@@ -1,0 +1,14 @@
+<resources>
+    <string name="dialog_positive">确定</string>
+    <string name="dialog_negative">取消</string>
+    <string name="dialog_tip_title">提醒</string>
+    <string name="dialog_tare_title" translatable="false">请输入扣重重量</string>
+    <string name="dialog_print_title" translatable="false">请输入打印份数</string>
+    <string name="dialog_key_title">操作认证</string>
+    <string name="dialog_key_msg">认证密码</string>
+    <string name="dialog_print">打印</string>
+    <string name="dialog_tare_msg">请输入…</string>
+    <string name="dialog_tare_unit" translatable="false">当前称重单位为：</string>
+    <string name="unit_jin" translatable="false">市斤</string>
+    <string name="unit_kg" translatable="false">公斤</string>
+</resources>

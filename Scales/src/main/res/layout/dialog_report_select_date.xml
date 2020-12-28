@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+                android:background="@drawable/bg_btn_white"
+              android:orientation="vertical"
+              android:padding="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="开始日期"
+            android:textColor="@color/white"
+            android:textSize="@dimen/configTextSize" />
+
+        <TextView
+            android:id="@+id/custom_report_begin_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/text_border"
+            android:gravity="center"
+            android:hint="点击选择"
+            android:textColor="@color/white"
+            android:textColorHint="@color/red"
+            android:textSize="@dimen/configTextSize" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="截止日期"
+            android:textColor="@color/white"
+            android:textSize="@dimen/configTextSize" />
+
+        <TextView
+            android:id="@+id/custom_report_end_date"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/text_border"
+            android:gravity="center"
+            android:hint="点击选择"
+            android:textColor="@color/white"
+            android:textColorHint="@color/red"
+            android:textSize="@dimen/configTextSize" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp">
+
+        <Button
+            android:id="@+id/custom_report_reset"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_origin"
+            android:text="取消"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerTipTextSize" />
+
+        <Button
+            android:id="@+id/custom_report_begin"
+            android:layout_width="0dp"
+            android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_red"
+            android:text="确定"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerTipTextSize" />
+    </LinearLayout>
+</LinearLayout>

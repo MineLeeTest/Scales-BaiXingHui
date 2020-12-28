@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#1e2a35"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="280"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingTop="12dp">
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:paddingEnd="16dp"
+                app:image_back_color="#2fb3bf"
+                app:image_src="@drawable/mana_sell"
+                app:text_back_color="#175a5e"
+                app:text_title="@string/manager_purchase_details"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingEnd="16dp"
+                app:image_back_color="#e65d5d"
+                app:image_src="@drawable/mana_goods_setting"
+                app:text_back_color="#c33534"
+                app:text_title="@string/manager_device_repair"/>
+
+            <com.seray.view.CustomView
+                android:id="@+id/setting"
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingEnd="16dp"
+                app:image_back_color="#7dc691"
+                app:image_src="@drawable/mana_setting"
+                app:text_back_color="#508c61"
+                app:text_title="@string/manager_local_settings"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="startInformationActivity"
+                android:paddingEnd="16dp"
+                app:image_back_color="#d98f63"
+                app:image_src="@drawable/mana_shop_info"
+                app:text_back_color="#956345"
+                app:text_title="@string/manager_booth_detail"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onCategoryManagerClick"
+                android:paddingEnd="16dp"
+                app:image_back_color="#fb8727"
+                app:image_src="@drawable/mana_classify"
+                app:text_back_color="#a35919"
+                app:text_title="@string/manager_classify"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingTop="12dp">
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="1"
+                android:onClick="startReportActivity"
+                android:paddingEnd="16dp"
+                app:image_back_color="#fb8727"
+                app:image_src="@drawable/mana_saledtail"
+                app:text_back_color="#a35919"
+                app:text_title="@string/manager_sale_details"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingEnd="16dp"
+                app:image_back_color="#2fb3bf"
+                app:image_src="@drawable/mana_collect"
+                app:text_back_color="#175a5e"
+                app:text_title="@string/manager_product_info"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onSyncBusinessDataClick"
+                android:paddingEnd="16dp"
+                app:image_back_color="#fb8727"
+                app:image_src="@drawable/mana_download"
+                app:text_back_color="#a35919"
+                app:text_title="@string/manager_sync_data"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingEnd="16dp"
+                app:image_back_color="#7dc691"
+                app:image_src="@drawable/mana_update"
+                app:text_back_color="#508c61"
+                app:text_title="库存系统"/>
+
+            <com.seray.view.CustomView
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="startSettingActivity"
+                android:paddingEnd="16dp"
+                app:image_back_color="#2fb3bf"
+                app:image_src="@drawable/mana_demarcate"
+                app:text_back_color="#175a5e"
+                app:text_title="@string/manager_go_to_operation"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="70"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="16dp"
+        android:weightSum="3">
+
+        <TextView
+            android:id="@+id/mana_device_code"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerTipTextSize"/>
+
+        <TextView
+            android:id="@+id/mana_ip"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerTipTextSize"/>
+
+        <TextView
+            android:id="@+id/mana_boothId"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerTipTextSize"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="80"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="16dp"
+        android:weightSum="3">
+
+        <Button
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_red"
+            android:onClick="onReStartClick"
+            android:text="@string/manager_reboot"
+            android:textColor="@color/white"
+            android:textSize="@dimen/functionButtonTextSize"/>
+
+        <Button
+            android:id="@+id/mana_weight_type"
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_red"
+            android:textColor="@color/white"
+            android:textSize="@dimen/functionButtonTextSize"/>
+
+        <Button
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_red"
+            android:onClick="backToMain"
+            android:text="@string/operation_back"
+            android:textColor="@color/white"
+            android:textSize="@dimen/functionButtonTextSize"/>
+    </LinearLayout>
+
+</LinearLayout>

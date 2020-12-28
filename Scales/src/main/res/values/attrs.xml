@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+    <declare-styleable name="CustomView">
+        <attr name="image_src" format="reference" />
+        <attr name="image_back_color" format="color" />
+        <attr name="text_title" format="string" />
+        <attr name="text_back_color" format="color" />
+    </declare-styleable>
+
+    <item name="tag_first" type="id" />
+    <item name="tag_second" type="id" />
+
+    <declare-styleable name="ImageVideoBanner">
+        <attr name="period" format="integer"/>
+    </declare-styleable>
+
+</resources>

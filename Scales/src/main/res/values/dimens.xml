@@ -1,0 +1,16 @@
+<resources>
+    <dimen name="functionButtonTextSize">35sp</dimen>
+    <dimen name="managerCategoryTextSize">20sp</dimen>
+    <dimen name="managerTipTextSize">30sp</dimen>
+    <dimen name="pluTextSize">30sp</dimen>
+    <dimen name="pluMinTextSize">12sp</dimen>
+    <dimen name="numPluTextSize">40sp</dimen>
+    <dimen name="measureTextSize">65sp</dimen>
+    <dimen name="configTextSize">25sp</dimen>
+
+    <dimen name="settingButtonHeight">60dp</dimen>
+
+    <dimen name="payResultTextSize">35sp</dimen>
+    <dimen name="payResultTextHeight">50dp</dimen>
+    <dimen name="display_text_size">80sp</dimen>
+</resources>

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+
+    <RelativeLayout
+        android:id="@+id/rl_search"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:layout_toStartOf="@+id/tv_scan"
+            android:background="@drawable/bg_searchtitle"
+            android:hint="请输入流水号/扫码查询"
+            android:imeOptions="actionSearch"
+            android:paddingStart="20dp"
+            android:textColor="#000000"
+            android:textColorHint="#999999"
+            android:textSize="22sp"/>
+
+        <Button
+            android:id="@+id/tv_scan"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/tv_cancel"
+            android:background="@drawable/bg_btn_origin"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="扫码"
+            android:textColor="@color/white"
+            android:textSize="22sp"/>
+
+        <Button
+            android:id="@+id/tv_cancel"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:background="@drawable/bg_btn_red"
+            android:paddingStart="20dp"
+            android:text="取消"
+            android:paddingEnd="20dp"
+            android:textColor="@color/white"
+            android:textSize="22sp"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/rl_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl_search"
+        android:layout_marginTop="5dp"
+        android:background="@color/orderdetail_textcolor"
+        android:orientation="horizontal"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:weightSum="5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="日期"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="交易类型"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="付款方式"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="交易金额"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="商品数量"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:visibility="invisible"
+            android:layout_marginStart="5dp"
+            android:id="@+id/tv_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_btn_origin"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="详情"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/subtotal_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_title"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp">
+    </android.support.v7.widget.RecyclerView>
+
+</RelativeLayout>

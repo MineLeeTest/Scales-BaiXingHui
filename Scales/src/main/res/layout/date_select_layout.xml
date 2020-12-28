@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:weightSum="480">
+
+    <CalendarView
+        android:id="@+id/date_select_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="400">
+
+    </CalendarView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="80"
+        android:orientation="horizontal"
+        android:padding="5dp"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/date_select_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_origin"
+            android:text="@string/operation_back"
+            android:textColor="@color/white"
+            android:textSize="@dimen/functionButtonTextSize" />
+
+        <Button
+            android:id="@+id/date_select_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_btn_red"
+            android:text="@string/reprint_ok"
+            android:textColor="@color/white"
+            android:textSize="@dimen/functionButtonTextSize" />
+    </LinearLayout>
+
+</LinearLayout>

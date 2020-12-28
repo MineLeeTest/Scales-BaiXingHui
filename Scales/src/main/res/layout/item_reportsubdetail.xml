@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_tabtitle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/rl_title"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:weightSum="5">
+
+    <TextView
+        android:id="@+id/tv_goodename"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:autoSizeMaxTextSize="@dimen/configTextSize"
+        android:autoSizeMinTextSize="@dimen/pluMinTextSize"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="商品名称"
+        android:textColor="@color/white"
+        android:textSize="@dimen/configTextSize"
+        app:autoSizeMaxTextSize="@dimen/configTextSize"
+        app:autoSizeMinTextSize="@dimen/pluMinTextSize"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"/>
+
+    <TextView
+        android:id="@+id/tv_prictype"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="价格类型"
+        android:textColor="@color/white"
+        android:textSize="@dimen/configTextSize"/>
+
+    <TextView
+        android:id="@+id/tv_dealCnt"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="成交数量"
+        android:textColor="@color/white"
+        android:textSize="@dimen/configTextSize"/>
+
+    <TextView
+        android:id="@+id/tv_dealPrice"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="成交单价"
+        android:textColor="@color/white"
+        android:textSize="@dimen/configTextSize"/>
+
+    <TextView
+        android:id="@+id/tv_dealAmt"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="成交总价"
+        android:textColor="@color/white"
+        android:textSize="@dimen/configTextSize"/>
+
+</LinearLayout>

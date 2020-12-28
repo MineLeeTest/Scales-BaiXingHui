@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@color/black"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight="468"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="352">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="613"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="57"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="@string/total_operation"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/configTextSize"/>
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="@string/total_product"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/configTextSize"/>
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="@string/scale_price"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/configTextSize"/>
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="@string/total_weight"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/configTextSize"/>
+
+                    <TextView
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.2"
+                        android:gravity="center"
+                        android:text="金额"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/configTextSize"/>
+
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_fntotal"
+                    app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="295">
+                </android.support.v7.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="138"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <Button
+                    android:id="@+id/totalpageButton_f1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_origin"
+                    android:text="@string/fn_1"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/functionButtonTextSize"/>
+
+                <Button
+                    android:id="@+id/totalpageButton_f2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_origin"
+                    android:text="@string/fn_2"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/functionButtonTextSize"/>
+
+                <Button
+                    android:id="@+id/totalpageButton_f3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_origin"
+                    android:text="@string/fn_3"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/functionButtonTextSize"/>
+
+                <Button
+                    android:id="@+id/totalpageButton_f4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0px"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_btn_origin"
+                    android:text="@string/fn_4"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/functionButtonTextSize"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="92"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0px"
+                android:layout_height="match_parent"
+                android:layout_weight="400"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_gravity="bottom"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="@string/scale_account"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/pluTextSize"/>
+
+                <TextView
+                    android:id="@+id/totalpage_Num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:layout_toEndOf="@+id/textView2"
+                    android:gravity="center"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/pluTextSize"/>
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_gravity="bottom"
+                    android:layout_toEndOf="@+id/totalpage_Num"
+                    android:gravity="center"
+                    android:text="@string/scale_piece"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/pluTextSize"/>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_toEndOf="@+id/textView3"
+                    android:gravity="center"
+                    android:text="@string/total_amount"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/pluTextSize"/>
+
+                <TextView
+                    android:id="@+id/totalpage_totalMoney"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="bottom"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_toEndOf="@+id/textView4"
+                    android:gravity="center"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/pluTextSize"/>
+
+                <TextView
+                    android:id="@+id/total_customer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/holo_red_light"
+                    android:textSize="@dimen/pluTextSize"
+                    android:layout_above="@+id/textView4"
+                    android:layout_toEndOf="@+id/textView6"/>
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="结算客户："
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/pluTextSize"
+                    android:layout_above="@+id/textView2"
+                    android:layout_alignParentStart="true"/>
+            </RelativeLayout>
+
+            <Button
+                android:layout_width="120dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:onClick="onOnceClearClick"
+                android:background="@drawable/bg_press_red"
+                android:gravity="center"
+                android:text="清除"
+                android:textColor="@color/white"
+                android:textSize="@dimen/functionButtonTextSize" />
+
+            <Button
+                android:id="@+id/fntotalpay"
+                android:layout_width="120dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bg_press_red"
+                android:gravity="center"
+                android:text="@string/zhifu"
+                android:textColor="@color/white"
+                android:textSize="@dimen/functionButtonTextSize"/>
+
+            <Button
+                android:id="@+id/close"
+                android:layout_width="120dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/bg_press_red"
+                android:gravity="center"
+                android:text="@string/operation_back"
+                android:textColor="@color/white"
+                android:textSize="@dimen/functionButtonTextSize"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

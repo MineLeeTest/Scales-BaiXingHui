@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="400dp"
+    android:layout_height="70dp"
+    android:orientation="horizontal">
+
+    <Button
+        android:id="@+id/dialog_negative"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_press_red"
+        android:gravity="center"
+        android:text="@string/dialog_negative"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"/>
+
+    <Button
+        android:id="@+id/dialog_positive"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_press_origin"
+        android:gravity="center"
+        android:text="@string/dialog_positive"
+        android:textColor="@android:color/white"
+        android:textSize="25sp"/>
+
+</LinearLayout>

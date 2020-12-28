@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/category_name"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_margin="5dp"
+        android:autoSizeMaxTextSize="@dimen/configTextSize"
+        android:autoSizeMinTextSize="@dimen/pluMinTextSize"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:background="@drawable/bg_btn_product"
+        android:textColor="@color/black1"
+        android:textSize="@dimen/configTextSize"
+        app:autoSizeMaxTextSize="@dimen/configTextSize"
+        app:autoSizeMinTextSize="@dimen/pluMinTextSize"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform">
+
+</Button>

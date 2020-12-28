@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+
+    <LinearLayout
+        android:id="@+id/rl_tabtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orderdetail_textcolor"
+        android:paddingTop="5dp"
+        android:layout_below="@+id/rl_title"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:weightSum="5">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="商品名称"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="计价类型"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="成交数量"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="成交单价"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="成交总价"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="本单详情"
+            android:textColor="@color/white"
+            android:textSize="32sp" />
+
+        <TextView
+            android:id="@+id/tv_sum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_title"
+            android:text=""
+            android:textColor="@color/yellow"
+            android:textSize="32sp"
+            tools:text="($108.99 元)" />
+
+
+        <TextView
+            android:id="@+id/tv_paytpe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/tv_sum"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            tools:text="现金 支付" />
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/sjcdetail_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_tabtitle"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp" />
+
+</RelativeLayout>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black">
+
+
+    <RadioGroup
+        android:id="@+id/config_group"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/config_to_recognize"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/radio_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="果蔬识别"
+            android:textColor="@drawable/radio_txt_color"
+            android:textSize="25sp"/>
+
+        <RadioButton
+            android:id="@+id/config_to_print"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/radio_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="小票打印"
+            android:textColor="@drawable/radio_txt_color"
+            android:textSize="25sp"/>
+
+        <RadioButton
+            android:id="@+id/config_to_product"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/radio_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="商品展示"
+            android:textColor="@drawable/radio_txt_color"
+            android:textSize="25sp"/>
+
+        <RadioButton
+            android:id="@+id/config_to_sundry"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/radio_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:text="其他杂项"
+            android:textColor="@drawable/radio_txt_color"
+            android:textSize="25sp"/>
+
+    </RadioGroup>
+
+    <View
+        android:id="@+id/config_line"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/config_group"
+        android:background="@android:color/darker_gray"/>
+
+    <FrameLayout
+        android:id="@+id/config_frameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@id/config_line">
+    </FrameLayout>
+
+</RelativeLayout>
