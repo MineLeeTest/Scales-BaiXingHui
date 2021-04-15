@@ -45,26 +45,7 @@ public class WeightPresentation extends BasePresentation {
     }
 
     private void configContentView() {
-        if (CacheHelper.isOpenCollection) {
-            File localFile = new File(FileHelp.PAY_CODE_PIC_DIR + "payCode.jpg");
-            if (localFile.exists()) {
-                try (FileInputStream fis = new FileInputStream(localFile)) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(fis);
-                    int width = bitmap.getWidth();
-                    if (width <= 700) {
-                        setContentView(R.layout.sale_back_pre);
-                    } else {
-                        setContentView(R.layout.sale_back_pre2);
-                    }
-                } catch (Exception e) {
-                    setContentView(R.layout.sale_back_pre);
-                }
-            } else {
-                setContentView(R.layout.sale_back_pre3);
-            }
-        } else {
-            setContentView(R.layout.sale_back_pre3);
-        }
+        setContentView(R.layout.sale_back_pre3);
     }
 
     public void setQRContent() {

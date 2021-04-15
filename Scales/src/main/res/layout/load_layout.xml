@@ -36,27 +36,27 @@
             app:text_back_color="#c33534"
             app:text_title="@string/operation_reboot"/>
 
-        <com.seray.view.CustomView
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="showSetWebDialog"
-            android:paddingEnd="16dp"
-            app:image_back_color="#2fb3bf"
-            app:image_src="@drawable/icon_web"
-            app:text_back_color="#175a5e"
-            app:text_title="@string/start_web_setting"/>
+<!--        <com.seray.view.CustomView-->
+<!--            android:layout_width="0px"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:onClick="showSetWebDialog"-->
+<!--            android:paddingEnd="16dp"-->
+<!--            app:image_back_color="#2fb3bf"-->
+<!--            app:image_src="@drawable/icon_web"-->
+<!--            app:text_back_color="#175a5e"-->
+<!--            app:text_title="@string/start_web_setting"/>-->
 
-        <com.seray.view.CustomView
-            android:layout_width="0px"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="startSettingActivity"
-            android:paddingEnd="16dp"
-            app:image_back_color="#7dc691"
-            app:image_src="@drawable/icon_setting"
-            app:text_back_color="#508c61"
-            app:text_title="@string/manager_go_to_operation"/>
+<!--        <com.seray.view.CustomView-->
+<!--            android:layout_width="0px"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="1"-->
+<!--            android:onClick="startSettingActivity"-->
+<!--            android:paddingEnd="16dp"-->
+<!--            app:image_back_color="#7dc691"-->
+<!--            app:image_src="@drawable/icon_setting"-->
+<!--            app:text_back_color="#508c61"-->
+<!--            app:text_title="@string/manager_go_to_operation"/>-->
 
         <com.seray.view.CustomView
             android:layout_width="0px"
@@ -67,7 +67,7 @@
             app:image_back_color="#d98f63"
             app:image_src="@drawable/icon_activate"
             app:text_back_color="#956345"
-            app:text_title="@string/start_active"/>
+            app:text_title="@string/start_active" />
 
     </LinearLayout>
 

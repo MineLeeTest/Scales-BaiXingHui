@@ -44,7 +44,6 @@ public class TestActivity extends BaseActivity {
         mScale = JNIScale.getScale();
         timer();
 
-        mCustomPrinter.printBitmap();
 
         // 初始化音量及播放语音
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -197,7 +196,7 @@ public class TestActivity extends BaseActivity {
     }
 
     public void onPrintTestClick(View view) {
-        mCustomPrinter.printTest();
+        showMessage("test print");
     }
 
     public void onMiscTestClick(View view) {

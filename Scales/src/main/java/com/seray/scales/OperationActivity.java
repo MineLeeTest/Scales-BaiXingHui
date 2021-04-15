@@ -82,6 +82,7 @@ public class OperationActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.operationaltest);
+        //
         initJNI();
         initView();
         initData();

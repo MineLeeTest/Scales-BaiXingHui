@@ -21,6 +21,9 @@ import android.widget.Toast;
 
 import com.decard.NDKMethod.BasicOper;
 import com.google.gson.Gson;
+import com.hard.CardReadHelp;
+import com.hard.ReturnValue;
+import com.hard.ReturnValueCallback;
 import com.lzscale.scalelib.misclib.Misc;
 import com.seray.cache.CacheHelper;
 import com.seray.scales.App;
@@ -54,7 +57,7 @@ import androidx.work.WorkManager;
  * E-mail：licheng@kedacom.com
  * Describe：
  */
-public class CpuCardManagerDialog extends BottomSheetDialogFragment {
+public class CpuCardManagerDialog extends BottomSheetDialogFragment    {
 
     Context mContext;
 
@@ -114,7 +117,14 @@ public class CpuCardManagerDialog extends BottomSheetDialogFragment {
         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         }
     };
-
+    ReturnValueCallback returnValueCallback = new ReturnValueCallback() {
+        @Override
+        public void run(ReturnValue result) {
+//            mLoadingTipView.setText();
+            Toast.makeText(getContext(), result.getIsSuccess() + "--" + result.getCode(), 20);
+        }
+    };
+    CardReadHelp cardReadHelp = new CardReadHelp();
     private View.OnClickListener mControlClickListener = new View.OnClickListener() {
 
         @Override
@@ -132,6 +142,7 @@ public class CpuCardManagerDialog extends BottomSheetDialogFragment {
                     if (isDeviceReady()) {
                         onDoQueryClick();
                     }
+//                    cardReadHelp.readCardId(returnValueCallback,"/dev/ttymxc2");
                     break;
                 case R.id.dialog_card_balance_pay:
                     if (isDeviceReady()) {
@@ -327,7 +338,7 @@ public class CpuCardManagerDialog extends BottomSheetDialogFragment {
 
     private CardPayOrder createCardPayOrder(UserCardInfo userCardInfo, PsamCardInfo psamCardInfo) {
         CardPayOrder order = new CardPayOrder();
-        order.setTermId(CacheHelper.TermId);
+        order.setTermId(CacheHelper.device_id+"");
         order.setTransOrderCode(mTransOrderCode);
         order.setTransAmt(mTransAmout);
         order.setTransDate(NumFormatUtil.getDateDetail());
@@ -401,8 +412,11 @@ public class CpuCardManagerDialog extends BottomSheetDialogFragment {
         tv.setText(String.format("%s：%s", split[0], content));
     }
 
+
     private int openCpuCardUsbReadPort() {
         BasicOper.dc_AUSB_ReqPermission(mContext);
+
+
         int devHandle = BasicOper.dc_open("AUSB", mContext, "", 0);
         if (devHandle > 0) {
             LogUtil.d("读卡设备端口打开成功！设备句柄号 = " + devHandle);

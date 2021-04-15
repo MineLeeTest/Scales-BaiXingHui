@@ -60,7 +60,7 @@ public class UploadCardPayOrderWork extends Worker {
             if (response.isSuccessful()) {
                 ApiDataRsp body = response.body();
                 if (body != null) {
-                    if (body.isSuccess()) {
+                    if (body.success) {
                         LogUtil.i("预付卡消费记录上传成功！" + transOrderCode);
                         // 更新本地订单上传状态
                         updateOrderUploadStatus(transOrderCode);

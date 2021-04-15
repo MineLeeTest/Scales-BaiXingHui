@@ -12,32 +12,20 @@ import com.google.gson.annotations.SerializedName;
 public class ActivateReq {
 
     // 称号
-    @SerializedName("termCode")
     @Expose
-    public String termCode;
+    public String dzc_imei;
 
     // 密码
-    @SerializedName("termPwd")
     @Expose
-    public String termPwd;
+    public String sim_imsi;
 
     // 设备sn号
-    @SerializedName("deviceSn")
     @Expose
-    public String deviceSn;
+    public String app_version;
 
     // 设备软件版本号
-    @SerializedName("deviceVersion")
     @Expose
-    public String deviceVersion;
+    public Integer company_id;
 
-    @Override
-    public String toString() {
-        return "ActivateReq{" +
-                "termCode='" + termCode + '\'' +
-                ", termPwd='" + termPwd + '\'' +
-                ", deviceSn='" + deviceSn + '\'' +
-                ", deviceVersion='" + deviceVersion + '\'' +
-                '}';
-    }
+
 }

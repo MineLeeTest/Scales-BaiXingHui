@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class SerialPortUtil {
+public class  SerialPortUtil {
     private SerialPort mSerialPort;
     private OutputStream mOutputStream;
     private InputStream mInputStream;

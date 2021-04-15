@@ -22,9 +22,9 @@ public class DeviceInfoFragment extends Fragment {
     }
 
     private void initView(View view) {
-        ((TextView) view.findViewById(R.id.device_term_id)).setText(CacheHelper.TermId);
-        ((TextView) view.findViewById(R.id.device_term_code)).setText(CacheHelper.TermCode);
-        ((TextView) view.findViewById(R.id.device_term_name)).setText(CacheHelper.TermName);
-        ((TextView) view.findViewById(R.id.device_factory_code)).setText(CacheHelper.DeviceCode);
+        ((TextView) view.findViewById(R.id.device_term_id)).setText(CacheHelper.device_id);
+//        ((TextView) view.findViewById(R.id.device_term_code)).setText(CacheHelper.TermCode);
+//        ((TextView) view.findViewById(R.id.device_term_name)).setText(CacheHelper.TermName);
+//        ((TextView) view.findViewById(R.id.device_factory_code)).setText(CacheHelper.DeviceCode);
     }
 }

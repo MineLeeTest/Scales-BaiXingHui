@@ -18,6 +18,7 @@ import java.util.List;
 
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
 import retrofit2.Response;
 
 /**
@@ -64,30 +65,29 @@ public class CheckUnUploadWork extends Worker {
                 subtotal.setTransItemList(detailList);
             }
 
-            try {
-
-                Response<ApiDataRsp<String[]>> response = HttpServicesFactory.getHttpServiceApi()
-                        .postOrders(subtotals)
-                        .execute();
-
-                if (response.isSuccessful()) {
-                    ApiDataRsp<String[]> body = response.body();
-                    if (body != null && body.isSuccess()) {
-                        String[] errorOrderCodes = body.info;
-                        if (errorOrderCodes != null && errorOrderCodes.length > 0) {
-                            LogUtil.i("批量上传订单部分失败！");
-                        } else {
-                            LogUtil.i("批量上传订单部分全部成功！");
-                        }
-                        updateOrderUploadStatus(totalTransOrderCode, errorOrderCodes);
-                        LogUtil.i("批量上传订单上传状态更新成功！");
-                    }
-                }
-            } catch (IOException e) {
-                LogUtil.e("批量上传订单异常！" + e.getMessage());
-            } finally {
-                currentTime++;
-            }
+//            try {
+//                Response<ApiDataRsp<String[]>> response = HttpServicesFactory.getHttpServiceApi()
+//                        .postOrders(subtotals)
+//                        .execute();
+//
+//                if (response.isSuccessful()) {
+//                    ApiDataRsp<String[]> body = response.body();
+//                    if (body != null && body.success) {
+//                        String[] errorOrderCodes = body.msg;
+//                        if (errorOrderCodes != null && errorOrderCodes.length > 0) {
+//                            LogUtil.i("批量上传订单部分失败！");
+//                        } else {
+//                            LogUtil.i("批量上传订单部分全部成功！");
+//                        }
+//                        updateOrderUploadStatus(totalTransOrderCode, errorOrderCodes);
+//                        LogUtil.i("批量上传订单上传状态更新成功！");
+//                    }
+//                }
+//            } catch (IOException e) {
+//                LogUtil.e("批量上传订单异常！" + e.getMessage());
+//            } finally {
+//                currentTime++;
+//            }
 
         } while (currentTime < TIMES);
 

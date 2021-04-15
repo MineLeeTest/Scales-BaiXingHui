@@ -26,7 +26,7 @@ import com.seray.sjc.db.dao.ConfigDao;
 import com.seray.sjc.entity.device.Config;
 import com.seray.sjc.entity.device.SjcParamInfo;
 import com.seray.sjc.report.NewReportActivity;
-import com.seray.sjc.work.CheckSyncDataWork;
+//import com.seray.sjc.work.CheckSyncDataWork;
 import com.seray.util.HttpUtils;
 import com.seray.util.LogUtil;
 import com.seray.util.NumFormatUtil;
@@ -70,48 +70,48 @@ public class ManageActivity extends BaseActivity {
         startActivity(SelectActivity.class);
     }
 
-    // 业务数据同步
-    public void onSyncBusinessDataClick(View view) {
-        super.onClick(view);
-        showLoading("正在同步");
-        // 强制更新 不使用已缓存的请求参数
-        Data inputData = new Data.Builder()
-                .putBoolean(CheckSyncDataWork.KEY_FORCE_UPDATE, true)
-                .build();
-
-        OneTimeWorkRequest syncDataWorkRequest = new OneTimeWorkRequest
-                .Builder(CheckSyncDataWork.class)
-                .setInputData(inputData)
-                .build();
-
-        final UUID requestId = syncDataWorkRequest.getId();
-        WorkManager.getInstance().enqueue(syncDataWorkRequest);
-        WorkManager.getInstance().getWorkInfoByIdLiveData(requestId)
-                .observe(this, workInfo -> {
-                    if (workInfo != null) {
-                        WorkInfo.State state = workInfo.getState();
-                        if (state.isFinished()) {
-                            dismissLoading();
-                            if (state == WorkInfo.State.SUCCEEDED) {
-                                showMessage("同步成功");
-                            } else if (state == WorkInfo.State.FAILED) {
-                                showMessage("同步失败");
-                            } else {
-                                showMessage("同步取消");
-                            }
-                        }
-                    }
-                });
-        // 以防超时 对话框无法关闭
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                WorkManager.getInstance().cancelWorkById(requestId);
-                // 确认对话框关闭
-                dismissLoading();
-            }
-        }, 7000);
-    }
+//    // 业务数据同步
+//    public void onSyncBusinessDataClick(View view) {
+//        super.onClick(view);
+//        showLoading("正在同步");
+//        // 强制更新 不使用已缓存的请求参数
+//        Data inputData = new Data.Builder()
+//                .putBoolean(CheckSyncDataWork.KEY_FORCE_UPDATE, true)
+//                .build();
+//
+//        OneTimeWorkRequest syncDataWorkRequest = new OneTimeWorkRequest
+//                .Builder(CheckSyncDataWork.class)
+//                .setInputData(inputData)
+//                .build();
+//
+//        final UUID requestId = syncDataWorkRequest.getId();
+//        WorkManager.getInstance().enqueue(syncDataWorkRequest);
+//        WorkManager.getInstance().getWorkInfoByIdLiveData(requestId)
+//                .observe(this, workInfo -> {
+//                    if (workInfo != null) {
+//                        WorkInfo.State state = workInfo.getState();
+//                        if (state.isFinished()) {
+//                            dismissLoading();
+//                            if (state == WorkInfo.State.SUCCEEDED) {
+//                                showMessage("同步成功");
+//                            } else if (state == WorkInfo.State.FAILED) {
+//                                showMessage("同步失败");
+//                            } else {
+//                                showMessage("同步取消");
+//                            }
+//                        }
+//                    }
+//                });
+//        // 以防超时 对话框无法关闭
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                WorkManager.getInstance().cancelWorkById(requestId);
+//                // 确认对话框关闭
+//                dismissLoading();
+//            }
+//        }, 7000);
+//    }
 
     // 返回
     public void backToMain(View view) {
@@ -166,21 +166,21 @@ public class ManageActivity extends BaseActivity {
                 startActivityForResult(intent, 0);
                 break;
             case R.id.item4:
-                InputImageRecognizeDialog inputImageRecognizeDialog = new InputImageRecognizeDialog(this);
-                inputImageRecognizeDialog.show();
-                inputImageRecognizeDialog.setOnPositiveClickListener((dialog, value) -> {
-                    if (value <= 0 || value == CacheHelper.MinRecognizeValue) {
-                        return;
-                    }
-                    AppExecutors.getInstance().insertIO().submit(() -> {
-                        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-                        Config config = new Config(SjcParamInfo.MinRecognizeValue, String.valueOf(value));
-                        configDao.save(config);
-                        // 更新数据
-                        CacheHelper.prepareParamInfo();
-                        runOnUiThread(this::changePopRecognizeValue);
-                    });
-                });
+//                InputImageRecognizeDialog inputImageRecognizeDialog = new InputImageRecognizeDialog(this);
+//                inputImageRecognizeDialog.show();
+//                inputImageRecognizeDialog.setOnPositiveClickListener((dialog, value) -> {
+//                    if (value <= 0 || value == CacheHelper.MinRecognizeValue) {
+//                        return;
+//                    }
+//                    AppExecutors.getInstance().insertIO().submit(() -> {
+//                        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
+//                        Config config = new Config(SjcParamInfo.MinRecognizeValue, String.valueOf(value));
+//                        configDao.save(config);
+//                        // 更新数据
+////                        CacheHelper.prepareParamInfo();
+//                        runOnUiThread(this::changePopRecognizeValue);
+//                    });
+//                });
                 break;
             case R.id.setting_pop_back_btn:
                 if (window != null) {
@@ -229,7 +229,7 @@ public class ManageActivity extends BaseActivity {
 
     private void changePopRecognizeValue() {
         TextView recognizeView = popupView.findViewById(R.id.manage_image_recognize_allow);
-        recognizeView.setText(String.format("%s%s", CacheHelper.MinRecognizeValue, "%"));
+//        recognizeView.setText(String.format("%s%s", CacheHelper.MinRecognizeValue, "%"));
     }
 
     @Override
@@ -373,14 +373,14 @@ public class ManageActivity extends BaseActivity {
         mIpTextView.setText(ipAddress);
         TextView mScaleCodeView = (TextView) findViewById(R.id.mana_device_code);
         TextView mBoothIdView = (TextView) findViewById(R.id.mana_boothId);
-        if (!TextUtils.isEmpty(CacheHelper.TermCode)) {
-            String deviceId = getString(R.string.manager_device_id);
-            mScaleCodeView.setText(String.format("%s%s", deviceId, CacheHelper.TermCode));
-        }
-        if (!TextUtils.isEmpty(CacheHelper.BoothName)) {
-            String boothName = getString(R.string.manager_booth_name);
-            mBoothIdView.setText(String.format("%s%s", boothName, CacheHelper.BoothName));
-        }
+//        if (!TextUtils.isEmpty(CacheHelper.TermCode)) {
+//            String deviceId = getString(R.string.manager_device_id);
+//            mScaleCodeView.setText(String.format("%s%s", deviceId, CacheHelper.TermCode));
+//        }
+//        if (!TextUtils.isEmpty(CacheHelper.BoothName)) {
+//            String boothName = getString(R.string.manager_booth_name);
+//            mBoothIdView.setText(String.format("%s%s", boothName, CacheHelper.BoothName));
+//        }
     }
 
     private void changeTimeShow() {

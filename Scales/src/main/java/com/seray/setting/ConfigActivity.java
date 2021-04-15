@@ -53,7 +53,7 @@ public class ConfigActivity extends BaseActivity {
                 AppExecutors.getInstance().queryIO().submit(new Runnable() {
                     @Override
                     public void run() {
-                        CacheHelper.prepareConfig();
+//                        CacheHelper.prepareConfig();
                         finish();
                     }
                 });

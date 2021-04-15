@@ -19,7 +19,7 @@ import com.seray.sjc.entity.device.Config;
 import com.seray.sjc.poster.DisplayPoster;
 import com.seray.sjc.util.CrashHandler;
 import com.seray.util.LogUtil;
-import com.tencent.bugly.Bugly;
+//import com.tencent.bugly.Bugly;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -50,12 +50,18 @@ public class App extends Application {
         myApplication = this;
         DisplayPoster.init();
         AppDatabase.getInstance();
-        Bugly.init(this, "092ced05af", false);
+//        Bugly.init(this, "092ced05af", false);
         CrashHandler.getInstance().init(this);
         VersionName = getVersionName();
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP
                 | PowerManager.SCREEN_DIM_WAKE_LOCK, "WakeAndLock");
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        android.support.multidex.MultiDex.install(this);
     }
 
     /**
@@ -145,7 +151,7 @@ public class App extends Application {
      * 退出当前应用
      */
     public void exit() {
-        CacheHelper.saveDataIdToDb();
+//        CacheHelper.saveDataIdToDb();
         mHandler.postDelayed(() -> {
             try {
                 for (Activity activity : activityList) {
@@ -163,7 +169,7 @@ public class App extends Application {
      * 重启当前应用
      */
     public void rebootApp() {
-        CacheHelper.saveDataIdToDb();
+//        CacheHelper.saveDataIdToDb();
         mHandler.postDelayed(() -> {
             try {
                 for (Activity activity : activityList) {

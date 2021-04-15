@@ -123,23 +123,11 @@ public class SettingActivity extends BaseActivity {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logo, options);
         //296 197
         Bitmap compressBitmap = Bitmap.createScaledBitmap(bitmap, 296, 197, true);
-        mCustomPrinter.saveBitmap(compressBitmap, new Runnable() {
-            @Override
-            public void run() {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        dismissLoading();
-                        showMessage("关机重启后生效");
-                    }
-                });
-            }
-        });
+
     }
 
     public void printNVBitmap(View view) {
         super.onClick(view);
-        mCustomPrinter.printBitmap();
     }
 
     private void showExitDialog() {

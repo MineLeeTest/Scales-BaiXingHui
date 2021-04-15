@@ -19,7 +19,7 @@ public class TermInfo implements Serializable {
 
     public static final String TERM_NAME = "termName";
     public static final String SHOP_NAME = "shopName";
-    public static final String MARKET_NAME = "marketName";
+    public static final String COMPANY_NAME = "company_name";
     public static final String BOOTH_CODE = "boothCode";
     public static final String BOOTH_NAME = "boothName";
 
@@ -100,7 +100,7 @@ public class TermInfo implements Serializable {
             data.put(SHOP_NAME, shopName);
         }
         if (!TextUtils.isEmpty(marketName)) {
-            data.put(MARKET_NAME, marketName);
+            data.put(COMPANY_NAME, marketName);
         }
         if (!TextUtils.isEmpty(boothCode)) {
             data.put(BOOTH_CODE, boothCode);

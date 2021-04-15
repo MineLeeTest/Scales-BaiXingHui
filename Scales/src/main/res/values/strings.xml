@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">智慧农贸(红太阳)</string>
+    <string name="app_name">盛阳易鲜达</string>
     <string name="image_recognize_service">果蔬在线识别服务</string>
     <string name="read_battery_service">电池电量监听服务</string>
     <string name="back_display_service">后显示广告服务</string>

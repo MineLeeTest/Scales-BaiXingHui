@@ -39,7 +39,7 @@ public class SundryConfigFragment extends BaseConfigFragment {
         ToggleButton collectionBtn = (ToggleButton) parent.findViewById(R.id.config_open_collection);
         backBtn.setChecked(CacheHelper.isOpenBackDisplay);
         priceBtn.setChecked(CacheHelper.isChangePrice);
-        batteryBtn.setChecked(CacheHelper.isOpenBattery);
-        collectionBtn.setChecked(CacheHelper.isOpenCollection);
+//        batteryBtn.setChecked(CacheHelper.isOpenBattery);
+//        collectionBtn.setChecked(CacheHelper.isOpenCollection);
     }
 }

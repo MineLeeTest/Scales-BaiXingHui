@@ -1977,7 +1977,7 @@ public class ViewPager extends ViewGroup {
 
     @Override
     public boolean dispatchPopulateAccessibilityEvent(AccessibilityEvent event) {
-        // ViewPagers should only report accessibility info for the current page,
+        // ViewPagers should only report accessibility msg for the current page,
         // otherwise things get very confusing.
 
         // TODO: Should this note something about the paging container?

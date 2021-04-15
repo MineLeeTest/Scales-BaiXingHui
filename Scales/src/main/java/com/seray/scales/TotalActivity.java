@@ -11,21 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.seray.cache.CacheHelper;
 import com.seray.message.ClearOrderMsg;
-import com.seray.message.LocalFileTag;
-import com.seray.sjc.AppExecutors;
-import com.seray.sjc.SjcConfig;
 import com.seray.sjc.adapter.SjcDetailAdapter;
-import com.seray.sjc.annotation.TransType;
-import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.entity.order.OrderInfo;
 import com.seray.sjc.entity.order.SjcDetail;
-import com.seray.sjc.entity.order.SjcSubtotal;
-import com.seray.sjc.pay.SjcPayActivity;
 import com.seray.sjc.work.UploadOrderWork;
-import com.seray.util.LogUtil;
-import com.seray.util.NumFormatUtil;
 import com.seray.view.CustomTipDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +38,7 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
     private TextView totalpage_Num, totalpage_totalMoney, mTotalCustomerTv;
     private Button fntotalpay, totalpageButton_f1, totalpageButton_f2, totalpageButton_f3,
             totalpageButton_f4;
-    private List<SjcDetail> fnList = CacheHelper.Detail_1;
+    //    private List<SjcDetail> fnList = CacheHelper.Detail_1;
     private List<Button> btnList = new ArrayList<>();
     private int FN_FLAG = 1;
     private SjcDetailAdapter mAdapter;
@@ -59,17 +48,17 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
      * 还原客户按钮的显示
      */
     protected void clearCustomer() {
-        int strIndex = CacheHelper.basicBtnText[FN_FLAG - 1];
+//        int strIndex = CacheHelper.basicBtnText[FN_FLAG - 1];
         Button btn = btnList.get(FN_FLAG - 1);
         btn.setTag(false);
-        btn.setText(strIndex);
+        btn.setText("99999");
     }
 
     /**
      * 清空订单集合刷新适配器显示
      */
     protected void clearCurrFn() {
-        fnList.clear();
+//        fnList.clear();
         mAdapter.notifyDataSetChanged();
         totalpage_Num.setText(R.string.base_weight_by_piece);
         totalpage_totalMoney.setText(R.string.base_price);
@@ -80,27 +69,27 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         mMisc.beep();
         switch (keyCode) {
             case KeyEvent.KEYCODE_NUMPAD_ENTER:
-                keyEnter();
+//                keyEnter();
                 return true;
             case KeyEvent.KEYCODE_BACK:
                 backToMain();
                 return true;
-            case KeyEvent.KEYCODE_A:
-                fnList = CacheHelper.Detail_1;
-                showSelectedDetails(1);
-                return true;
-            case KeyEvent.KEYCODE_D:
-                fnList = CacheHelper.Detail_2;
-                showSelectedDetails(2);
-                return true;
-            case KeyEvent.KEYCODE_B:
-                fnList = CacheHelper.Detail_3;
-                showSelectedDetails(3);
-                return true;
-            case KeyEvent.KEYCODE_C:
-                fnList = CacheHelper.Detail_4;
-                showSelectedDetails(4);
-                return true;
+//            case KeyEvent.KEYCODE_A:
+//                fnList = CacheHelper.Detail_1;
+//                showSelectedDetails(1);
+//                return true;
+//            case KeyEvent.KEYCODE_D:
+//                fnList = CacheHelper.Detail_2;
+//                showSelectedDetails(2);
+//                return true;
+//            case KeyEvent.KEYCODE_B:
+//                fnList = CacheHelper.Detail_3;
+//                showSelectedDetails(3);
+//                return true;
+//            case KeyEvent.KEYCODE_C:
+//                fnList = CacheHelper.Detail_4;
+//                showSelectedDetails(4);
+//                return true;
             case KeyEvent.KEYCODE_NUMPAD_DOT:
                 clearAtOnce();
                 break;
@@ -120,7 +109,7 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         setContentView(R.layout.fntotalpage);
         EventBus.getDefault().register(this);
         initViews();
-        initAdapter();
+//        initAdapter();
         initData();
         recurFnContent();
         initListener();
@@ -160,22 +149,22 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
             case R.id.close:
                 backToMain();
                 break;
-            case R.id.totalpageButton_f1:
-                fnList = CacheHelper.Detail_1;
-                showSelectedDetails(1);
-                break;
-            case R.id.totalpageButton_f2:
-                fnList = CacheHelper.Detail_2;
-                showSelectedDetails(2);
-                break;
-            case R.id.totalpageButton_f3:
-                fnList = CacheHelper.Detail_3;
-                showSelectedDetails(3);
-                break;
-            case R.id.totalpageButton_f4:
-                fnList = CacheHelper.Detail_4;
-                showSelectedDetails(4);
-                break;
+//            case R.id.totalpageButton_f1:
+//                fnList = CacheHelper.Detail_1;
+//                showSelectedDetails(1);
+//                break;
+//            case R.id.totalpageButton_f2:
+//                fnList = CacheHelper.Detail_2;
+//                showSelectedDetails(2);
+//                break;
+//            case R.id.totalpageButton_f3:
+//                fnList = CacheHelper.Detail_3;
+//                showSelectedDetails(3);
+//                break;
+//            case R.id.totalpageButton_f4:
+//                fnList = CacheHelper.Detail_4;
+//                showSelectedDetails(4);
+//                break;
         }
     }
 
@@ -183,16 +172,16 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
      * 前往支付页面
      */
     private void goToPay() {
-        if (fnList != null && !fnList.isEmpty()) {
-            OrderInfo info = toBean();
-            info.getSjcSubtotal().setPayStatus(0);
-            Intent intent = getSkipIntent(SjcPayActivity.class);
-            intent.putExtra(OrderInfo.class.getSimpleName(), info);
-            intent.putExtra(SjcConfig.KEY_CLEAR_ORDER_ACTIVITY, this.getClass().getSimpleName());
-            startActivity(intent);
-        } else {
-            showMessage(R.string.total_tips);
-        }
+//        if (fnList != null && !fnList.isEmpty()) {
+//            OrderInfo info = toBean();
+//            info.getSjcSubtotal().setPayStatus(0);
+//            Intent intent = getSkipIntent(SjcPayActivity.class);
+//            intent.putExtra(OrderInfo.class.getSimpleName(), info);
+//            intent.putExtra(SjcConfig.KEY_CLEAR_ORDER_ACTIVITY, this.getClass().getSimpleName());
+//            startActivity(intent);
+//        } else {
+        showMessage("开始支付！");
+//        }
     }
 
     /**
@@ -204,32 +193,32 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         intent.putExtra("FNS", FN_FLAG);
         startActivity(intent);
     }
+//
+//    /**
+//     * 初始化订单信息
+//     */
+//    private OrderInfo toBean() {
+//        SjcSubtotal subtotal = getSubtotal(fnList);
+//        for (SjcDetail detail : fnList) {
+//            detail.setTransOrderCode(subtotal.getTransOrderCode());
+//        }
+//        return new OrderInfo(subtotal, fnList);
+//    }
 
-    /**
-     * 初始化订单信息
-     */
-    private OrderInfo toBean() {
-        SjcSubtotal subtotal = getSubtotal(fnList);
-        for (SjcDetail detail : fnList) {
-            detail.setTransOrderCode(subtotal.getTransOrderCode());
-        }
-        return new OrderInfo(subtotal, fnList);
-    }
-
-    /**
-     * 生成累计销售小计
-     */
-    private SjcSubtotal getSubtotal(List<SjcDetail> list) {
-        String transOrderCode = NumFormatUtil.createSerialNum();
-        String transDate = NumFormatUtil.getDateDetail();
-        BigDecimal transAmt = getTotalMoney(list);
-        return new SjcSubtotal(
-                transOrderCode,
-                transDate,
-                TransType.NORMAL,
-                transAmt
-        );
-    }
+//    /**
+//     * 生成累计销售小计
+//     */
+//    private SjcSubtotal getSubtotal(List<SjcDetail> list) {
+//        String transOrderCode = NumFormatUtil.createSerialNum();
+//        String transDate = NumFormatUtil.getDateDetail();
+//        BigDecimal transAmt = getTotalMoney(list);
+//        return new SjcSubtotal(
+//                transOrderCode,
+//                transDate,
+//                TransType.NORMAL,
+//                transAmt
+//        );
+//    }
 
     private void initViews() {
         mListView = findViewById(R.id.list_fntotal);
@@ -245,13 +234,13 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         fntotalpay.setText(R.string.zhifu);
     }
 
-    /**
-     * 初始化ListView适配器
-     */
-    private void initAdapter() {
-        mAdapter = new SjcDetailAdapter(fnList, this);
-        mListView.setAdapter(mAdapter);
-    }
+//    /**
+//     * 初始化ListView适配器
+//     */
+//    private void initAdapter() {
+//        mAdapter = new SjcDetailAdapter(fnList, this);
+//        mListView.setAdapter(mAdapter);
+//    }
 
     private void initData() {
         btnList.add(totalpageButton_f1);
@@ -267,11 +256,11 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         Intent intent = getIntent();
         int SUM_ID = intent.getIntExtra("Customer", 1);
         showSelectedDetails(SUM_ID);
-        for (int i = 0; i < CacheHelper.basicBtnText.length; i++) {
-            int contentId = CacheHelper.basicBtnText[i];
-            Button btn = btnList.get(i);
-            btn.setText(getResources().getString(contentId));
-        }
+//        for (int i = 0; i < CacheHelper.basicBtnText.length; i++) {
+//            int contentId = CacheHelper.basicBtnText[i];
+//            Button btn = btnList.get(i);
+//            btn.setText(getResources().getString(contentId));
+//        }
     }
 
     /**
@@ -290,32 +279,32 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
      * 累计1累计2累计3累计4点击刷新
      */
     protected void showSelectedDetails(int flag) {
-        totalAssign(flag);
+//        totalAssign(flag);
         totalpageButton_change(flag);
         FN_FLAG = flag;
     }
 
-    /**
-     * 控制客户总价和笔数的方法
-     */
-    private void totalAssign(int fn) {
-        switch (fn) {
-            case 1:
-                fnList = CacheHelper.Detail_1;
-                break;
-            case 2:
-                fnList = CacheHelper.Detail_2;
-                break;
-            case 3:
-                fnList = CacheHelper.Detail_3;
-                break;
-            case 4:
-                fnList = CacheHelper.Detail_4;
-                break;
-        }
-        mAdapter.setNewData(fnList);
-        setTotalAmountShow();
-    }
+//    /**
+//     * 控制客户总价和笔数的方法
+//     */
+//    private void totalAssign(int fn) {
+//        switch (fn) {
+//            case 1:
+//                fnList = CacheHelper.Detail_1;
+//                break;
+//            case 2:
+//                fnList = CacheHelper.Detail_2;
+//                break;
+//            case 3:
+//                fnList = CacheHelper.Detail_3;
+//                break;
+//            case 4:
+//                fnList = CacheHelper.Detail_4;
+//                break;
+//        }
+//        mAdapter.setNewData(fnList);
+//        setTotalAmountShow();
+//    }
 
     /**
      * 切换客户背景色变换
@@ -352,10 +341,10 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
     }
 
     private void setTotalAmountShow() {
-        String total_Price = getTotalMoney(fnList).toString();
-        int total_Num = fnList.size();
-        totalpage_Num.setText(String.valueOf(total_Num));
-        totalpage_totalMoney.setText(total_Price);
+//        String total_Price = getTotalMoney(fnList).toString();
+//        int total_Num = fnList.size();
+//        totalpage_Num.setText(String.valueOf(total_Num));
+        totalpage_totalMoney.setText("888888");
     }
 
     /**
@@ -370,69 +359,42 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         return sum.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    /**
-     * 准备打印
-     */
-    private void keyEnter() {
-        if (fnList != null && !fnList.isEmpty()) {
-            OrderInfo info = toBean();
-            info.getSjcSubtotal().setPayStatus(2);
-            record(info);
-            print(info);
-            clearCustomer();
-            clearCurrFn();
-            backToMain();
-        } else if (fnList != null && !CacheHelper.orderCache.isEmpty()) {
-            createReprintShow();
-        }
-    }
+//    /**
+//     * 准备打印
+//     */
+//    private void keyEnter() {
+//        if (fnList != null && !fnList.isEmpty()) {
+//            OrderInfo msg = toBean();
+//            msg.getSjcSubtotal().setPayStatus(2);
+//            record(msg);
+//            print(msg);
+//            clearCustomer();
+//            clearCurrFn();
+//            backToMain();
+//        } else if (fnList != null && !CacheHelper.orderCache.isEmpty()) {
+//            createReprintShow();
+//        }
+//    }
 
     private void clearAtOnce() {
-        if (!fnList.isEmpty()) {
-            CustomTipDialog dialog = new CustomTipDialog(this);
-            dialog.show();
-            dialog.setTitle(R.string.test_clear_title);
-            dialog.setMessage(R.string.total_clear_detail_msg);
-            dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
-                @Override
-                public void onPositiveClick(CustomTipDialog dialog) {
-                    clearCurrFn();
-                    clearCustomer();
-                }
-            });
-        } else {
+//        if (!fnList.isEmpty()) {
+//            CustomTipDialog dialog = new CustomTipDialog(this);
+//            dialog.show();
+//            dialog.setTitle(R.string.test_clear_title);
+//            dialog.setMessage(R.string.total_clear_detail_msg);
+//            dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
+//                @Override
+//                public void onPositiveClick(CustomTipDialog dialog) {
+//                    clearCurrFn();
+//                    clearCustomer();
+//                }
+//            });
+//        } else {
             showMessage(R.string.total_clear_detail_error);
-        }
+//        }
     }
 
-    /**
-     * 将订单信息插入数据库
-     */
-    private void record(final OrderInfo info) {
-        AppExecutors.getInstance().insertIO().submit(new Runnable() {
-            @Override
-            public void run() {
-                SjcSubtotal subtotal = info.getSjcSubtotal();
-                List<SjcDetail> sjcDetails = info.getSjcDetails();
-                AppDatabase database = AppDatabase.getInstance();
-                database.beginTransaction();
-                try {
-                    database.getSubtotalDao().save(subtotal);
-                    database.getDetailDao().save(sjcDetails);
-                    database.setTransactionSuccessful();
-                    LogUtil.d("订单插入数据库成功！" + subtotal.getTransOrderCode());
-                } catch (Exception e) {
-                    LogUtil.e("订单插入数据库失败！" + e.getMessage());
-                } finally {
-                    database.endTransaction();
-//                    // 创建订单上传任务
-//                    Gson gson = new Gson();
-//                    String jsonDataStr = gson.toJson(info);
-//                    uploadOrder(jsonDataStr);
-                }
-            }
-        });
-    }
+
 
     /**
      * 创建并提交订单上传任务
@@ -455,17 +417,17 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         });
     }
 
-    /**
-     * 打印订单信息
-     */
-    private void print(final OrderInfo info) {
-        mCustomPrinter.printOrder(info, () -> {
-            LocalFileTag tag = CacheHelper.addOrderToCache(info);
-            if (!tag.isSuccess()) {
-                showMessage(tag.getContent());
-            }
-        });
-    }
+//    /**
+//     * 打印订单信息
+//     */
+//    private void print(final OrderInfo msg) {
+//        mCustomPrinter.printOrder(msg, () -> {
+//            LocalFileTag tag = CacheHelper.addOrderToCache(msg);
+//            if (!tag.success()) {
+//                showMessage(tag.getContent());
+//            }
+//        });
+//    }
 
     @Override
     public void onItemDeleteClick(final int position, String name, String number) {
@@ -480,7 +442,7 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
             @Override
             public void onPositiveClick(CustomTipDialog dialog) {
-                fnList.remove(position);
+//                fnList.remove(position);
                 mAdapter.notifyDataSetChanged();
                 setTotalAmountShow();
             }

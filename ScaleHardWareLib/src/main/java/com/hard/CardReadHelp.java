@@ -12,46 +12,29 @@ public class CardReadHelp {
     private Misc mMisc = Misc.newInstance();
 
     public CardReadHelp() {
-        this.timeout = 48 * 1000;
+        this.timeout = 40 * 48 * 1000;
     }
 
-    public void readCardId(ReturnValueCallback callback) {
-        this.setAutoReadBlockData(callback, new ReturnValueCallback() {
-
-            @Override
-            public void run(ReturnValue rv) {
-
-                if (rv.getIsSuccess()) {
-
-                    String remark = "读卡";
-
-                    readData(remark, new ReadDataListener() {
-
-                        @Override
-                        public void readDataCallback(ReturnValue result) {
-
-                            if (result.getIsSuccess()) {//读取成功
-
-                                mMisc.beepEx(100, 50, 3);
-
-                                Object tag = result.getTag();//卡号
-
-                                String userCardNum = (String) tag;
-
-                                ReturnValue rv = new ReturnValue(true, String.valueOf(1), userCardNum);
-                                callReturnValueCallback(rv);
-
-                            } else {
-                                mMisc.beepWarn();
-                                callReturnValueCallback(result);
-                            }
-                        }
-                    });
-                } else {
-                    callReturnValueCallback(rv);
-                }
+    public void readCardId(ReturnValueCallback callback, String portNum) {
+        this.setAutoReadBlockData(callback, rv -> {
+            if (rv.getIsSuccess()) {
+                String remark = "读卡";
+                readData(remark, result -> {
+                    if (result.getIsSuccess()) {//读取成功
+                        mMisc.beepEx(100, 50, 3);
+                        Object tag = result.getTag();//卡号
+                        String userCardNum = (String) tag;
+                        ReturnValue rv1 = new ReturnValue(true, String.valueOf(1), userCardNum);
+                        callReturnValueCallback(rv1);
+                    } else {
+                        mMisc.beepWarn();
+                        callReturnValueCallback(result);
+                    }
+                });
+            } else {
+                callReturnValueCallback(rv);
             }
-        });
+        }, portNum);
     }
 
     public void cancelReadCard(ReturnValueCallback callback) {
@@ -65,38 +48,28 @@ public class CardReadHelp {
     }
 
     // 初始化串口, 如果已经打开则先关闭
-    private String initSerialPortUtil() {
+    private String initSerialPortUtil(String portNum) {
         try {
             this.closeSerialPort();
-            this.mSerialPortUtil = new SerialPortUtil("/dev/ttymxc2", 9600);
+            this.mSerialPortUtil = new SerialPortUtil(portNum, 9600);
             return null;
         } catch (Exception e) {
             return "初始化串口失败:" + e.getMessage();
         }
     }
 
-    private void setAutoReadBlockData(ReturnValueCallback finalCallback, final ReturnValueCallback callback) {
+    private void setAutoReadBlockData(ReturnValueCallback finalCallback, final ReturnValueCallback callback, String portNum) {
 
-        hand(finalCallback, new Runnable() {
-
-            @Override
-            public void run() {
-
-                final String remark = "设置自动读卡模式";
-
-                if (!sendData(getSetAutoReadBlockData(), remark))
-                    return;
-
-                readData(remark, new ReadDataListener() {
-
-                    @Override
-                    public void readDataCallback(ReturnValue result) {
-                        callback.run(result);
-                    }
-                });
-
+        hand(finalCallback, () -> {
+            final String remark = "设置自动读卡模式";
+            if (!sendData(getSetAutoReadBlockData(), remark)) {
+                System.out.println("---sendData->false");
+                return;
+            } else {
+                System.out.println("---sendData->true");
+                readData(remark, callback::run);
             }
-        });
+        }, portNum);
     }
 
     private void closeSerialPort() {
@@ -106,14 +79,25 @@ public class CardReadHelp {
         }
     }
 
-    private void hand(ReturnValueCallback callback, final Runnable run) {
-        if (!this.isCanLaunchRequest(callback))
+    private void hand(ReturnValueCallback callback, final Runnable run, String portNum) {
+        if (!this.isCanLaunchRequest(callback, portNum)) {
+            System.out.println("-----isCanLaunchRequest--->false");
             return;
-        run.run();
+        } else {
+            System.out.println("-----isCanLaunchRequest--->true");
+            run.run();
+        }
     }
 
     private boolean sendData(byte[] data, String explain) {
         return this.sendData(data, explain, true);
+    }
+
+    // 发送数据
+    public boolean sendBytes(byte[] data) {
+        if (this.mSerialPortUtil.sendBuffer(data))
+            return true;
+        return false;
     }
 
     // 发送数据
@@ -133,47 +117,53 @@ public class CardReadHelp {
 
     private void readData(int tTimeout, final String explain, final ReadDataListener listener) {
 
-        this.mSerialPortUtil.readBuffer(tTimeout, new SerialPortUtil.OnDataReceiveListener() {
+        this.mSerialPortUtil.readBuffer(tTimeout, (type, buffer, size) -> {
+            String hex = getHexStr(buffer, size);
+            System.out.println("---------------hex----------------->" + hex);
+            ReturnValue result = new ReturnValue(true, "999", "收到数据:" + hex);
+            listener.readDataCallback(result);
 
-            @Override
-            public void onDataReceive(SerialPortUtil.DataReceType type, byte[] buffer, int size) {
+//            ReturnValue result;
+//            String faildStr = "";
+//            boolean flag = false;
+//            if (SerialPortUtil.DataReceType.timeout == type) {
+//                faildStr = "超时";
+//            } else if (SerialPortUtil.DataReceType.success != type) {
+//                faildStr = "失败";
+//            } else {
+//                flag = true;
+//            }
+//
+//
+//            System.out.println("---------------flag----------------->" + flag);
+//
+//
+//            if (!flag) {
+//                //105 原 等于 -2
+//                result = new ReturnValue(false, "105", "读取" + explain + "响应数据" + faildStr);
+//                System.out.println("---------------ReturnValue----------------->" + result.toString());
+//                listener.readDataCallback(result);
+//                return;
+//            }
 
-                ReturnValue result;
-                String faildStr = "";
-                boolean flag = false;
-                if (SerialPortUtil.DataReceType.timeout == type) {
-                    faildStr = "超时";
-                } else if (SerialPortUtil.DataReceType.success != type) {
-                    faildStr = "失败";
-                } else {
-                    flag = true;
-                }
-                if (!flag) {
-                    //105 原 等于 -2
-                    result = new ReturnValue(false, "105", "读取" + explain + "响应数据" + faildStr);
-                    listener.readDataCallback(result);
-                    return;
-                }
 
-                String hex = getHexStr(buffer, size);
-
-                if (isOk(buffer, size)) {
-
-                    byte[] cont = getContent(buffer, size);
-                    String strRes = getHexStr(cont, 0, cont.length).replace(" ", "");
-
-                    result = new ReturnValue(true, "0", strRes);
-
-                } else {
-                    result = new ReturnValue(false, "-1", "校验" + explain + "应答数据有误:" + hex);
-                }
-
-                listener.readDataCallback(result);
-            }
+//
+//            if (isOk(buffer, size)) {
+//
+//                byte[] cont = getContent(buffer, size);
+//                String strRes = getHexStr(cont, 0, cont.length).replace(" ", "");
+//
+//                result = new ReturnValue(true, "0", strRes);
+//
+//            } else {
+//                result = new ReturnValue(false, "-1", "校验" + explain + "应答数据有误:" + hex);
+//            }
+//            System.out.println("---------------result----------------->" + result);
+//            listener.readDataCallback(result);
         });
     }
 
-    private boolean isCanLaunchRequest(ReturnValueCallback callback) {
+    private boolean isCanLaunchRequest(ReturnValueCallback callback, String portNum) {
         if (this.getIsLock()) {
             if (callback != null) {
                 callback.run(new ReturnValue(false, "99", "请等待上次通讯请求完成"));
@@ -182,7 +172,7 @@ public class CardReadHelp {
         }
         this.setLock();
         this.returnValueCallback = callback;
-        String msg = this.initSerialPortUtil();
+        String msg = this.initSerialPortUtil(portNum);
         if (msg == null)
             return true;
         this.callReturnValueCallback(new ReturnValue(false, "-3", msg));

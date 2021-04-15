@@ -4,15 +4,11 @@ import com.seray.sjc.api.request.ActivateReq;
 import com.seray.sjc.api.request.BusinessReq;
 import com.seray.sjc.api.request.ControlQRPayReq;
 import com.seray.sjc.api.request.DownloadQRPayUrlReq;
+import com.seray.sjc.api.request.GetUserByICCardReq;
 import com.seray.sjc.api.request.ImageRecognizeReq;
 import com.seray.sjc.api.request.OpenMachineAlarmReq;
 import com.seray.sjc.api.request.TermHeartReq;
-import com.seray.sjc.api.result.ActivateRsp;
 import com.seray.sjc.api.result.ApiDataRsp;
-import com.seray.sjc.api.result.BusinessRsp;
-import com.seray.sjc.api.result.ControlQRPayResult;
-import com.seray.sjc.api.result.DownloadQRPayUrlRsp;
-import com.seray.sjc.api.result.RecognizeResult;
 import com.seray.sjc.entity.order.SjcSubtotal;
 import com.seray.sjc.entity.card.CardPayOrder;
 
@@ -20,6 +16,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Url;
@@ -31,26 +28,34 @@ import retrofit2.http.Url;
  * Describe：世界村数据对接
  */
 public interface SjcApi {
-
     /**
      * 设备激活
      *
      * @param activateReq 设备激活请求体
      * @return 设备基本参数
      */
-    @POST("term_service/activate/termActivate")
-    @Headers("Content-Type:application/json")
-    Call<ApiDataRsp<ActivateRsp>> activate(@Body ActivateReq activateReq);
+    @POST("/device_public/register_device")
+//    @Headers("Content-Type:application/json")
+    Call<ApiDataRsp> register_device(@Body ActivateReq activateReq);
 
     /**
-     * 获取业务数据，包含分类、商品、广告图、摊位和市场信息
+     * 心跳包
+     */
+    @POST("/public/heart_beat")
+    @Headers("Content-Type:application/json")
+    Call<Void> heart_beat(@Body TermHeartReq termHeartReq);
+
+
+
+    /**
+     * 获取IC卡的拥有者身份
      *
      * @param businessReq 获取业务数据请求体
      * @return 业务数据
      */
-    @POST("term_service/term/syncBaseInfo")
+    @POST("device/ic/get_user")
     @Headers("Content-Type:application/json")
-    Call<ApiDataRsp<BusinessRsp>> getBusinessData(@Body BusinessReq businessReq);
+    Call<ApiDataRsp> getUserByICCard(@Body GetUserByICCardReq businessReq);
 
     /**
      * 上传单笔交易数据
@@ -70,7 +75,7 @@ public interface SjcApi {
      */
     @POST("term_service/data/receiveTradeList")
     @Headers("Content-Type:application/json")
-    Call<ApiDataRsp<String[]>> postOrders(@Body List<SjcSubtotal> subtotals);
+    Call<ApiDataRsp> postOrders(@Body List<SjcSubtotal> subtotals);
 
     /**
      * 上传预付卡交易报文
@@ -90,40 +95,10 @@ public interface SjcApi {
      */
     @POST
     @Headers("Content-Type:application/json")
-    Call<ApiDataRsp<DownloadQRPayUrlRsp>> downloadQRPayUrl(
+    Call<ApiDataRsp> downloadQRPayUrl(
             @Url String url,
             @Body DownloadQRPayUrlReq downloadQRPayUrlReq);
 
-    /**
-     * 聚合支付的查询
-     *
-     * @param controlQRPayReq 请求体
-     * @return 支付结果
-     */
-    @POST
-    @Headers("Content-Type:application/json")
-    Call<ControlQRPayResult> queryQRPayResult(
-            @Url String url,
-            @Body ControlQRPayReq controlQRPayReq);
-
-    /**
-     * 聚合支付的取消
-     *
-     * @param controlQRPayReq 请求体
-     * @return 取消结果
-     */
-    @POST
-    @Headers("Content-Type:application/json")
-    Call<ControlQRPayResult> cancelQRPay(
-            @Url String url,
-            @Body ControlQRPayReq controlQRPayReq);
-
-    /**
-     * 心跳包
-     */
-    @POST("term_service/termHeartbeat/upload")
-    @Headers("Content-Type:application/json")
-    Call<Void> uploadTermHeat(@Body TermHeartReq termHeartReq);
 
     /**
      * 果蔬识别
@@ -133,7 +108,7 @@ public interface SjcApi {
      */
     @POST("term_service/image/recoginze")
     @Headers("Content-Type:application/json")
-    Call<ApiDataRsp<List<RecognizeResult>>> productImageRecognize(@Body ImageRecognizeReq request);
+    Call<ApiDataRsp> productImageRecognize(@Body ImageRecognizeReq request);
 
     /**
      * 拆解警告

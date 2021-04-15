@@ -105,7 +105,7 @@ public class SjcSubtotal implements Serializable {
         this.transType = transType;
         this.transAmt = transAmt;
         this.payType = BASE_CASH_PAY_TYPE;
-        this.termId = CacheHelper.TermId;
+//        this.termId = CacheHelper.device_id;
         this.deviceVersion = App.VersionName;
     }
 

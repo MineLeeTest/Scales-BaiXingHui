@@ -15,37 +15,10 @@ import java.util.Map;
  * E-mail：licheng@kedacom.com
  * Describe：世界村设备激活返回值
  */
+
 public class ActivateRsp implements Serializable {
-
-    public static final String TERM_ID = "termId";
-    public static final String TERM_CODE = "termCode";
-
     // 终端ID
-    @SerializedName("termId")
+    @SerializedName("device_dzc_id")
     @Expose
-    public String termId;
-
-    // 终端编码
-    @SerializedName("termCode")
-    @Expose
-    public String termCode;
-
-    @Override
-    public String toString() {
-        return "ActivateRsp{" +
-                "termId='" + termId + '\'' +
-                ", termCode='" + termCode + '\'' +
-                '}';
-    }
-
-    public Map<String, String> toMap() {
-        Map<String, String> data = new HashMap<>();
-        if (!TextUtils.isEmpty(termId)) {
-            data.put(TERM_ID, termId);
-        }
-        if (!TextUtils.isEmpty(termCode)) {
-            data.put(TERM_CODE, termCode);
-        }
-        return data;
-    }
+    public Integer device_id;
 }

@@ -22,10 +22,10 @@ public class BasicInfoFragment extends Fragment {
     }
 
     private void initView(View view) {
-        ((TextView) view.findViewById(R.id.basic_boothName)).setText(CacheHelper.BoothName);
-        ((TextView) view.findViewById(R.id.basic_boothId)).setText(CacheHelper.BoothId);
-        ((TextView) view.findViewById(R.id.basic_shopName)).setText(CacheHelper.ShopName);
-        ((TextView) view.findViewById(R.id.basic_marketName)).setText(CacheHelper.MarketName);
+//        ((TextView) view.findViewById(R.id.basic_boothName)).setText(CacheHelper.BoothName);
+//        ((TextView) view.findViewById(R.id.basic_boothId)).setText(CacheHelper.BoothId);
+//        ((TextView) view.findViewById(R.id.basic_shopName)).setText(CacheHelper.ShopName);
+        ((TextView) view.findViewById(R.id.basic_marketName)).setText(CacheHelper.company_name);
         ((TextView) view.findViewById(R.id.basic_localIp)).setText(HttpUtils.getLocalIpStr(getContext()));
     }
 }

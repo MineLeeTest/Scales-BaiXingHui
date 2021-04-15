@@ -30,22 +30,9 @@ public class HttpServicesFactory {
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .build();
-
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()
                 .create();
-
-        //获取设置的baseurl
-        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-        String webIp = configDao.get(SjcConfig.WEB_IP);
-        String webPort = configDao.get(SjcConfig.WEB_PORT);
-        String curBaseUrl = BuildConfig.HTTP_BASE_URL;
-        if (!TextUtils.isEmpty(webIp)) {
-            if (TextUtils.isEmpty(webPort)) {
-                curBaseUrl = "http://" + webIp + "/";
-            } else {
-                curBaseUrl = "http://" + webIp + ":" + webPort + "/";
-            }
-        }
+        String curBaseUrl ="http://8.136.212.105:8108";
         httpRetrofitFactory = new Retrofit.Builder()
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -66,17 +53,7 @@ public class HttpServicesFactory {
                     .create();
 
             //获取设置的baseurl
-            ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-            String webIp = configDao.get(SjcConfig.WEB_IP);
-            String webPort = configDao.get(SjcConfig.WEB_PORT);
-            String curBaseUrl = BuildConfig.HTTP_BASE_URL;
-            if (!TextUtils.isEmpty(webIp)) {
-                if (TextUtils.isEmpty(webPort)) {
-                    curBaseUrl = "http://" + webIp + "/";
-                } else {
-                    curBaseUrl = "http://" + webIp + ":" + webPort + "/";
-                }
-            }
+            String curBaseUrl ="http://8.136.212.105:8108";
             httpRetrofitFactory = new Retrofit.Builder()
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))

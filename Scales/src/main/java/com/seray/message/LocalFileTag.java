@@ -46,7 +46,7 @@ public class LocalFileTag {
 
     @Override
     public String toString() {
-        return "LocalFileTag [content=" + content + ", isSuccess=" + isSuccess + ", obj=" + obj +
+        return "LocalFileTag [content=" + content + ", success=" + isSuccess + ", obj=" + obj +
                 "]";
     }
 }

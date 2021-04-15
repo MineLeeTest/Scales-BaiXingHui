@@ -34,8 +34,8 @@ public class ProductShowConfigFragment extends BaseConfigFragment {
         ToggleButton nameBtn = (ToggleButton) parent.findViewById(R.id.config_save_name);
         ToggleButton priceBtn = (ToggleButton) parent.findViewById(R.id.config_save_price);
         ToggleButton selectedBtn = (ToggleButton) parent.findViewById(R.id.config_force_selected);
-        nameBtn.setChecked(CacheHelper.isHoldPlu);
-        priceBtn.setChecked(CacheHelper.isHoldPrice);
-        selectedBtn.setChecked(CacheHelper.isNoPluNoSum);
+//        nameBtn.setChecked(CacheHelper.isHoldPlu);
+//        priceBtn.setChecked(CacheHelper.isHoldPrice);
+//        selectedBtn.setChecked(CacheHelper.isNoPluNoSum);
     }
 }

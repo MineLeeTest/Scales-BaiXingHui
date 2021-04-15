@@ -28,7 +28,8 @@ public class BannerImageLoader extends ImageLoader {
             ScreenResource resource = (ScreenResource) path;
             String resourceType = resource.getResourceType();
             if (resourceType.equals("1")) {
-                String imageServerURL = CacheHelper.ResourceBaseUrl + resource.getResourceUrl();
+//                String imageServerURL = CacheHelper.ResourceBaseUrl + resource.getResourceUrl();
+                String imageServerURL = "";
                 Glide.with(context.getApplicationContext())
                         .load(imageServerURL)
                         .asBitmap()

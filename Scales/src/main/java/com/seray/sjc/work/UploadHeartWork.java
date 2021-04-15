@@ -32,12 +32,9 @@ public class UploadHeartWork extends Worker {
     public Result doWork() {
         try {
             TermHeartReq termHeartReq = new TermHeartReq();
-            termHeartReq.heartbeatTime = DateUtil.getDateStr(new Date(), "");
-            termHeartReq.termId = CacheHelper.TermId;
-            termHeartReq.deviceVersion = SystemUtils.getVersionName(context);
 
             HttpServicesFactory.getHttpServiceApi()
-                    .uploadTermHeat(termHeartReq)
+                    .heart_beat(termHeartReq)
                     .execute();
 
         } catch (Exception e) {

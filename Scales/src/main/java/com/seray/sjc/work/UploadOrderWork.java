@@ -69,7 +69,7 @@ public class UploadOrderWork extends Worker {
                 if (response.isSuccessful()) {
                     ApiDataRsp body = response.body();
                     if (body != null) {
-                        if (body.isSuccess()) {
+                        if (body.success) {
                             LogUtil.i("订单上传成功！" + transOrderCode);
                             // 更新本地订单上传状态
                             updateLocalOrder(transOrderCode);

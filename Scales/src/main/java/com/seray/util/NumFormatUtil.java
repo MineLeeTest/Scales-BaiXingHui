@@ -51,7 +51,7 @@ public class NumFormatUtil {
             CacheHelper.DATE_ID = 0;
         }
         CacheHelper.DATE_ID += 1;
-        return CacheHelper.TermCode + getDatePoint2() + getOneRandomNumber()
+        return CacheHelper.device_id + getDatePoint2() + getOneRandomNumber()
                 + String.format(Locale.CHINA, "%03d", CacheHelper.DATE_ID);
     }
 

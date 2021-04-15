@@ -1,14 +1,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/black"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical">
 
     <include
         layout="@layout/interfacepage"
         android:layout_width="match_parent"
         android:layout_height="0px"
-        android:layout_weight="31"/>
+        android:layout_weight="31" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                         android:includeFontPadding="false"
                         android:text="皮重"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                     <TextView
                         android:id="@+id/tare_unit"
@@ -55,7 +55,7 @@
                         android:includeFontPadding="false"
                         android:paddingRight="5dp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                 </LinearLayout>
 
@@ -70,7 +70,7 @@
                     android:paddingRight="5dp"
                     android:text="@string/base_weight"
                     android:textColor="@color/yellow"
-                    android:textSize="@dimen/measureTextSize"/>
+                    android:textSize="@dimen/measureTextSize" />
 
             </LinearLayout>
 
@@ -96,7 +96,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/grossweight"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                     <TextView
                         android:id="@+id/tarestring"
@@ -107,7 +107,7 @@
                         android:includeFontPadding="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/managerCategoryTextSize"
-                        android:visibility="invisible"/>
+                        android:visibility="invisible" />
 
                     <TextView
                         android:id="@+id/weight_unit"
@@ -117,7 +117,7 @@
                         android:includeFontPadding="false"
                         android:paddingRight="5dp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                 </LinearLayout>
 
@@ -132,7 +132,7 @@
                     android:paddingRight="5dp"
                     android:text="@string/base_weight"
                     android:textColor="@color/yellow"
-                    android:textSize="@dimen/measureTextSize"/>
+                    android:textSize="@dimen/measureTextSize" />
 
             </LinearLayout>
 
@@ -158,7 +158,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/scale_price"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                     <!--<TextView-->
                     <!--android:id="@+id/tv_memberprice"-->
@@ -179,7 +179,7 @@
                         android:includeFontPadding="false"
                         android:paddingRight="5dp"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                 </LinearLayout>
 
@@ -194,7 +194,7 @@
                     android:paddingRight="5dp"
                     android:text="@string/base_price"
                     android:textColor="@color/yellow"
-                    android:textSize="@dimen/measureTextSize"/>
+                    android:textSize="@dimen/measureTextSize" />
 
             </LinearLayout>
 
@@ -218,7 +218,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/scale_amount"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -228,7 +228,7 @@
                         android:paddingRight="5dp"
                         android:text="元"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                 </LinearLayout>
 
@@ -243,7 +243,7 @@
                     android:paddingRight="5dp"
                     android:text="@string/base_price"
                     android:textColor="@color/yellow"
-                    android:textSize="@dimen/measureTextSize"/>
+                    android:textSize="@dimen/measureTextSize" />
 
             </LinearLayout>
 
@@ -278,7 +278,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/scale_product_title"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/managerCategoryTextSize"/>
+                        android:textSize="@dimen/managerCategoryTextSize" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -297,7 +297,7 @@
                             android:gravity="bottom"
                             android:includeFontPadding="false"
                             android:textColor="@color/yellow"
-                            android:textSize="@dimen/managerCategoryTextSize"/>
+                            android:textSize="@dimen/managerCategoryTextSize" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -307,7 +307,7 @@
                             android:includeFontPadding="false"
                             android:text="@string/all"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/managerCategoryTextSize"/>
+                            android:textSize="@dimen/managerCategoryTextSize" />
 
                         <TextView
                             android:id="@+id/totalvegenum"
@@ -317,23 +317,22 @@
                             android:includeFontPadding="false"
                             android:text="@string/base_weight_by_piece"
                             android:textColor="@color/yellow"
-                            android:textSize="@dimen/managerCategoryTextSize"/>
+                            android:textSize="@dimen/managerCategoryTextSize" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="bottom"
                             android:includeFontPadding="false"
-                            android:text="@string/scale_piece"
+                            android:text="件"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/managerCategoryTextSize"/>
+                            android:textSize="@dimen/managerCategoryTextSize" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="3"
@@ -341,22 +340,38 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/vegenames"
+                        android:id="@+id/buyer_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/seller_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/buyer"
                         android:layout_width="0px"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="15dp"
+                        android:layout_marginStart="0dp"
                         android:layout_weight="4"
-                        android:autoSizeMaxTextSize="@dimen/functionButtonTextSize"
-                        android:autoSizeMinTextSize="@dimen/pluMinTextSize"
-                        android:autoSizeStepGranularity="2sp"
-                        android:autoSizeTextType="uniform"
                         android:gravity="center_vertical|start"
-                        android:textColor="#ffffff"
-                        android:textSize="@dimen/functionButtonTextSize"
-                        app:autoSizeMaxTextSize="@dimen/functionButtonTextSize"
-                        app:autoSizeMinTextSize="@dimen/pluMinTextSize"
-                        app:autoSizeStepGranularity="2sp"
-                        app:autoSizeTextType="uniform"/>
+                        android:text="卖家:\n请刷卡"
+                        android:textColor="@color/LightGreen"
+                        android:textSize="30sp" />
+
+                    <TextView
+                        android:id="@+id/seller"
+                        android:layout_width="0px"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="0dp"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical|start"
+                        android:text="买家:\n请刷卡"
+                        android:textColor="@color/LightPink"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -365,7 +380,7 @@
                         android:includeFontPadding="false"
                         android:text="@string/scale_account"
                         android:textColor="@color/yellow"
-                        android:textSize="@dimen/pluTextSize"/>
+                        android:textSize="@dimen/pluTextSize" />
 
                     <TextView
                         android:id="@+id/allvegeprice"
@@ -377,7 +392,7 @@
                         android:singleLine="true"
                         android:text="@string/base_price"
                         android:textColor="@color/yellow"
-                        android:textSize="@dimen/pluTextSize"/>
+                        android:textSize="@dimen/pluTextSize" />
 
                 </LinearLayout>
 
@@ -407,7 +422,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <include
                         android:id="@+id/flippart"
@@ -415,7 +430,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="3"
-                        android:visibility="visible"/>
+                        android:visibility="visible" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -434,7 +449,7 @@
                             android:text="累计"
                             android:textColor="@color/white"
                             android:textSize="@dimen/pluTextSize"
-                            android:visibility="visible"/>
+                            android:visibility="visible" />
 
                         <Button
                             android:id="@+id/printout"
@@ -444,11 +459,11 @@
                             android:layout_marginTop="3dp"
                             android:layout_weight="1"
                             android:background="@drawable/bg_btn_control"
-                            android:singleLine="true"
                             android:lines="2"
+                            android:singleLine="true"
                             android:text="现金"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/pluTextSize"/>
+                            android:textSize="@dimen/pluTextSize" />
 
                         <ImageView
                             android:id="@+id/pluorunm"
@@ -462,7 +477,7 @@
                             android:gravity="center"
                             android:padding="10dp"
                             android:scaleType="centerInside"
-                            android:src="@drawable/pinming"/>
+                            android:src="@drawable/pinming" />
 
                         <Button
                             android:id="@+id/pay"
@@ -475,7 +490,7 @@
                             android:gravity="center"
                             android:text="@string/zhifu"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/pluTextSize"/>
+                            android:textSize="@dimen/pluTextSize" />
 
                     </LinearLayout>
 
@@ -483,12 +498,12 @@
 
                 <SurfaceView
                     android:id="@+id/image_preview"
-                    android:alpha="0"
-                    android:background="#00ffffff"
                     android:layout_width="640px"
                     android:layout_height="480px"
                     android:layout_gravity="center"
-                    android:clickable="false"/>
+                    android:alpha="0"
+                    android:background="#00ffffff"
+                    android:clickable="false" />
 
             </FrameLayout>
 

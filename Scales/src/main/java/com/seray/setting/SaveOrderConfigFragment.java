@@ -33,6 +33,6 @@ public class SaveOrderConfigFragment extends BaseConfigFragment {
         ToggleButton forceRecordBtn = (ToggleButton) parent.findViewById(R.id.config_force_insert);
         forceRecordBtn.setChecked(CacheHelper.isOpenForceRecord);
         ToggleButton pictureBtn = (ToggleButton) parent.findViewById(R.id.config_force_picture);
-        pictureBtn.setChecked(CacheHelper.isOpenCamera);
+//        pictureBtn.setChecked(CacheHelper.isOpenCamera);
     }
 }

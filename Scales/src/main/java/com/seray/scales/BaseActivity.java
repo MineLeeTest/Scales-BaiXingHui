@@ -28,15 +28,12 @@ import com.seray.cache.CacheHelper;
 import com.seray.inter.DisplayController;
 import com.seray.message.LocalFileTag;
 import com.seray.message.QuantifyMessage;
-import com.seray.print.CustomPrinter;
 import com.seray.sjc.AppExecutors;
-import com.seray.sjc.entity.order.OrderInfo;
 import com.seray.sjc.entity.product.SjcProduct;
 import com.seray.sjc.report.NewReportActivity;
 import com.seray.util.FileHelp;
 import com.seray.util.LogUtil;
 import com.seray.util.NumFormatUtil;
-import com.seray.view.CustomTipDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -72,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     /**
      * 打印控制器
      */
-    public CustomPrinter mCustomPrinter = CustomPrinter.getInstance();
+//    public CustomPrinter mCustomPrinter = CustomPrinter.getInstance();
 
     protected Dialog mLoadingDialog;
     private AVLoadingIndicatorView mLoadingDialogImage;
@@ -101,6 +98,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         }
         mLoadingDialogMessageView.setText(message);
         mLoadingDialogImage.smoothToShow();
+        mLoadingDialog.onAttachedToWindow();
         mLoadingDialog.show();
     }
 
@@ -190,26 +188,26 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         mHandler.post(showRun);
     }
 
-    /**
-     * 创建重印对话框并缓存上笔订单信息
-     */
-    public void createReprintShow() {
-        final OrderInfo info = CacheHelper.getOrderInfoFromCache();
-        if (info == null) {
-            showMessage(R.string.no_last_order);
-            return;
-        }
-        CustomTipDialog dialog = new CustomTipDialog(this);
-        dialog.show();
-        dialog.setTitle(R.string.test_clear_title);
-        dialog.setMessage(R.string.reprint);
-        dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
-            @Override
-            public void onPositiveClick(CustomTipDialog dia) {
-                CustomPrinter.getInstance().printOrder(info);
-            }
-        });
-    }
+//    /**
+//     * 创建重印对话框并缓存上笔订单信息
+//     */
+//    public void createReprintShow() {
+//        final OrderInfo msg = CacheHelper.getOrderInfoFromCache();
+//        if (msg == null) {
+//            showMessage(R.string.no_last_order);
+//            return;
+//        }
+//        CustomTipDialog dialog = new CustomTipDialog(this);
+//        dialog.show();
+//        dialog.setTitle(R.string.test_clear_title);
+//        dialog.setMessage(R.string.reprint);
+//        dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
+//            @Override
+//            public void onPositiveClick(CustomTipDialog dia) {
+//                CustomPrinter.getInstance().printOrder(msg);
+//            }
+//        });
+//    }
 
     /**
      * 设置是否允许关闭Dialog
@@ -240,8 +238,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String userPwd = userPwdEdit.getText().toString();
-                        if (userPwd.equals(randomPwd)) {
+//                        String userPwd = userPwdEdit.getText().toString();
+//                        if (userPwd.equals(randomPwd)) {
                             canCloseDialog(dialog, true);
                             switch (flag) {
                                 case NumFormatUtil.PASSWORD_TO_UNIT:
@@ -274,12 +272,12 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
                                     startActivity(NewReportActivity.class);
                                     break;
                             }
-                        } else {
-                            canCloseDialog(dialog, false);
-                            showMessage(getResources().getString(R.string
-                                    .operation_usercode_wrong));
-                            userPwdEdit.setText("");
-                        }
+//                        } else {
+//                            canCloseDialog(dialog, false);
+//                            showMessage(getResources().getString(R.string
+//                                    .operation_usercode_wrong));
+//                            userPwdEdit.setText("");
+//                        }
                     }
                 }).setNegativeButton(R.string.reprint_cancel, new DialogInterface.OnClickListener() {
 

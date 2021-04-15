@@ -34,8 +34,8 @@ public class PrintOrderConfigFragment extends BaseConfigFragment {
         ToggleButton qrBtn = (ToggleButton) parent.findViewById(R.id.config_print_qr);
         ToggleButton priceBtn = (ToggleButton) parent.findViewById(R.id.config_print_price);
         ToggleButton logBtn = (ToggleButton) parent.findViewById(R.id.config_print_recognize);
-        qrBtn.setChecked(CacheHelper.isOpenPrintQR);
-        priceBtn.setChecked(CacheHelper.isPrintPrice);
-        logBtn.setChecked(CacheHelper.isPrintRecognizeLog);
+//        qrBtn.setChecked(CacheHelper.isOpenPrintQR);
+//        priceBtn.setChecked(CacheHelper.isPrintPrice);
+//        logBtn.setChecked(CacheHelper.isPrintRecognizeLog);
     }
 }
