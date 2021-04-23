@@ -4,8 +4,7 @@ import android.os.Environment;
 import android.util.Base64;
 
 import com.seray.message.LocalFileTag;
-import com.seray.sjc.entity.order.OrderInfo;
-import com.seray.sjc.entity.product.SjcProduct;
+import com.seray.sjc.entity.device.ProductADB;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -309,12 +308,12 @@ public class FileHelp {
     /**
      * 写入用户选择的商品信息
      */
-    public static LocalFileTag writeToProducts(List<SjcProduct> list) {
+    public static LocalFileTag writeToProducts(List<ProductADB> list) {
         LocalFileTag tag = null;
         if (!list.isEmpty()) {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < list.size(); i++) {
-                sb.append(list.get(i).getGoodsName()).append(";");
+                sb.append(list.get(i).getPro_name()).append(";");
             }
             String content = sb.toString();
             content = content.substring(0, content.length() - 1);
@@ -344,12 +343,12 @@ public class FileHelp {
         return readObject(new File(BUSSIREQ_PATH));
     }
 
-    /**
-     * 写入临时订单信息
-     */
-    public static LocalFileTag writeToOrderInfo(OrderInfo orderInfo) {
-        return writeObject(createNewFile(ORDER_INFO), orderInfo);
-    }
+//    /**
+//     * 写入临时订单信息
+//     */
+//    public static LocalFileTag writeToOrderInfo(OrderInfo orderInfo) {
+//        return writeObject(createNewFile(ORDER_INFO), orderInfo);
+//    }
 
     public static boolean deleteCache() {
         File file = new File(CACHE_DIR_PATH);

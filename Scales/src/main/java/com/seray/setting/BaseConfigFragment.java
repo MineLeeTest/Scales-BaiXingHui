@@ -10,7 +10,7 @@ import com.lzscale.scalelib.misclib.Misc;
 import com.seray.sjc.AppExecutors;
 import com.seray.sjc.db.AppDatabase;
 import com.seray.sjc.db.dao.ConfigDao;
-import com.seray.sjc.entity.device.Config;
+import com.seray.sjc.entity.device.ConfigADB;
 
 public abstract class BaseConfigFragment extends Fragment implements View.OnClickListener {
 
@@ -40,8 +40,8 @@ public abstract class BaseConfigFragment extends Fragment implements View.OnClic
         AppExecutors.getInstance().insertIO().submit(new Runnable() {
             @Override
             public void run() {
-                Config config = new Config(key, value);
-                mManager.save(config);
+                ConfigADB configADB = new ConfigADB(key, value);
+                mManager.save(configADB);
             }
         });
     }

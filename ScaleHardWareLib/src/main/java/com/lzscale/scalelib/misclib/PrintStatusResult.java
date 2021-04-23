@@ -15,7 +15,7 @@ public class PrintStatusResult {
     public String toString() {
         return "PrintStatusResult{" +
                 "code=" + code +
-                ", msg='" + msg + '\'' +
+                ", msgs='" + msg + '\'' +
                 '}';
     }
 }

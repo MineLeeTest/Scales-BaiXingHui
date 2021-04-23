@@ -1,13 +1,11 @@
 package com.seray.sjc.api.result;
 
-import android.text.TextUtils;
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+
+import lombok.Data;
 
 /**
  * Author：李程
@@ -15,10 +13,19 @@ import java.util.Map;
  * E-mail：licheng@kedacom.com
  * Describe：世界村设备激活返回值
  */
+@Data
+public class DeviceRegisterDTO implements Serializable {
 
-public class ActivateRsp implements Serializable {
-    // 终端ID
     @SerializedName("device_dzc_id")
     @Expose
-    public Integer device_id;
+    private Integer device_dzc_id;
+
+    @SerializedName("use_aes_key")
+    @Expose
+    private String use_aes_key;
+
+    @SerializedName("company_name")
+    @Expose
+    private String company_name;
+
 }

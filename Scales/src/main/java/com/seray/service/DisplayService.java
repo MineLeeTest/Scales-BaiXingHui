@@ -19,7 +19,6 @@ import com.seray.sjc.AppExecutors;
 import com.seray.sjc.SjcConfig;
 import com.seray.sjc.annotation.DisplayType;
 import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.db.dao.ScreenResourceDao;
 import com.seray.sjc.poster.DisplayPoster;
 import com.seray.sjc.poster.Instruction;
 import com.seray.util.LogUtil;
@@ -60,7 +59,6 @@ public class DisplayService extends Service {
                 String instruction = intent.getStringExtra(DisplayPoster.KEY_INSTRUCTION);
                 switch (instruction) {
                     case Instruction.DISPLAY_ON:
-
                         break;
                     case Instruction.DISPLAY_OFF:
                         stopSelf();
@@ -146,12 +144,12 @@ public class DisplayService extends Service {
                 .submit(new Runnable() {
                     @Override
                     public void run() {
-                        ScreenResourceDao dao = AppDatabase.getInstance().getScreenResourceDao();
-                        int countUsableResource = dao.countUsableResource();
-                        Message message = Message.obtain();
-                        message.what = 0;
-                        message.arg1 = countUsableResource;
-                        mHandler.sendMessage(message);
+//                        ScreenResourceDao dao = AppDatabase.getInstance().getScreenResourceDao();
+//                        int countUsableResource = dao.countUsableResource();
+//                        Message message = Message.obtain();
+//                        message.what = 0;
+//                        message.arg1 = countUsableResource;
+//                        mHandler.sendMessage(message);
                     }
                 });
     }

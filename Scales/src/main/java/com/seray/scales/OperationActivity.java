@@ -22,7 +22,7 @@ import com.seray.cache.AppConfig;
 import com.seray.cache.AppConfig.ScaleType;
 import com.seray.sjc.db.AppDatabase;
 import com.seray.sjc.db.dao.ConfigDao;
-import com.seray.sjc.entity.device.Config;
+import com.seray.sjc.entity.device.ConfigADB;
 import com.seray.util.NumFormatUtil;
 import com.seray.view.CustomTipDialog;
 import com.tscale.scalelib.jniscale.JNIScale;
@@ -503,7 +503,7 @@ public class OperationActivity extends BaseActivity {
 
     private void saveZeroCodeValue(String text) {
         ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-        Config config = new Config("ZeroCodeValue", text);
-        configDao.save(config);
+        ConfigADB configADB = new ConfigADB("ZeroCodeValue", text);
+        configDao.save(configADB);
     }
 }

@@ -5,10 +5,10 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.seray.instance.SjcDetail;
 import com.seray.scales.R;
 import com.seray.cache.CacheHelper;
 import com.seray.sjc.annotation.PriceType;
-import com.seray.sjc.entity.order.SjcDetail;
 
 import java.math.BigDecimal;
 import java.util.List;

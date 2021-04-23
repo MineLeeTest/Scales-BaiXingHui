@@ -1,5 +1,6 @@
 package com.seray.scales;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -29,8 +30,6 @@ import com.seray.inter.DisplayController;
 import com.seray.message.LocalFileTag;
 import com.seray.message.QuantifyMessage;
 import com.seray.sjc.AppExecutors;
-import com.seray.sjc.entity.product.SjcProduct;
-import com.seray.sjc.report.NewReportActivity;
 import com.seray.util.FileHelp;
 import com.seray.util.LogUtil;
 import com.seray.util.NumFormatUtil;
@@ -53,6 +52,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      */
     public static ExecutorService sqlQueryThread = AppExecutors.getInstance().queryIO();
 
+
+
     /**
      * 执行定时任务固定数量线程池
      */
@@ -74,10 +75,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     protected Dialog mLoadingDialog;
     private AVLoadingIndicatorView mLoadingDialogImage;
     private TextView mLoadingDialogMessageView;
-
-    public void showLoading() {
-        showLoading(null);
-    }
 
     public void showLoading(String message) {
         if (mLoadingDialog == null) {
@@ -116,6 +113,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     private Handler mHandler = new Handler();
 
     Runnable showRun = new Runnable() {
+        @SuppressLint("ShowToast")
         @Override
         public void run() {
             if (mToast == null) {
@@ -126,11 +124,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
             mToast.show();
         }
     };
-
-    /**
-     * 随机二道密码
-     */
-    private String randomPwd;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -188,27 +181,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         mHandler.post(showRun);
     }
 
-//    /**
-//     * 创建重印对话框并缓存上笔订单信息
-//     */
-//    public void createReprintShow() {
-//        final OrderInfo msg = CacheHelper.getOrderInfoFromCache();
-//        if (msg == null) {
-//            showMessage(R.string.no_last_order);
-//            return;
-//        }
-//        CustomTipDialog dialog = new CustomTipDialog(this);
-//        dialog.show();
-//        dialog.setTitle(R.string.test_clear_title);
-//        dialog.setMessage(R.string.reprint);
-//        dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
-//            @Override
-//            public void onPositiveClick(CustomTipDialog dia) {
-//                CustomPrinter.getInstance().printOrder(msg);
-//            }
-//        });
-//    }
-
     /**
      * 设置是否允许关闭Dialog
      */
@@ -226,7 +198,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      * 创建密码对话框并支持小键盘输入
      */
     public void openManageKey(final int flag, final Button btn) {
-        randomPwd = NumFormatUtil.getRandomPassword(flag);
         LayoutInflater factory = LayoutInflater.from(this);
         View view = factory.inflate(R.layout.user_dialog, null);
         final EditText userPwdEdit = (EditText) view.findViewById(R.id.password_edit);
@@ -269,7 +240,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
                                     startActivity(SettingActivity.class);
                                     break;
                                 case NumFormatUtil.PASSWORD_TO_REPORT:
-                                    startActivity(NewReportActivity.class);
+//                                    startActivity(NewReportActivity.class);
                                     break;
                             }
 //                        } else {
@@ -333,57 +304,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
 
     protected Intent getSkipIntent(Class<?> targetActivity) {
         return new Intent(getApplicationContext(), targetActivity);
-    }
-
-    /**
-     * 当前品名库与已记录的品名比对
-     */
-    public ArrayList<SjcProduct> checkSelectedData(List<SjcProduct> data) {
-
-        String[] content;
-
-        ArrayList<SjcProduct> selectedList = new ArrayList<>();
-
-        if (data == null || data.isEmpty()) {
-
-            return selectedList;
-        }
-
-        LocalFileTag tag = FileHelp.readSelectedProducts();
-
-        Object obj = tag.getObj();
-
-        String error = tag.getContent();
-
-        if (tag.isSuccess() && obj != null) {
-
-            if (obj instanceof String) {
-
-                String sb = (String) obj;
-
-                content = sb.split(";");
-
-                for (String aContent : content) {
-
-                    for (int j = 0; j < data.size(); j++) {
-
-                        String name = data.get(j).getGoodsName();
-
-                        if (aContent.equals(name)) {
-
-                            selectedList.add(data.get(j));
-
-                            break;
-                        }
-                    }
-                }
-            }
-        } else if (error != null) {
-
-            showMessage(error);
-
-        }
-        return selectedList;
     }
 
     @Override

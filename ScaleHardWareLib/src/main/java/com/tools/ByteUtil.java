@@ -30,17 +30,18 @@ public class ByteUtil {
 
     @SuppressLint("DefaultLocale")
     public static String getCardNo(byte[] bytes) {
-        if (bytes.length != 12) {
-            return "卡号长度有误：" + bytes.length;
+        try {
+            byte[] cardid = new byte[4];
+            System.arraycopy(bytes, 7, cardid, 0, 4);
+            cardid = reveseBytes(cardid);
+            String hexStr = getHexStr(cardid, 0, cardid.length, "");
+            System.out.println("IC卡号hex：" + hexStr);
+            long cardIDInt = Long.parseLong(hexStr, 16);
+            System.out.println("IC卡号long：" + cardIDInt);
+            return String.format("%010d", cardIDInt);
+        } catch (Exception e) {
+            return null;
         }
-        byte[] cardid = new byte[4];
-        System.arraycopy(bytes, 7, cardid, 0, 4);
-        cardid = reveseBytes(cardid);
-        String hexStr = getHexStr(cardid, 0, cardid.length, "");
-        System.out.println("IC卡号hex：" + hexStr);
-        long cardIDInt = Long.parseLong(hexStr, 16);
-        System.out.println("IC卡号long：" + cardIDInt);
-        return String.format("%010d", cardIDInt);
     }
 
 //    public static void main(String[] args) {

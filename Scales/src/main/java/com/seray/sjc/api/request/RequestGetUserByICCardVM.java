@@ -11,7 +11,7 @@ import java.io.Serializable;
  * E-mail：licheng@kedacom.com
  * Describe：世界村获取业务数据请求参数
  */
-public class GetUserByICCardReq implements Serializable {
+public class RequestGetUserByICCardVM implements Serializable {
 
     @SerializedName("sign")
     @Expose

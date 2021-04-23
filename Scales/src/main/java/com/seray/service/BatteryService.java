@@ -31,7 +31,7 @@ public class BatteryService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        batteryThread.scheduleAtFixedRate(mRunnable, 20, 30 * 60 , TimeUnit.SECONDS);
+        batteryThread.scheduleAtFixedRate(mRunnable, 20, 30, TimeUnit.SECONDS);
         return START_NOT_STICKY;
     }
 
@@ -46,8 +46,8 @@ public class BatteryService extends Service {
         return null;
     }
 
-    private class BatteryRunnable implements Runnable {
 
+    private class BatteryRunnable implements Runnable {
         @Override
         public void run() {
             int time = 0;

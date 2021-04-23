@@ -10,17 +10,18 @@ import android.telephony.TelephonyManager;
 import com.seray.cache.CacheHelper;
 import com.seray.instance.ResultData;
 import com.seray.scales.BuildConfig;
-import com.seray.sjc.api.request.ActivateReq;
-import com.seray.sjc.api.request.TermHeartReq;
+import com.seray.sjc.api.request.RequestHeartBeatVM;
+import com.seray.sjc.api.request.RequestRegisterVM;
 
-import java.util.UUID;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
 
 public class HardwareNetwork {
     @SuppressLint("HardwareIds")
     public static ResultData getSimData(Context context) {
 
         ResultData resultData = new ResultData("5101", "获取硬件联网信息！", "");
-        ActivateReq activateReq = new ActivateReq();
+        RequestRegisterVM requestRegisterVM = new RequestRegisterVM();
         try {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
@@ -92,7 +93,7 @@ public class HardwareNetwork {
             String tel = tm.getLine1Number();
             sb.append("@tel=").append(tel);
             String imei = tm.getSimSerialNumber();//手机ID
-            activateReq.dzc_imei = imei;
+            requestRegisterVM.setDzc_imei(imei);
             sb.append("@imei=").append(imei);
             int simState = tm.getSimState();
             sb.append("@simState=").append(simState);
@@ -102,10 +103,10 @@ public class HardwareNetwork {
             if (null == imsi) {
                 return resultData.setRetMsg(resultData, "5103", "手机卡不存在！");
             }
-            activateReq.sim_imsi = imsi;
-            activateReq.company_id = CacheHelper.company_id;
-            activateReq.app_version = BuildConfig.VERSION_NAME;
-            resultData.setTrueMsg(activateReq);
+            requestRegisterVM.setSim_imsi(imsi);
+            requestRegisterVM.setCompany_id(CacheHelper.company_id);
+            requestRegisterVM.setApp_version(BuildConfig.VERSION_NAME);
+            resultData.setTrueMsg(requestRegisterVM);
 
         } catch (Exception e) {
             resultData.setRetMsg("51044", "获取硬件信息失败！");
@@ -116,7 +117,7 @@ public class HardwareNetwork {
     @SuppressLint("HardwareIds")
     public static ResultData getHeartBeatReq(Context context) {
         ResultData resultData = new ResultData("5101", "获取电子秤信息！", "");
-        TermHeartReq heartReq = new TermHeartReq();
+        RequestHeartBeatVM heartReq = new RequestHeartBeatVM();
         try {
             TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
             if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED
@@ -129,12 +130,13 @@ public class HardwareNetwork {
             if (null == imsi) {
                 return resultData.setRetMsg(resultData, "5103", "手机卡不存在！");
             }
-            heartReq.sim_imsi = imsi;
-            heartReq.dzc_imei = tm.getSimSerialNumber();//手机ID
-            heartReq.device_dzc_id = CacheHelper.device_id;
-            heartReq.app_version = BuildConfig.VERSION_NAME;
-            heartReq.info = CacheHelper.getConfigMapString();
-            heartReq.company_id = CacheHelper.company_id;
+            heartReq.setSim_imsi(imsi);
+            heartReq.setDzc_imei(tm.getSimSerialNumber());//手机ID
+            heartReq.setDevice_dzc_id(CacheHelper.device_id);
+            heartReq.setApp_version(BuildConfig.VERSION_NAME);
+            heartReq.setInfo(CacheHelper.getConfigMapString());
+            heartReq.setCompany_id(CacheHelper.company_id);
+            heartReq.setApp_data(NumberUtil.isNumber(CacheHelper.data_version) ? CacheHelper.data_version : "0");
             resultData.setTrueMsg(heartReq);
         } catch (Exception e) {
             resultData.setRetMsg("51044", "获取硬件信息失败！");

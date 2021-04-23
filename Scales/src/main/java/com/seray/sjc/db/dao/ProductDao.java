@@ -6,6 +6,7 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
 import com.seray.sjc.entity.device.ConfigADB;
+import com.seray.sjc.entity.device.ProductADB;
 
 import java.util.List;
 
@@ -16,16 +17,16 @@ import java.util.List;
  * Describe：
  */
 @Dao
-public interface ConfigDao {
+public interface ProductDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void save(ConfigADB configADB);
+    void save(ProductADB productADB);
 
-    @Query("SELECT * FROM " + ConfigADB.TABLE_NAME)
-    List<ConfigADB> loadAll();
+    @Query("SELECT * FROM " + ProductADB.TABLE_NAME)
+    List<ProductADB> loadAll();
 
-    @Query("SELECT 'configValue' FROM " + ConfigADB.TABLE_NAME + " WHERE 'configKey' =:configKey LIMIT 1")
-    String get(String configKey);
+    @Query("SELECT * FROM " + ProductADB.TABLE_NAME + " WHERE  'product_id' =:product_id")
+    ProductADB findByID(Integer product_id);
 
     @Query("DELETE FROM " + ConfigADB.TABLE_NAME)
     void delete();

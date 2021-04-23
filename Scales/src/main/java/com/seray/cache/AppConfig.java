@@ -4,7 +4,7 @@ import android.text.TextUtils;
 
 import com.seray.sjc.db.AppDatabase;
 import com.seray.sjc.db.dao.ConfigDao;
-import com.seray.sjc.entity.device.Config;
+import com.seray.sjc.entity.device.ConfigADB;
 import com.seray.util.NumFormatUtil;
 
 /**
@@ -44,18 +44,18 @@ public class AppConfig {
      */
     private static ScaleType getScaleTypeFromDb() {
         ScaleType st = ScaleType.SR200;
-        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-        String result = configDao.get("ScaleType");
-        if (TextUtils.isEmpty(result)) {
-            return st;
-        } else if (NumFormatUtil.isNumeric(result)) {
-            int t = Integer.parseInt(result);
-            if (t == 1) {
-                st = ScaleType.T200;
-            }
-        } else {
-            return st;
-        }
+//        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
+//        String result = configDao.get("ScaleType");
+//        if (TextUtils.isEmpty(result)) {
+//            return st;
+//        } else if (NumFormatUtil.isNumeric(result)) {
+//            int t = Integer.parseInt(result);
+//            if (t == 1) {
+//                st = ScaleType.T200;
+//            }
+//        } else {
+//            return st;
+//        }
         return st;
     }
 
@@ -72,8 +72,8 @@ public class AppConfig {
             value = "2";
         }
         ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-        Config config = new Config("ScaleType", value);
-        configDao.save(config);
+        ConfigADB configADB = new ConfigADB("ScaleType", value);
+        configDao.save(configADB);
     }
 
     /**

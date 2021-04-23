@@ -9,18 +9,17 @@ import com.seray.cache.CacheHelper;
 import com.seray.instance.ResultData;
 import com.seray.sjc.api.SjcApi;
 import com.seray.sjc.api.net.HttpServicesFactory;
-import com.seray.sjc.api.request.ActivateReq;
-import com.seray.sjc.api.result.ActivateRsp;
+import com.seray.sjc.api.request.RequestRegisterVM;
+import com.seray.sjc.api.result.DeviceRegisterDTO;
 import com.seray.sjc.api.result.ApiDataRsp;
-import com.seray.sjc.work.UploadHeartWork;
+import com.seray.sjc.api.result.ProductDZCDTO;
+import com.seray.sjc.db.AppDatabase;
+import com.seray.sjc.entity.device.ProductADB;
+import com.seray.util.AESTools;
 import com.seray.util.HardwareNetwork;
 import com.seray.view.CustomTipDialog;
 
-import java.util.concurrent.TimeUnit;
-
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +27,6 @@ import retrofit2.Response;
 
 public class StartActivity extends BaseActivity implements View.OnClickListener {
     Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +34,6 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         context = this.getBaseContext();
         //读取配置文件数据
         CacheHelper.prepareCacheData();
-        System.out.println(CacheHelper.device_id + "--------CacheHelper.company_name----" + CacheHelper.company_name);
         //没有注册过
         if (!CacheHelper.isDeviceRegistered()) {
             //提交注册信息
@@ -49,7 +46,6 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
 
     //已经注册过则进入交易界面
     private void registed() {
-        startPeriodWork();
         startActivity(ScaleActivity.class);
         StartActivity.this.finish();
     }
@@ -62,49 +58,47 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         ResultData resultData = HardwareNetwork.getSimData(context);
         if (!resultData.isSuccess()) {
             showLoading(resultData.getCode() + "-" + resultData.getMsg());
+            return;
         }
-        ActivateReq activateReq = (ActivateReq) resultData.getMsg();
-
-        System.out.println("resultData----------->" + resultData.toString());
+        RequestRegisterVM requestRegisterVM = (RequestRegisterVM) resultData.getMsg();
         //发起注册请求
         showLoading("激活中,请稍后.......");
         SjcApi sjcApi = HttpServicesFactory.getHttpServiceApi();
-        Call<ApiDataRsp> request = sjcApi.register_device(activateReq);
-        System.out.println("request().url()---------->" + request.request().url());
-        request.enqueue(new Callback<ApiDataRsp>() {
+        Call<ApiDataRsp<DeviceRegisterDTO>> request = sjcApi.register_device(requestRegisterVM);
+        request.enqueue(new Callback<ApiDataRsp<DeviceRegisterDTO>>() {
             @Override
-            public void onResponse(Call<ApiDataRsp> call, Response<ApiDataRsp> response) {
+            public void onResponse(Call<ApiDataRsp<DeviceRegisterDTO>> call, Response<ApiDataRsp<DeviceRegisterDTO>> response) {
                 dismissLoading();
-                System.out.println("----isSuccessful----->" + response.isSuccessful());
-                if (response.isSuccessful()) {
-                    ApiDataRsp apiDataRsp = response.body();
-                    if (apiDataRsp != null) {
-                        System.out.println("----ActivateRsp----->" + apiDataRsp.toString());
-                        if (apiDataRsp.success) {
-                            if (CacheHelper.deviceRegistered((ActivateRsp) apiDataRsp.msg)) {
-                                registed();
-                            } else {
-                                showMessage("将注册信息存储到本地失败！");
-                            }
-                        } else {
-                            showMessage(apiDataRsp.code + "-" + apiDataRsp.errorMsg);
-                        }
-                    } else {
-                        showMessage("请求返回的body为null");
-                    }
-                } else {
+                if (!response.isSuccessful()) {
                     showMessage("请求失败：" + response.toString());
+                    return;
+                }
+
+                ApiDataRsp apiDataRsp = response.body();
+                if (apiDataRsp == null) {
+                    showMessage("请求返回的body为null");
+                    return;
+                }
+
+                if (!apiDataRsp.getSuccess()) {
+                    showMessage(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
+                    return;
+                }
+
+                if (CacheHelper.deviceRegistered((DeviceRegisterDTO) apiDataRsp.getMsgs())) {
+                    showMessage("将注册信息存储到本地失败！");
+                    return;
                 }
             }
 
             @Override
-            public void onFailure(Call<ApiDataRsp> call, Throwable t) {
+            public void onFailure(Call<ApiDataRsp<DeviceRegisterDTO>> call, Throwable t) {
                 dismissLoading();
-
                 showMessage(TextUtils.isEmpty(t.getMessage()) ? "激活失败" : "激活失败::" + t.getMessage());
             }
         });
     }
+
 
 
     /**
@@ -129,34 +123,16 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
      */
     public void checkIsActivated(View view) {
         super.onClick(view);
-        registerNow();
+        //没有注册过
+        if (!CacheHelper.isDeviceRegistered()) {
+            //提交注册信息
+            registerNow();
+        } else {
+            //已经注册过则进入交易界面
+            registed();
+        }
     }
 
-    /**
-     * 周期性任务发起
-     */
-    private void startPeriodWork() {
-        // 周期性心跳包
-        PeriodicWorkRequest uploadheatRequest = new PeriodicWorkRequest
-                .Builder(UploadHeartWork.class, CacheHelper.HeartBeatTime, TimeUnit.SECONDS)
-                .build();
-        WorkManager.getInstance().enqueueUniquePeriodicWork("UploadHeartWork",
-                ExistingPeriodicWorkPolicy.REPLACE,
-                uploadheatRequest);
-    }
-
-//        //获取数据库
-//        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-//        List<Config> list = configDao.loadAll();
-//        for (Config config : list) {
-//            System.out.println(config.getConfigKey() + "---DB-->" + config.getConfigValue());
-//        }
-
-
-//        String aesKey = "C2ckCioYP0ygY9yPw55jVA==";
-//        ResultData resultData = new ResultData();
-//        resultData = AESTools.encrypt(resultData, aesKey, System.currentTimeMillis() + "");
-//        System.out.println("--------aes----->" + resultData.getMsg());
 
 }
 

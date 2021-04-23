@@ -16,7 +16,6 @@ import com.seray.scales.R;
 import com.seray.sjc.AppExecutors;
 import com.seray.sjc.SjcConfig;
 import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.db.dao.ScreenResourceDao;
 import com.seray.sjc.entity.device.ScreenResource;
 import com.seray.sjc.poster.SjcUpdatePoster;
 import com.seray.sjc.util.BannerImageLoader;
@@ -69,7 +68,7 @@ public class PicturePresentation extends BasePresentation {
 //                    pausePlayer();
                     break;
                 case SET_VIDEO_URL:
-//                    setVideoUrl(msg.obj.toString());
+//                    setVideoUrl(msgs.obj.toString());
 //                    startPlayer();
                     break;
             }
@@ -263,11 +262,11 @@ public class PicturePresentation extends BasePresentation {
         AppExecutors.getInstance().queryIO().submit(new Runnable() {
             @Override
             public void run() {
-                ScreenResourceDao screenResourceDao = AppDatabase.getInstance().getScreenResourceDao();
-                final List<ScreenResource> screenResources = screenResourceDao.loadPictures();
+//                ScreenResourceDao screenResourceDao = AppDatabase.getInstance().getScreenResourceDao();
+//                final List<ScreenResource> screenResources = screenResourceDao.loadPictures();
 //                List<ScreenResource> videos = screenResourceDao.loadVideos();
                 mData.clear();
-                mData.addAll(screenResources);
+//                mData.addAll(screenResources);
 
                 mHandler.sendEmptyMessage(0);
 

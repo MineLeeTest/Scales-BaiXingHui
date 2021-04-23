@@ -13,8 +13,7 @@ import android.widget.TextView;
 
 import com.seray.message.ClearOrderMsg;
 import com.seray.sjc.adapter.SjcDetailAdapter;
-import com.seray.sjc.entity.order.SjcDetail;
-import com.seray.sjc.work.UploadOrderWork;
+import com.seray.sjc.entity.device.ProductADB;
 import com.seray.view.CustomTipDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -350,10 +349,10 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
     /**
      * 获取某客户订单总价主方法
      */
-    private BigDecimal getTotalMoney(List<SjcDetail> list) {
+    private BigDecimal getTotalMoney(List<ProductADB> list) {
         BigDecimal sum = BigDecimal.ZERO;
         for (int i = 0; i < list.size(); i++) {
-            BigDecimal amount = list.get(i).getDealAmt();
+            BigDecimal amount = BigDecimal.valueOf(list.get(i).getPrice());
             sum = sum.add(amount);
         }
         return sum.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -364,10 +363,10 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
 //     */
 //    private void keyEnter() {
 //        if (fnList != null && !fnList.isEmpty()) {
-//            OrderInfo msg = toBean();
-//            msg.getSjcSubtotal().setPayStatus(2);
-//            record(msg);
-//            print(msg);
+//            OrderInfo msgs = toBean();
+//            msgs.getSjcSubtotal().setPayStatus(2);
+//            record(msgs);
+//            print(msgs);
 //            clearCustomer();
 //            clearCurrFn();
 //            backToMain();
@@ -390,10 +389,9 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
 //                }
 //            });
 //        } else {
-            showMessage(R.string.total_clear_detail_error);
+        showMessage(R.string.total_clear_detail_error);
 //        }
     }
-
 
 
     /**
@@ -402,27 +400,27 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
      * @param jsonDataStr 订单JSON字串
      */
     private void uploadOrder(final String jsonDataStr) {
-        mTotalHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                @SuppressLint("RestrictedApi")
-                Data inputData = new Data.Builder()
-                        .put(UploadOrderWork.JSON_DATA_KEY, jsonDataStr)
-                        .build();
-                OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(UploadOrderWork.class)
-                        .setInputData(inputData)
-                        .build();
-                WorkManager.getInstance().enqueue(request);
-            }
-        });
+//        mTotalHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                @SuppressLint("RestrictedApi")
+//                Data inputData = new Data.Builder()
+//                        .put(UploadOrderWork.JSON_DATA_KEY, jsonDataStr)
+//                        .build();
+//                OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(UploadOrderWork.class)
+//                        .setInputData(inputData)
+//                        .build();
+//                WorkManager.getInstance().enqueue(request);
+//            }
+//        });
     }
 
 //    /**
 //     * 打印订单信息
 //     */
-//    private void print(final OrderInfo msg) {
-//        mCustomPrinter.printOrder(msg, () -> {
-//            LocalFileTag tag = CacheHelper.addOrderToCache(msg);
+//    private void print(final OrderInfo msgs) {
+//        mCustomPrinter.printOrder(msgs, () -> {
+//            LocalFileTag tag = CacheHelper.addOrderToCache(msgs);
 //            if (!tag.success()) {
 //                showMessage(tag.getContent());
 //            }

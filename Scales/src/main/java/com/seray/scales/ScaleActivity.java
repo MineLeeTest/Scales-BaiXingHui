@@ -1,22 +1,16 @@
 package com.seray.scales;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,37 +18,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.decard.NDKMethod.BasicOper;
 import com.seray.cache.AppConfig;
 import com.seray.cache.CacheHelper;
+import com.seray.instance.ResultData;
 import com.seray.inter.BackDisplayBase;
 import com.seray.inter.LandBackDisplay;
 import com.seray.inter.TableBackDisplay;
 import com.seray.message.BatteryMsg;
-import com.seray.message.ClearOrderMsg;
-import com.seray.message.QuantifyMessage;
+import com.seray.message.HeartBeatMsg;
 import com.seray.service.BatteryService;
 import com.seray.service.DisplayService;
-import com.seray.sjc.SjcConfig;
+import com.seray.service.HeartBeatService;
 import com.seray.sjc.annotation.DisplayType;
-import com.seray.sjc.annotation.PriceType;
-import com.seray.sjc.annotation.TransType;
-import com.seray.sjc.api.SjcApi;
 import com.seray.sjc.api.net.HttpServicesFactory;
-import com.seray.sjc.api.net.LocalServer;
-import com.seray.sjc.api.request.GetUserByICCardReq;
+import com.seray.sjc.api.request.GetUserByCardNoVM;
 import com.seray.sjc.api.result.ApiDataRsp;
-import com.seray.sjc.api.result.GetUserByICCardRsp;
+import com.seray.sjc.api.result.ProductDZCDTO;
+import com.seray.sjc.api.result.UserVipCardDetailDTO;
 import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.db.dao.SjcProductDao;
-import com.seray.sjc.entity.order.OrderInfo;
-import com.seray.sjc.entity.order.SjcDetail;
-import com.seray.sjc.entity.order.SjcSubtotal;
-import com.seray.sjc.entity.product.SjcProduct;
-import com.seray.sjc.poster.DisplayPoster;
-import com.seray.sjc.poster.SjcUpdatePoster;
-import com.seray.sjc.util.CameraHelper;
-import com.seray.sjc.view.RecognizeProductDialog;
+import com.seray.sjc.db.dao.ProductDao;
+import com.seray.sjc.entity.device.ProductADB;
+import com.seray.util.AESTools;
 import com.seray.util.FileHelp;
 import com.seray.util.LogUtil;
 import com.seray.util.NumFormatUtil;
@@ -74,58 +58,85 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 
 /**
  * The type Scale activity.
  */
-public class ScaleActivity extends BaseActivity implements RecognizeProductDialog.OnRecognizeProductSelectListener, ICCardSerialPortUtil.OnDataReceiveListener {
+public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.OnDataReceiveListener {
 
-    private TextView mTimeView, mTvWeight, mTvUnitPrice, mTvSubtotal, mTvWeightType,
-            mTvWeightUnit, mTvTare, totalvegenum, allvegeprice, fnshow, buyer, seller;
-    private TextView mPriceUnitView, mTareTextView, mMaxUnitView, mTareUnitView;
-    private LinearLayout flippart, numberpart;
+    private TextView mTimeView,//日期时间
+            mTvTare,//商品的皮重
+            mTvWeight, //商品的重量
+            mTvUnitPrice, //商品单价
+            mTvSubtotal,//商品总价
+            tvProName,//商品名称
+            buyer,//买家
+            seller,//卖家
+            mMaxUnitView;//标题显示
+    private LinearLayout flippart;
     private ImageView mBatteryIv;
-    private LocalServer mLocalServer = null;
-    private List<SjcProduct> mProductList = new ArrayList<>();
-    //    private List<SjcDetail> Fn = CacheHelper.Detail_1;
+    private List<ProductADB> mProductList = new ArrayList<>();
     private ArrayList<Button> btnList = new ArrayList<>();
-    private BigDecimal BASIC_TARE = new BigDecimal("0.000");
+    private ProductADB proTradeNow = null;
+    private float currWeight = 0.0f, tareFloat = -1.0F, lastWeight = 0.0f, divisionValue = 0.02f;
+    private boolean isPlu = false, isByWeight = true;
 
+    private BigDecimal BASIC_TARE = new BigDecimal("0.000");
     private ScheduledExecutorService advertThread = Executors.newScheduledThreadPool(1);
     private ScaleHandler mScaleHandler = new ScaleHandler(new WeakReference<>(this));
-
     private ICCardHandler icCardHandler = new ICCardHandler(new WeakReference<>(this));
-
     private JNIScale mScale;
-
-    private SjcSubtotal mSubtotal;
-    private SjcDetail mDetail;
-
-    private NumFormatUtil mNumUtil = null;
+    private NumFormatUtil mNumUtil = NumFormatUtil.getInstance();
     private BackDisplayBase backDisplay = null;
-
-    private SjcProduct mSelectedProduct;
-
     private String priceRealValue = "";
-
     private int RECUR_FLAG = 1;
-    private float currWeight = 0.0f;
-    private float tareFloat = -1.0F;
-    private float lastWeight = 0.0f;
-    private float divisionValue = 0.02f;
 
-    private boolean camerIsEnable = true;
-    private boolean isDisplay = false;
-    private boolean isPlu = false;
-    private boolean isByWeight = true;
+    //展示商品列表
+    private void showPros() {
+        System.out.println("------CacheHelper.getConfigMapString()------->" + CacheHelper.getConfigMapString());
+        List<ProductADB> productADBList = CacheHelper.getPros();
+        if (productADBList == null || productADBList.size() < 1) {
+            showMessage("本地数据库中没有找到商品！");
+            return;
+        }
+        List<Button> btnList = new ArrayList<Button>();
+        for (int i = 0; i < flippart.getChildCount(); i++) {
+            View view = flippart.getChildAt(i);
+            if (view instanceof LinearLayout) {
+                LinearLayout ll = ((LinearLayout) view);
+                for (int m = 0; m < ll.getChildCount(); m++) {
+                    View btn = ll.getChildAt(m);
+                    if (btn instanceof Button) {
+                        btnList.add((Button) btn);
+                    }
 
-    private CameraHelper mCameraHelper;
+                }
+            }
+        }
+        System.out.println("--btnList.size()-->" + btnList.size());
+        System.out.println("--productADBList.size()-->" + productADBList.size());
+        for (int j = 0; j < productADBList.size(); j++) {
+            btnList.get(j).setText(productADBList.get(j).getPro_name());
+            btnList.get(j).setTag(productADBList.get(j));
+            btnList.get(j).setOnClickListener(new OnClickListener() {
+                @SuppressLint("SetTextI18n")
+                @Override
+                public void onClick(View v) {
+                    mMisc.beep();
+                    ProductADB productADB = (ProductADB) v.getTag();
+                    mTvUnitPrice.setText(productADB.getPrice() + "");
+                    tvProName.setText(productADB.getPro_name());
+                    //标记该商品已经被选中
+                    proTradeNow = productADB;
+                }
+            });
+        }
+
+    }
+
 
     private void lightScreenCyclicity() {
         float w = mScale.getFloatNet();
@@ -146,21 +157,21 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
             fW = CacheHelper.isOpenJin ? fW * 2 : fW;
             if (isOL()) {
                 if (tareFloat > 0) {
-                    mTareTextView.setText(String.format("(当前扣重：%s)", NumFormatUtil.df3.format(tare)));
-                    mTareTextView.setVisibility(View.VISIBLE);
-                    mTareTextView.setTextColor(Color.RED);
+                    mTvTare.setText(String.format("(当前扣重：%s)", NumFormatUtil.df3.format(tare)));
+                    mTvTare.setVisibility(View.VISIBLE);
+                    mTvTare.setTextColor(Color.RED);
                 } else {
-                    mTareTextView.setVisibility(View.INVISIBLE);
+                    mTvTare.setVisibility(View.INVISIBLE);
                 }
                 mTvWeight.setText(strNet);
             } else {
                 if (tareFloat > 0) {
                     fW -= tare;
-                    mTareTextView.setText(String.format("(当前扣重：%s)", NumFormatUtil.df3.format(tare)));
-                    mTareTextView.setVisibility(View.VISIBLE);
-                    mTareTextView.setTextColor(Color.RED);
+                    mTvTare.setText(String.format("(当前扣重：%s)", NumFormatUtil.df3.format(tare)));
+                    mTvTare.setVisibility(View.VISIBLE);
+                    mTvTare.setTextColor(Color.RED);
                 } else {
-                    mTareTextView.setVisibility(View.INVISIBLE);
+                    mTvTare.setVisibility(View.INVISIBLE);
                 }
                 mTvWeight.setText(NumFormatUtil.df3.format(fW));
             }
@@ -211,35 +222,131 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+        stopService(getSkipIntent(BatteryService.class));
+        stopService(getSkipIntent(HeartBeatService.class));
+        stopService(getSkipIntent(DisplayService.class));
+
+        advertThread.shutdownNow();
+        timerThreads.shutdownNow();
+        mScaleHandler.removeCallbacksAndMessages(null);
+        mController.cleanPresentations();
+        mProductList.clear();
+        mProductList = null;
+        btnList.clear();
+        btnList = null;
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scalepage);
+
+        //注册订阅事件
         EventBus.getDefault().register(this);
+        //后台发送服务-电池电量订阅服务
+        startService(getSkipIntent(BatteryService.class));
+        //后台发送服务-心跳数据订阅服务
+        startService(getSkipIntent(HeartBeatService.class));
+
+        //初始化称重模块
+        initJNI();
+        //初始化控件
         initViews();
 
-        requestUSBPermission();
-
-        register();
-
-        initData();
-
-        initJNI();
-
-        initListeners();
-
-        timer();
-
-        startService(getSkipIntent(BatteryService.class));
-        System.out.println(CacheHelper.device_id + "--------CacheHelper.company_name----" + CacheHelper.company_name);
+        showPros();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveClearInfoFromPay(ClearOrderMsg msg) {
-        if (msg.getMsg().equals(ScaleActivity.class.getSimpleName())) {
-            clearProductInfo();
+    //初始化控件
+    private void initViews() {
+        mTimeView = findViewById(R.id.timer);//日期时间
+        mTimeView.setText(NumFormatUtil.getFormatDate());
+        mTvUnitPrice = findViewById(R.id.unitprice); //商品单价
+        mTvWeight = findViewById(R.id.weight);   //商品的重量
+        mTvTare = findViewById(R.id.tare);//商品的皮重
+        mTvSubtotal = findViewById(R.id.subtotal);  //商品总价
+        tvProName = findViewById(R.id.tvProName);//商品名称
+        buyer = findViewById(R.id.buyer);
+        seller = findViewById(R.id.seller);
+        flippart = findViewById(R.id.flippart);
+        mMaxUnitView = findViewById(R.id.maxUnit);
+        mBatteryIv = findViewById(R.id.battery);
+
+        //配置自动计算功能
+        mTvTare.addTextChangedListener(new TWShowBackDisplay(1)); //商品的皮重
+        mTvUnitPrice.addTextChangedListener(new TWShowBackDisplay(3));//商品单价
+        mTvSubtotal.addTextChangedListener(new TWShowBackDisplay(4));//商品总价
+
+
+        TextView versionView = findViewById(R.id.version);
+        String content = "V" + App.VersionName;
+        versionView.setText(content);
+    }
+
+    //初始化称重模块
+    private void initJNI() {
+        try {
+            mScale = JNIScale.getScale();
+            divisionValue = mScale.getDivisionValue();
+            boolean isDirExists = FileHelp.isSerayDirExists();
+            if (!isDirExists) {
+                App.getApplication().setScreenOffTime(60 * 60 * 1000);
+            }
+            if (AppConfig.isSR200()) {
+                // 开启广告后显示服务
+                Intent intent = new Intent(ScaleActivity.this, DisplayService.class);
+                startService(intent);
+                mController.showPresentation(DisplayType.DISPLAY_WEIGHT);
+                backDisplay = TableBackDisplay.getInstance(CacheHelper.isOpenBackDisplay, DisplayType.DISPLAY_WEIGHT);
+            } else {
+                backDisplay = LandBackDisplay.getInstance(CacheHelper.isOpenBackDisplay);
+            }
+            backDisplay.initBackDisplay();
+            if (CacheHelper.isOpenJin) {
+                backDisplay.showWeightType(2);
+            } else {
+                backDisplay.showWeightType(0);
+            }
+        } catch (Exception e) {
+            LogUtil.e(e.getMessage());
         }
     }
 
+    //接收电量消息 每分钟一次
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void receiveBattery(@NonNull BatteryMsg msg) {
+        LogUtil.i("--------BatteryMsg---->" + msg.toString());
+        //展示时间
+        mTimeView.setText(NumFormatUtil.getFormatDate());
+        //展示电量
+        int level = msg.getLevel();
+        switch (level) {
+            case 4:
+                mBatteryIv.setImageResource(R.drawable.four_electric);
+                break;
+            case 3:
+                mBatteryIv.setImageResource(R.drawable.three_electric);
+                break;
+            case 2:
+                mBatteryIv.setImageResource(R.drawable.two_electric);
+                break;
+            case 1:
+                mBatteryIv.setImageResource(R.drawable.one_electric);
+                break;
+            case 0:
+                mBatteryIv.setImageResource(R.drawable.need_charge);
+                break;
+        }
+    }
+
+    //接收心跳数据信息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void receiveHeartBeatMsg(HeartBeatMsg heartBeatMsg) {
+        LogUtil.i("--------HeartBeatMsg---->" + heartBeatMsg.toString());
+    }
 
     /**
      * 清除品名信息
@@ -247,19 +354,6 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
     void clearProductInfo() {
         priceRealValue = "";
         cleanTareFloat();
-        mScaleHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!isByWeight) {
-                    isByWeight = true;
-                    mTvWeightType.setText(R.string.base_weight_unit_by_scale);
-                    mTvWeightUnit.setTextColor(Color.WHITE);
-                    mTvWeightType.setTextColor(Color.WHITE);
-                    setDefaultUnitView();
-                    displayUnitShow();
-                }
-            }
-        });
     }
 
 
@@ -270,110 +364,22 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
         tareFloat = -1.0F;
     }
 
+
+    //
     private void changeWeightType() {
-        if (isByWeight) {
-            cleanTareFloat();
-            isByWeight = false;
-            mTvWeightUnit.setText(R.string.base_piece);
-            mTvWeightType.setText(R.string.base_weight_unit_by_piece);
-            mTvWeightUnit.setTextColor(Color.RED);
-            mTvWeightType.setTextColor(Color.RED);
-            mPriceUnitView.setText(R.string.base_unit_with_piece_1);
-            mTvWeight.setText(R.string.base_weight_by_piece);
-            mTareTextView.setVisibility(View.INVISIBLE);
-        } else {
-            isByWeight = true;
-            setDefaultUnitView();
-            mTvWeightType.setText(R.string.base_weight_unit_by_scale);
-            mTvWeightUnit.setTextColor(Color.WHITE);
-            mTvWeightType.setTextColor(Color.WHITE);
-        }
-        displayUnitShow();
+        isByWeight = true;
     }
 
-    protected void toggleIsWeight() {
-        if (isByWeight) {
-            setDefaultUnitView();
-            mTvWeightType.setText(R.string.base_weight_unit_by_scale);
-            mTvWeightUnit.setTextColor(Color.WHITE);
-            mTvWeightType.setTextColor(Color.WHITE);
-        } else {
-            cleanTareFloat();
-            mTvWeightUnit.setText(R.string.base_piece);
-            mTvWeightType.setText(R.string.base_weight_unit_by_piece);
-            mTvWeightUnit.setTextColor(Color.RED);
-            mTvWeightType.setTextColor(Color.RED);
-            mPriceUnitView.setText(R.string.base_unit_with_piece_1);
-            mTvWeight.setText(R.string.base_weight_by_piece);
-            mTareTextView.setVisibility(View.INVISIBLE);
-        }
-        displayUnitShow();
-    }
 
-    private BigDecimal getTotalMoney(List<SjcDetail> list) {
+    private BigDecimal getTotalMoney(List<ProductADB> list) {
         BigDecimal sum = new BigDecimal("0.00");
         for (int i = 0; i < list.size(); i++) {
-            BigDecimal amount = list.get(i).getDealAmt();
+            BigDecimal amount = BigDecimal.valueOf(list.get(i).getPrice());
             sum = sum.add(amount);
         }
         return sum;
     }
 
-    void setDefaultUnitView() {
-        if (CacheHelper.isOpenJin) {
-            mTareUnitView.setText(R.string.base_unit_type_2);
-            mTvWeightUnit.setText(R.string.base_unit_type_2);
-            mPriceUnitView.setText(R.string.base_unit_with_piece_3);
-        } else {
-            mTareUnitView.setText(R.string.base_unit_type_1);
-            mTvWeightUnit.setText(R.string.base_unit_type_1);
-            mPriceUnitView.setText(R.string.base_unit_with_piece_2);
-        }
-    }
-
-    private void displayUnitShow() {
-        if (AppConfig.isT200())
-            return;
-        if (CacheHelper.isOpenJin) {
-            backDisplay.showWeightType(isByWeight ? 2 : 1);
-        } else {
-            backDisplay.showWeightType(isByWeight ? 0 : 1);
-        }
-    }
-
-    //接收电量消息 每半小时一次
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveBattery(BatteryMsg msg) {
-        if (msg != null) {
-            int level = msg.getLevel();
-            switch (level) {
-                case 4:
-                    mBatteryIv.setImageResource(R.drawable.four_electric);
-                    break;
-                case 3:
-                    mBatteryIv.setImageResource(R.drawable.three_electric);
-                    break;
-                case 2:
-                    mBatteryIv.setImageResource(R.drawable.two_electric);
-                    break;
-                case 1:
-                    mBatteryIv.setImageResource(R.drawable.one_electric);
-                    break;
-                case 0:
-                    mBatteryIv.setImageResource(R.drawable.need_charge);
-                    break;
-            }
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveSelectPLU(List<SjcProduct> selected) {
-        if (!selected.isEmpty()) {
-            mProductList.clear();
-            mProductList.addAll(selected);
-            assign();
-        }
-    }
 
     private void assign() {
         int index = mProductList.size();
@@ -396,18 +402,12 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
             return;
         }
         for (int i = 0; i < value; i++) {
-            SjcProduct product = mProductList.get(i);
+            ProductADB product = mProductList.get(i);
             btnList.get(i).setTag(product);
-            btnList.get(i).setText(product.getGoodsName());
+            btnList.get(i).setText(product.getPro_name());
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveProductFromSearch(@NonNull SjcProduct product) {
-        mSelectedProduct = product;
-        isByWeight = mSelectedProduct.getPriceType().equals(PriceType.BY_PRICE);
-        showProductName();
-    }
 
     /**
      * 处理显示单价
@@ -438,21 +438,6 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
             temp += ".00";
         }
         return temp;
-    }
-
-    /**
-     * 显示单价 小计 默认保留0.00
-     */
-    private void showProductName() {
-        toggleIsWeight();
-        isPlu = true;
-//        vegenames.setText(mSelectedProduct.getGoodsName());
-        float price = mSelectedProduct.getSalePrice().floatValue();
-        if (CacheHelper.isOpenJin) {
-            price /= 2;
-        }
-        priceRealValue = String.valueOf(price);
-        displayPrice();
     }
 
     @Override
@@ -501,7 +486,6 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
                 undoLast();
                 return true;
             case KeyEvent.KEYCODE_DEL:// 语音
-
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_0:
                 unitPriceValu("0");
@@ -545,7 +529,7 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_ENTER: // 打印
 //                keyEnter();
-                clearTraders();
+//                clearTraders();
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_SUBTRACT:// 手动输入去皮重量
                 if (!isByWeight)
@@ -581,102 +565,13 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
                 || super.dispatchKeyEvent(event);
     }
 
-    public void clearTraders() {
-        icCardHandler.post(() -> {
-            System.out.println("---------clearTraders---------->");
-            seller.setText("卖家\n请刷卡");
-            buyer.setText("买家\n请刷卡");
-        });
-    }
-
-    /**
-     * 时间刷新监听器 每分钟自动监听 注意：API要求必须动态注册
-     */
-    private BroadcastReceiver timeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null && action.equals(Intent.ACTION_TIME_TICK)) {
-                mTimeView.setText(NumFormatUtil.getFormatDate());
-            }
-        }
-    };
-
-    /**
-     * 业务数据周期性自检更新回调通知
-     */
-    private BroadcastReceiver mBusinessDataUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null && action.equals(SjcConfig.ACTION_UPDATE_BUSINESS_DATA)) {
-                String notifyType = intent.getStringExtra(SjcUpdatePoster.KEY_INTENT);
-                LogUtil.d("BusinessDataUpdateReceiver", ScaleActivity.class.getSimpleName()
-                        + ": RECEIVE RELOAD MESSAGE : " + notifyType);
-                switch (notifyType) {
-                    case SjcConfig.UPDATE_PRODUCT:// 品名库更新
-                        clearProductInfo();
-                        updateViews();
-                        break;
-                    case SjcConfig.UPDATE_PAY_TYPE:// 支付方式更新
-//                        CacheHelper.preparePayTypeInfoList();
-                        break;
-                    case SjcConfig.UPDATE_DEVICE_INFO:// 设备信息更新
-//                        CacheHelper.prepareTermConfig();
-                        break;
-                    case SjcConfig.UPDATE_PARAM_INFO:// 下发参数配置更新
-//                        CacheHelper.prepareParamInfo();
-                        break;
-                }
-            }
-        }
-    };
-
-
-    private void requestUSBPermission() {
-        try {
-            BasicOper.dc_AUSB_ReqPermission(this);
-        } catch (UnsatisfiedLinkError e) {
-            LogUtil.e(e.getMessage());
-        }
-    }
-
-    public void register() {
-        IntentFilter timeFilter = new IntentFilter();
-        timeFilter.addAction(Intent.ACTION_TIME_TICK);
-        registerReceiver(timeReceiver, timeFilter);
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(SjcConfig.ACTION_UPDATE_BUSINESS_DATA);
-        LocalBroadcastManager.getInstance(this).registerReceiver(mBusinessDataUpdateReceiver, filter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mBusinessDataUpdateReceiver);
-        stopService(getSkipIntent(BatteryService.class));
-        stopService(getSkipIntent(DisplayService.class));
-        unregisterReceiver(timeReceiver);
-        if (mLocalServer != null && mLocalServer.wasStarted())
-            mLocalServer.stop();
-        mLocalServer = null;
-        advertThread.shutdownNow();
-        timerThreads.shutdownNow();
-        mScaleHandler.removeCallbacksAndMessages(null);
-//        CacheHelper.cleanLocalCache();
-        mController.cleanPresentations();
-        if (mCameraHelper != null) {
-            mCameraHelper.releaseCamera();
-        }
-        mProductList.clear();
-        mProductList = null;
-        btnList.clear();
-        btnList = null;
-//        Fn.clear();
-//        Fn = null;
-        android.os.Process.killProcess(android.os.Process.myPid());
-    }
+//    public void clearTraders() {
+//        icCardHandler.post(() -> {
+//            System.out.println("---------clearTraders---------->");
+//            seller.setText("卖家\n请刷卡");
+//            buyer.setText("买家\n请刷卡");
+//        });
+//    }
 
 
     @Override
@@ -711,328 +606,14 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
         }
     }
 
-//    /**
-//     * 准备打印
-//     */
-//    private void keyEnter() {
-//        if (!Fn.isEmpty()) {
-//            printTotalListOrder();
-//        } else if (isByWeight) {
-//            if (isStable() && initSubAndDetail()) {
-//                print();
-//            } else if (!CacheHelper.orderCache.isEmpty()) {
-//                createReprintShow();
-//            }
-//        } else if (initSubAndDetail()) {
-//            print();
-//        } else if (!CacheHelper.orderCache.isEmpty()) {
-//            createReprintShow();
-//        }
-//    }
-
-//    private void printTotalListOrder() {
-//        OrderInfo msg = toBean();
-//        mCustomPrinter.printOrder(msg, () -> {
-//            // 打印缓存
-//            preReprint(msg);
-//        });
-//        record(false, msg);
-//        if (!Fn.isEmpty()) {
-//            Fn.clear();
-//            recurFnContent(RECUR_FLAG);
-//        }
-//    }
-
-    /**
-     * 生成累计销售小计
-     */
-    private SjcSubtotal getSubtotal(List<SjcDetail> list) {
-        String transOrderCode = NumFormatUtil.createSerialNum();
-        String transDate = NumFormatUtil.getDateDetail();
-        BigDecimal transAmt = getTotalMoney(list);
-        return new SjcSubtotal(
-                transOrderCode,
-                transDate,
-                TransType.NORMAL,
-                transAmt
-        );
-    }
-
-//    /**
-//     * 初始化订单信息
-//     */
-//    private OrderInfo toBean() {
-//        SjcSubtotal subtotal = getSubtotal(Fn);
-//        subtotal.setPayStatus(2);
-//        for (SjcDetail detail : Fn) {
-//            detail.setTransOrderCode(subtotal.getTransOrderCode());
-//        }
-//        return new OrderInfo(subtotal, Fn);
-//    }
-
-//    /**
-//     * 打印
-//     */
-//    private void print() {
-//        // 支付成功
-//        mSubtotal.setPayStatus(2);
-//        OrderInfo msg = new OrderInfo(mSubtotal, mDetail);
-//        mCustomPrinter.printOrder(msg, () -> {
-//            // 打印缓存
-//            preReprint(msg);
-//
-//        });
-//        markRecord();
-//        record(false, msg);
-//    }
-
-//    /**
-//     * 储存重印准备
-//     */
-//    void preReprint(OrderInfo msg) {
-//        LocalFileTag tag = CacheHelper.addOrderToCache(msg);
-//        if (!tag.success()) {
-//            showMessage(tag.getContent());
-//        }
-//    }
-
-    private void initViews() {
-        mTimeView = (TextView) findViewById(R.id.timer);
-        mTimeView.setText(NumFormatUtil.getFormatDate());
-        mTareTextView = (TextView) findViewById(R.id.tarestring);
-        mTvSubtotal = (TextView) findViewById(R.id.subtotal);
-        mTvUnitPrice = (TextView) findViewById(R.id.unitprice);
-        mPriceUnitView = (TextView) findViewById(R.id.price_unit);
-        buyer = (TextView) findViewById(R.id.buyer);
-        seller = (TextView) findViewById(R.id.seller);
-        mTvWeight = (TextView) findViewById(R.id.weight);
-        mTvTare = (TextView) findViewById(R.id.tare);
-        mTvWeightUnit = (TextView) findViewById(R.id.weight_unit);
-        mTvWeightType = (TextView) findViewById(R.id.bypiece);
-        flippart = (LinearLayout) findViewById(R.id.flippart);
-        numberpart = (LinearLayout) findViewById(R.id.number);
-        totalvegenum = (TextView) findViewById(R.id.totalvegenum);
-        allvegeprice = (TextView) findViewById(R.id.allvegeprice);
-        fnshow = (TextView) findViewById(R.id.fnshow);
-        mMaxUnitView = (TextView) findViewById(R.id.maxUnit);
-        TextView versionView = (TextView) findViewById(R.id.version);
-        mTareUnitView = (TextView) findViewById(R.id.tare_unit);
-        mBatteryIv = (ImageView) findViewById(R.id.battery);
-        setPieceNum(mTvWeight);
-        setTextChanged(mTvUnitPrice, 3);
-        setTextChanged(mTvTare, 1);
-        setTextChanged(mTvSubtotal, 4);
-//        setTextChanged(vegenames, 2);
-        showVersionCode(versionView);
-    }
-
-    /**
-     * 初始化数据
-     */
-    private void initData() {
-        mNumUtil = NumFormatUtil.getInstance();
-        SurfaceView surfaceView = findViewById(R.id.image_preview);
-        surfaceView.setVisibility(View.GONE);
-        updateViews();
-        try {
-            mLocalServer = new LocalServer();
-            mLocalServer.start();
-        } catch (IOException e) {
-            LogUtil.e(e.getMessage());
-        }
-    }
-
-    private void initJNI() {
-        try {
-            mScale = JNIScale.getScale();
-            divisionValue = mScale.getDivisionValue();
-            boolean isDirExists = FileHelp.isSerayDirExists();
-            if (!isDirExists) {
-                App.getApplication().setScreenOffTime(60 * 60 * 1000);
-            }
-            if (AppConfig.isSR200()) {
-                // 开启广告后显示服务
-                Intent intent = new Intent(ScaleActivity.this, DisplayService.class);
-                startService(intent);
-                mController.showPresentation(DisplayType.DISPLAY_WEIGHT);
-                backDisplay = TableBackDisplay.getInstance(CacheHelper.isOpenBackDisplay, DisplayType.DISPLAY_WEIGHT);
-            } else {
-                backDisplay = LandBackDisplay.getInstance(CacheHelper.isOpenBackDisplay);
-            }
-            backDisplay.initBackDisplay();
-            if (CacheHelper.isOpenJin) {
-                backDisplay.showWeightType(2);
-            } else {
-                backDisplay.showWeightType(0);
-            }
-        } catch (Exception e) {
-            LogUtil.e(e.getMessage());
-        }
-    }
-
-    private void initListeners() {
-        Button num0 = (Button) findViewById(R.id.num0);
-        Button num1 = (Button) findViewById(R.id.num1);
-        Button num2 = (Button) findViewById(R.id.num2);
-        Button num3 = (Button) findViewById(R.id.num3);
-        Button num4 = (Button) findViewById(R.id.num4);
-        Button num5 = (Button) findViewById(R.id.num5);
-        Button num6 = (Button) findViewById(R.id.num6);
-        Button num7 = (Button) findViewById(R.id.num7);
-        Button num8 = (Button) findViewById(R.id.num8);
-        Button num9 = (Button) findViewById(R.id.num9);
-        Button PLU1 = (Button) findViewById(R.id.plu1);
-        Button PLU2 = (Button) findViewById(R.id.plu2);
-        Button PLU3 = (Button) findViewById(R.id.plu3);
-        Button PLU4 = (Button) findViewById(R.id.plu4);
-        Button PLU5 = (Button) findViewById(R.id.plu5);
-        Button PLU6 = (Button) findViewById(R.id.plu6);
-        Button PLU7 = (Button) findViewById(R.id.plu7);
-        Button PLU8 = (Button) findViewById(R.id.plu8);
-        Button PLU9 = (Button) findViewById(R.id.plu9);
-        Button PLU10 = (Button) findViewById(R.id.plu10);
-        Button PLU11 = (Button) findViewById(R.id.plu11);
-        MyPluListener myPluListener = new MyPluListener();
-        num0.setOnClickListener(myPluListener);
-        num1.setOnClickListener(myPluListener);
-        num2.setOnClickListener(myPluListener);
-        num3.setOnClickListener(myPluListener);
-        num4.setOnClickListener(myPluListener);
-        num5.setOnClickListener(myPluListener);
-        num6.setOnClickListener(myPluListener);
-        num7.setOnClickListener(myPluListener);
-        num8.setOnClickListener(myPluListener);
-        num9.setOnClickListener(myPluListener);
-        PLU1.setOnClickListener(myPluListener);
-        PLU2.setOnClickListener(myPluListener);
-        PLU3.setOnClickListener(myPluListener);
-        PLU4.setOnClickListener(myPluListener);
-        PLU5.setOnClickListener(myPluListener);
-        PLU6.setOnClickListener(myPluListener);
-        PLU7.setOnClickListener(myPluListener);
-        PLU8.setOnClickListener(myPluListener);
-        PLU9.setOnClickListener(myPluListener);
-        PLU10.setOnClickListener(myPluListener);
-        PLU11.setOnClickListener(myPluListener);
-        btnList.add(PLU1);
-        btnList.add(PLU2);
-        btnList.add(PLU3);
-        btnList.add(PLU4);
-        btnList.add(PLU5);
-        btnList.add(PLU6);
-        btnList.add(PLU7);
-        btnList.add(PLU8);
-        btnList.add(PLU9);
-        btnList.add(PLU10);
-        btnList.add(PLU11);
-        findViewById(R.id.printout).setOnClickListener(this);
-        findViewById(R.id.pay).setOnClickListener(this);
-        findViewById(R.id.scalelayout_fn).setOnClickListener(this);
-        findViewById(R.id.pluorunm).setOnClickListener(myPluListener);
-        findViewById(R.id.accuxbutton).setOnClickListener(myPluListener);
-        findViewById(R.id.printout).setOnClickListener(myPluListener);
-
-        findViewById(R.id.dotnum).setOnClickListener(myPluListener);
-        findViewById(R.id.numdele).setOnClickListener(myPluListener);
-        findViewById(R.id.morebutton).setOnClickListener(myPluListener);
-    }
-
-    // 定时器-超时则清空交易信息
-    private void timer() {
-        timerThreads.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                mScaleHandler.sendEmptyMessage(1);
-                try {
-                    if (isStable()) {
-                        currWeight = mScale.getFloatNet();
-                        String sumStr = mTvSubtotal.getText().toString().trim();
-                        boolean isWeighting = (currWeight > 5 * divisionValue) || !sumStr.equals("0.00");
-                        mController.setWeighting(isWeighting);
-                        boolean isWeightShowing = mController.isShowing(DisplayType.DISPLAY_WEIGHT);
-                        if (isDisplay && isWeighting && !isWeightShowing) {
-                            DisplayPoster.notifyDisplayAsyncShow(DisplayType.DISPLAY_WEIGHT);
-                        }
-                    }
-
-                } catch (Exception ex) {
-
-                }
-
-            }
-        }, 1500, 50, TimeUnit.MILLISECONDS);
-    }
-
-    private Runnable mImageRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (currWeight > divisionValue * 2) {
-                if (camerIsEnable) {
-                    camerIsEnable = false;
-                    mScaleHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mCameraHelper.getPreviewImage();
-                        }
-                    });
-                }
-            } else {
-                camerIsEnable = true;
-            }
-        }
-    };
-
-    public void setPieceNum(final TextView textView) {
-        textView.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!isByWeight) {
-                    if (s.toString().contains(".")) {
-                        s = s.toString().subSequence(0, s.toString().length() - 1);
-                        textView.setText(s);
-                    }
-                }
-                backDisplay.showWeight(s.toString());
-            }
-
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
-
-    // 单价变化监听器
-    public void setTextChanged(TextView tv, int flag) {
-        MyTextWatcher watcher = new MyTextWatcher(flag);
-        tv.addTextChangedListener(watcher);
-    }
-
-    private void showVersionCode(TextView tv) {
-        String content = "V" + App.VersionName;
-        if (tv != null) {
-            if (!AppConfig.isDeploy) {
-                content += "测试版";
-            }
-            tv.setText(content);
-        }
-    }
 
     private void updateViews() {
         sqlQueryThread.submit(new Runnable() {
-
             @Override
             public void run() {
-                SjcProductDao productDao = AppDatabase.getInstance().getProductDao();
+                ProductDao productDao = AppDatabase.getInstance().getProductDao();
                 mProductList = productDao.loadAll();
-                List<SjcProduct> result = checkSelectedData(mProductList);
+                List<ProductADB> result = mProductList;
                 if (!result.isEmpty()) {
                     mProductList.clear();
                     mProductList.addAll(result);
@@ -1040,50 +621,6 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
                 mScaleHandler.sendEmptyMessage(3);
             }
         });
-    }
-
-    /**
-     * 初始化订单信息
-     */
-    boolean initSubAndDetail() {
-        String priceString = mTvUnitPrice.getText().toString().trim();
-
-        if (!NumFormatUtil.isNumeric(priceString))
-            priceString = getString(R.string.base_price);
-
-        String weightString = mTvWeight.getText().toString().trim();
-        if (!NumFormatUtil.isNumeric(weightString))
-            weightString = getString(R.string.base_weight);
-
-        BigDecimal bigPrice = mNumUtil.getDecimalPrice(priceString);
-        BigDecimal bigLastW = mNumUtil.getDecimalNet(String.valueOf(lastWeight));
-        if (CacheHelper.isOpenJin && isByWeight) {
-            BigDecimal rate = new BigDecimal(2.0);
-            bigPrice = bigPrice.multiply(rate);
-        }
-
-        BigDecimal num = isByWeight ? bigLastW : mNumUtil.getDecimalPiece(weightString);
-        BigDecimal sum = mNumUtil.getDecimalSum(bigPrice, num);
-        Log.i("forceRecord", "weight = " + num.toString() + "| sum = " + sum.toString());
-//        if (sum.compareTo(BigDecimal.ZERO) > 0 && IsDisplaySum()) {
-        if (sum.compareTo(BigDecimal.ZERO) > 0) {
-            return true;
-        }
-        return false;
-    }
-
-    private void forceRecord() {
-        if (mSubtotal == null) {
-            Log.i("forceRecord", "强制记录数据失败！");
-            return;
-        }
-        mSubtotal.setTransType(TransType.FORCE_RECORD);
-        OrderInfo info = new OrderInfo(mSubtotal, mDetail);
-        Log.i("forceRecord", "强制记录数据订单生成成功！");
-        Log.i("forceRecord", "强制记录数据订单插入成功！");
-//        preReprint(msg);
-        Log.i("forceRecord", "强制记录数据订单打印缓存成功！");
-        showMessage("强制记录数据!");
     }
 
 
@@ -1236,28 +773,25 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
 
             BigDecimal transAmt = mNumUtil.getDecimalSum(bigPrice, number);
 
-            if (isCanAddUp(transAmt, number)) {
-                if (mSelectedProduct != null) {
-                    mDetail = SjcDetail.getSjcDetail("", mSelectedProduct);
-                } else {
-                    mDetail = SjcDetail.getSjcDetail("");
-                    mDetail.setPriceType(isByWeight ? PriceType.BY_PRICE : PriceType.BY_PIECE);
-                    mDetail.setSaleUnit(isByWeight ? "公斤" : "件");
-                    mDetail.setSalePrice(bigPrice);
-                }
-                mDetail.setDealPrice(bigPrice);
-                mDetail.setDealCnt(number);
-                mDetail.setDealAmt(transAmt);
-                mDetail.setDiscountAmt(BigDecimal.ZERO);
-                mDetail.setNetWeight(bigTare.compareTo(BigDecimal.ZERO) < 0 ? BASIC_TARE : bigTare);
-                clearProductInfo();
-            }
+//            if (isCanAddUp(transAmt, number)) {
+//                if (mSelectedProduct != null) {
+//                    mDetail = SjcDetail.getSjcDetail("", mSelectedProduct);
+//                } else {
+//                    mDetail = SjcDetail.getSjcDetail("");
+//                    mDetail.setPriceType(isByWeight ? PriceType.BY_PRICE : PriceType.BY_PIECE);
+//                    mDetail.setSaleUnit(isByWeight ? "公斤" : "件");
+//                    mDetail.setSalePrice(bigPrice);
+//                }
+//                mDetail.setDealPrice(bigPrice);
+//                mDetail.setDealCnt(number);
+//                mDetail.setDealAmt(transAmt);
+//                mDetail.setDiscountAmt(BigDecimal.ZERO);
+//                mDetail.setNetWeight(bigTare.compareTo(BigDecimal.ZERO) < 0 ? BASIC_TARE : bigTare);
+//                clearProductInfo();
+//            }
         }
     }
 
-    private boolean isCanAddUp(@NonNull BigDecimal amount, @NonNull BigDecimal weight) {
-        return weight.compareTo(BigDecimal.ZERO) > 0 && amount.compareTo(BigDecimal.ZERO) > 0;
-    }
 
     /**
      * 累加操作
@@ -1276,92 +810,52 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
 
     @Override
     protected void onResume() {
-        isDisplay = true;
-        setDefaultUnitView();
         mMaxUnitView.setText(String.format("%skg-%s", mScale.getMainUnitFull(), CacheHelper.device_id));
         super.onResume();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        isDisplay = false;
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveDisplayUnitChange(QuantifyMessage message) {
-        if (message == null)
-            return;
-        displayUnitShow();
-        float curTare = mScale.getFloatTare();
-        if (curTare != 0) {
-            if (message.isOpenJin())
-                curTare *= 2;
-            mTvTare.setText(NumFormatUtil.df3.format(curTare));
-        }
-    }
-
-    @Override
-    public void recognizeProductClick(int position, SjcProduct product) {
-        mSelectedProduct = product;
-        isByWeight = mSelectedProduct.getPriceType().equals(PriceType.BY_PRICE);
-        showProductName();
-    }
-
-
     @SuppressLint("SetTextI18n")
     @Override
     public void onICCardDataReceive(ICCardSerialPortUtil.DataReceType type, byte[] buffer, int size) {
+        Message message = new Message();
+        message.what = -1;
         if (ICCardSerialPortUtil.DataReceType.success == type) {
-            String cardId = ByteUtil.getCardNo(buffer);
-            System.out.println("----readBuffer()---有数据------>" + cardId);
-            icCardHandler.post(() -> {
-                GetUserByICCardReq getUserByICCardReq = new GetUserByICCardReq();
-                getUserByICCardReq.sign = cardId;
-                getUserByICCard(getUserByICCardReq);
-            });
+            if (buffer.length != 12) {
+                message.obj = "卡号长度有误：" + buffer.length;
+            }
+            String cardID = ByteUtil.getCardNo(buffer);
+            if (null == cardID) {
+                message.obj = "解析卡号失败！";
+            }
+            ResultData resultData = getUserByICCard(cardID);
+
         } else {
-            System.out.println("----readBuffer()---读取数据失败！------------");
+            message.obj = "读取卡号失败！";
+        }
+        icCardHandler.sendMessage(message);
+    }
+
+    private ResultData getUserByICCard(String cardID) {
+        ResultData resultData = new ResultData();
+        try {
+            GetUserByCardNoVM getUserByCardNoVM = new GetUserByCardNoVM();
+            resultData = AESTools.encrypt(resultData, CacheHelper.device_aes_key, System.currentTimeMillis() + "," + CacheHelper.device_id);
+            if (!resultData.isSuccess()) {
+                return resultData;
+            }
+            String sign = resultData.getMsg() + "";
+            getUserByCardNoVM.setCard_id(cardID);
+            Response<ApiDataRsp<List<UserVipCardDetailDTO>>> response = HttpServicesFactory.getHttpServiceApi().getuserbycardno(CacheHelper.device_id + "", sign, getUserByCardNoVM).execute();
+            if (response.isSuccessful()) {
+
+            }
+            return resultData;
+        } catch (Exception e) {
+//            return resultData.setRetMsg(resultData)
+            return resultData;
         }
     }
 
-    private void getUserByICCard(GetUserByICCardReq getUserByICCardReq) {
-        showLoading("正在获取IC卡信息......");
-        SjcApi sjcApi = HttpServicesFactory.getHttpServiceApi();
-//        Call<ApiDataRsp<GetUserByICCardRsp>> request = sjcApi.getUserByICCard(getUserByICCardReq);
-//        System.out.println("request.request().url()---------->" + request.request().url());
-//        request.request().headers();
-//        request.request().body();
-//        request.enqueue(new Callback<ApiDataRsp<GetUserByICCardRsp>>() {
-//            @Override
-//            public void onResponse(Call<ApiDataRsp<GetUserByICCardRsp>> call, Response<ApiDataRsp<GetUserByICCardRsp>> response) {
-//                dismissLoading();
-//                System.out.println("----isSuccessful----->" + response.isSuccessful());
-////                if (response.isSuccessful()) {
-////                    if ("2361948652".equals(getUserByICCardReq.sign)) {
-////                        buyer.setText("卖家:\n李飞龙");
-////                    }
-////                    if ("2361403932".equals(getUserByICCardReq.sign)) {
-////                        seller.setText("买家:张三\n100000.00");
-////                    }
-////                }
-//                onFailure(call, new Throwable());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ApiDataRsp<GetUserByICCardRsp>> call, Throwable t) {
-//                if ("2361948652".equals(getUserByICCardReq.sign)) {
-//                    buyer.setText("卖家:\n李飞龙");
-//                }
-//                if ("2361403932".equals(getUserByICCardReq.sign)) {
-//                    seller.setText("买家:张三\n100000.00");
-//                }
-//                System.out.println("---getUserByICCardReq.sign--------->" + getUserByICCardReq.sign);
-//
-//            }
-//
-//        });
-    }
 
     private static class ICCardHandler extends Handler {
         WeakReference<ScaleActivity> mWeakReference;
@@ -1374,15 +868,8 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ScaleActivity activity = mWeakReference.get();
-            if (activity != null) {
-                switch (msg.arg1) {
-                    case 1://买家
-                        activity.buyer.setText(msg.obj.toString());
-                        break;
-                    case 2://卖家
-                        activity.seller.setText(msg.obj.toString());
-                        break;
-                }
+            if (msg.what == -1) {
+                activity.showMessage(msg.obj.toString());
             }
         }
     }
@@ -1399,6 +886,7 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
             ScaleActivity activity = mWeakReference.get();
             if (activity != null) {
                 switch (msg.what) {
@@ -1414,11 +902,11 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
         }
     }
 
-    private class MyTextWatcher implements TextWatcher {
-
+    //在背面显示屏上显示单价、皮重、总价
+    private class TWShowBackDisplay implements TextWatcher {
         int flag;
 
-        MyTextWatcher(int flag) {
+        TWShowBackDisplay(int flag) {
             this.flag = flag;
         }
 
@@ -1435,113 +923,17 @@ public class ScaleActivity extends BaseActivity implements RecognizeProductDialo
         public void afterTextChanged(Editable s) {
             switch (flag) {
                 case 1:
-                    backDisplay.showTare(s.toString());
-                    break;
-                case 2:
-                    backDisplay.showProductName(s.toString());
+                    backDisplay.showTare(s.toString()); //商品的皮重
                     break;
                 case 3:
-                    backDisplay.showPrice(s.toString());
+                    backDisplay.showPrice(s.toString());//商品单价
                     break;
                 case 4:
-                    backDisplay.showAmount(s.toString());
+                    backDisplay.showAmount(s.toString());//商品总价
                     break;
             }
         }
     }
 
-    ICCardSerialPortUtil icCardSerialPortUtil = new ICCardSerialPortUtil();
 
-
-    private class MyPluListener implements OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            mMisc.beep();
-            switch (v.getId()) {
-                case R.id.plu1:
-                case R.id.plu2:
-                case R.id.plu3:
-                case R.id.plu4:
-                case R.id.plu5:
-                case R.id.plu6:
-                case R.id.plu7:
-                case R.id.plu8:
-                case R.id.plu9:
-                case R.id.plu10:
-
-                case R.id.plu11:
-                    Object obj = v.getTag();
-                    if (obj instanceof SjcProduct) {
-                        mSelectedProduct = (SjcProduct) obj;
-                        isByWeight = mSelectedProduct.getPriceType().equals(PriceType.BY_PRICE);
-                        showProductName();
-                    }
-                    break;
-
-
-                case R.id.accuxbutton:
-                    icCardSerialPortUtil.startRead(ScaleActivity.this);
-                    break;
-                case R.id.printout://todo 删除
-                    icCardSerialPortUtil.endRead();
-                    break;
-//                case R.id.pluorunm:
-//                    cardReadHelp3.readCardId(returnValueCallback,"/dev/ttymxc4");
-//                    break;
-//                case R.id.pay:
-//                    cardReadHelp4.readCardId(returnValueCallback,"/dev/ttymxc1");
-//                    break;
-//
-//                    if (flippart.getVisibility() == View.VISIBLE) {
-//                        flippart.setVisibility(View.GONE);
-//                        numberpart.setVisibility(View.VISIBLE);
-//                    } else {
-//                        flippart.setVisibility(View.VISIBLE);
-//                        numberpart.setVisibility(View.GONE);
-//                    }
-//                    break;
-                case R.id.morebutton:
-                    startActivity(SearchActivity.class);
-                    break;
-                case R.id.num0:
-                    unitPriceValu("0");
-                    break;
-                case R.id.num1:
-                    unitPriceValu("1");
-                    break;
-                case R.id.num2:
-                    showMessage(CacheHelper.device_id + "-" + CacheHelper.company_name);
-                    unitPriceValu("2");
-                    break;
-                case R.id.num3:
-                    unitPriceValu("3");
-                    break;
-                case R.id.num4:
-                    unitPriceValu("4");
-                    break;
-                case R.id.num5:
-                    unitPriceValu("5");
-                    break;
-                case R.id.num6:
-                    unitPriceValu("6");
-                    break;
-                case R.id.num7:
-                    unitPriceValu("7");
-                    break;
-                case R.id.num8:
-                    unitPriceValu("8");
-                    break;
-                case R.id.num9:
-                    unitPriceValu("9");
-                    break;
-                case R.id.dotnum:
-                    unitPriceValu(".");
-                    break;
-                case R.id.numdele:
-                    clearEvent();
-                    break;
-            }
-        }
-    }
 }

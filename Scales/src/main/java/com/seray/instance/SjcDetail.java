@@ -1,22 +1,12 @@
-package com.seray.sjc.entity.order;
+package com.seray.instance;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.JsonAdapter;
-import com.google.gson.annotations.SerializedName;
 import com.seray.sjc.annotation.PriceType;
-import com.seray.sjc.converters.MoneyConverter;
-import com.seray.sjc.converters.MoneyDecimalTypeAdapter;
-import com.seray.sjc.converters.WeightConverter;
-import com.seray.sjc.converters.WeightDecimalTypeAdapter;
-import com.seray.sjc.entity.product.SjcProduct;
+import com.seray.sjc.entity.device.ProductADB;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -27,105 +17,60 @@ import java.math.BigDecimal;
  * E-mail：licheng@kedacom.com
  * Describe：世界村交易明细
  */
-@Entity(tableName = SjcDetail.TABLE_NAME,
-        foreignKeys = @ForeignKey(entity = SjcSubtotal.class,
-                parentColumns = SjcSubtotal.TRANS_ORDER_CODE,
-                childColumns = SjcSubtotal.TRANS_ORDER_CODE,
-                onDelete = ForeignKey.CASCADE),
-        indices = @Index(value = {SjcSubtotal.TRANS_ORDER_CODE})
-)
+
 public class SjcDetail implements Serializable {
 
     public static final String TABLE_NAME = "Detail";
 
-    @PrimaryKey(autoGenerate = true)
     private long id;
 
     // 交易单号
-    @ColumnInfo(name = SjcSubtotal.TRANS_ORDER_CODE)
-    @SerializedName("transOrderCode")
-    @Expose
     private String transOrderCode;
 
     // 商品ID
-    @SerializedName("goodsId")
-    @Expose
     private String goodsInfoId;
 
     // 商品编码（用于打印显示）
-    @ColumnInfo(name = SjcProduct.COLUMN_GOODS_CODE)
-    @Expose(serialize = false, deserialize = false)
     private String goodsCode;
 
     // 商品名称
-    @SerializedName("goodsName")
-    @Expose
     private String goodsName;
 
     // 销售单位
-    @SerializedName("saleUnit")
-    @Expose
     private String saleUnit;
 
     // 价格类型 1：计价；2：计件
-    @SerializedName("priceType")
-    @PriceType
-    @Expose
     private String priceType;
 
     // 销售单价
-    @SerializedName("salePrice")
-    @TypeConverters(value = MoneyConverter.class)
-    @Expose
-    @JsonAdapter(MoneyDecimalTypeAdapter.class)
     private BigDecimal salePrice;
 
     // 成交单价
-    @SerializedName("dealPrice")
-    @TypeConverters(value = MoneyConverter.class)
-    @JsonAdapter(MoneyDecimalTypeAdapter.class)
-    @Expose
     private BigDecimal dealPrice;
 
     // 成交数量
-    @SerializedName("dealCnt")
-    @TypeConverters(value = WeightConverter.class)
-    @JsonAdapter(WeightDecimalTypeAdapter.class)
-    @Expose
     private BigDecimal dealCnt;
 
     // 去皮
-    @SerializedName("netWeight")
-    @TypeConverters(value = WeightConverter.class)
-    @JsonAdapter(WeightDecimalTypeAdapter.class)
-    @Expose
     private BigDecimal netWeight;
 
     // 折扣价格
-    @SerializedName("discountAmt")
-    @TypeConverters(value = MoneyConverter.class)
-    @JsonAdapter(MoneyDecimalTypeAdapter.class)
-    @Expose
     private BigDecimal discountAmt;
 
     // 成交总价
-    @SerializedName("dealAmt")
-    @TypeConverters(value = MoneyConverter.class)
-    @JsonAdapter(MoneyDecimalTypeAdapter.class)
-    @Expose
     private BigDecimal dealAmt;
 
     public SjcDetail() {
     }
 
-    public static SjcDetail getSjcDetail(@NonNull String transOrderCode, @NonNull SjcProduct product) {
+    public static SjcDetail getSjcDetail(@NonNull String transOrderCode, @NonNull ProductADB product) {
         SjcDetail detail = getSjcDetail(transOrderCode);
-        detail.setGoodsInfoId(product.getGoodsId());
-        detail.setGoodsName(product.getGoodsName());
-        detail.setGoodsCode(product.getGoodsCode());
-        detail.setSalePrice(product.getSalePrice());
-        detail.setSaleUnit(product.getSaleUnit());
-        detail.setPriceType(product.getPriceType());
+//        detail.setGoodsInfoId(product.getProduct_id());
+//        detail.setGoodsName(product.getPro_name());
+//        detail.setGoodsCode(product.get());
+//        detail.setSalePrice(product.getSalePrice());
+//        detail.setSaleUnit(product.getSaleUnit());
+//        detail.setPriceType(product.getPriceType());
         return detail;
     }
 

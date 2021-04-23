@@ -16,7 +16,7 @@
 //import com.seray.sjc.db.dao.ScreenResourceDao;
 //import com.seray.sjc.db.dao.SjcCategoryDao;
 //import com.seray.sjc.db.dao.SjcProductDao;
-//import com.seray.sjc.entity.device.Config;
+//import com.seray.sjc.entity.device.ConfigADB;
 //import com.seray.sjc.entity.device.PayTypeInfo;
 //import com.seray.sjc.entity.device.ScreenResource;
 //import com.seray.sjc.entity.device.SjcParamInfo;
@@ -82,7 +82,7 @@
 //                LogUtil.i("检查周期性更新数据的任务 成功");
 //                ApiDataRsp<BusinessRsp> body = response.body();
 //                if (body != null && body.success) {
-//                    BusinessRsp resp = body.msg;
+//                    BusinessRsp resp = body.msgs;
 //                    try {
 //                        mDatabase.beginTransaction();
 //                        saveCategories(resp.goodsCategory, resp.goodsCategoryList);
@@ -187,25 +187,25 @@
 //                if (paramKey == null || paramKey.isEmpty()) {
 //                    continue;
 //                }
-//                Config query = new Config(paramKey, paramValue);
+//                ConfigADB query = new ConfigADB(paramKey, paramValue);
 //                configDao.save(query);
 //            }
 //            SjcUpdatePoster.notifyParamInfoReload();
 //        }
 //    }
 //
-//    private void saveTermInfo(String status, TermInfo msg) {
+//    private void saveTermInfo(String status, TermInfo msgs) {
 //        boolean doSave = isDoSave(status);
-//        if (doSave && msg != null) {
+//        if (doSave && msgs != null) {
 //            ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-//            Map<String, String> map = msg.toMap();
+//            Map<String, String> map = msgs.toMap();
 //            for (Map.Entry<String, String> entry : map.entrySet()) {
 //                String key = entry.getKey();
 //                String value = entry.getValue();
 //                if (key == null || key.isEmpty()) {
 //                    continue;
 //                }
-//                Config query = new Config(key, value);
+//                ConfigADB query = new ConfigADB(key, value);
 //                configDao.save(query);
 //            }
 //            SjcUpdatePoster.notifyDeviceInfoReload();

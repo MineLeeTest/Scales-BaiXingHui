@@ -12,7 +12,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 
-import com.seray.sjc.view.CpuCardManagerDialog;
 import com.tscale.scalelib.jniscale.JNIScale;
 
 import java.lang.ref.WeakReference;
@@ -212,8 +211,8 @@ public class TestActivity extends BaseActivity {
         mMisc.beep();
         BigDecimal transAmt = new BigDecimal("1.00");
         String transOrderCode = System.currentTimeMillis() + "";
-        CpuCardManagerDialog dialog = CpuCardManagerDialog.getInstance(transOrderCode, transAmt);
-        dialog.show(getSupportFragmentManager(), "CpuCardDialog");
+//        CpuCardManagerDialog dialog = CpuCardManagerDialog.getInstance(transOrderCode, transAmt);
+//        dialog.show(getSupportFragmentManager(), "CpuCardDialog");
     }
 
     public void onVoiceTestClick(View view) {

@@ -25,7 +25,7 @@ public class ClearOrderMsg {
     @Override
     public String toString() {
         return "ClearOrderMsg{" +
-                "msg='" + msg + '\'' +
+                "msgs='" + msg + '\'' +
                 '}';
     }
 }

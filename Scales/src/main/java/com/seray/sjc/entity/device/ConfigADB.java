@@ -14,10 +14,10 @@ import java.util.UUID;
  * E-mail：licheng@kedacom.com
  * Describe：配置表
  */
-@Entity(tableName = Config.TABLE_NAME)
-public class Config {
+@Entity(tableName = ConfigADB.TABLE_NAME)
+public class ConfigADB {
 
-    public static final String TABLE_NAME = "Config";
+    public static final String TABLE_NAME = "ConfigADB";
 
     @ColumnInfo(name = "configKey")
     @PrimaryKey
@@ -27,11 +27,11 @@ public class Config {
     @ColumnInfo(name = "configValue")
     private String configValue;
 
-    public Config() {
+    public ConfigADB() {
     }
 
     @Ignore
-    public Config(@NonNull String configKey, String configValue) {
+    public ConfigADB(@NonNull String configKey, String configValue) {
         this.configKey = configKey;
         this.configValue = configValue;
     }
@@ -55,7 +55,7 @@ public class Config {
 
     @Override
     public String toString() {
-        return "Config{" +
+        return "ConfigADB{" +
                 "configKey='" + configKey + '\'' +
                 ", configValue='" + configValue + '\'' +
                 '}';

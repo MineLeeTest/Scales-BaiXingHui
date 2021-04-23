@@ -2,6 +2,8 @@ package com.seray.sjc.api.result;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+import lombok.Data;
 
 /**
  * Author：李程
@@ -9,43 +11,32 @@ import com.google.gson.annotations.SerializedName;
  * E-mail：licheng@kedacom.com
  * Describe：世界村接口标准格式
  */
-public class ApiDataRsp {
-
-    ApiDataRsp() {
-    }
+@Data
+public class ApiDataRsp<T> implements Serializable {
 
     // 返回码 0000 表示成功，其他表示失败
     @SerializedName("code")
     @Expose
-    public String code;
+    private String code;
+
     // 返回码描述
-    @SerializedName("errorMsg")
+    @SerializedName("error_msg")
     @Expose
-    public String errorMsg;
+    private String error_msg;
 
     // 返回码描述
     @SerializedName("uuid")
     @Expose
-    public String uuid;
+    private String uuid;
 
     // 业务数据
     @SerializedName("msg")
     @Expose
-    public Object msg;
+    private T msgs;
 
     // 返回码描述
     @SerializedName("success")
     @Expose
-    public Boolean success;
+    private Boolean success;
 
-    @Override
-    public String toString() {
-        return "ApiDataRsp{" +
-                "code='" + code + '\'' +
-                ", errorMsg='" + errorMsg + '\'' +
-                ", uuid='" + uuid + '\'' +
-                ", msg=" + msg +
-                ", success=" + success +
-                '}';
-    }
 }

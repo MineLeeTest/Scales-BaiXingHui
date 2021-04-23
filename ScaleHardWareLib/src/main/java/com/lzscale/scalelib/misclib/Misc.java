@@ -47,6 +47,6 @@ public class Misc {
 
     public native String system(String cmd);// cmd要执行的命令，返回输出结果
 
-    public native int readBattery();
+    public native int readBattery();//读取电池电量
 
 }

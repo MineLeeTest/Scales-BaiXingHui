@@ -26,7 +26,7 @@ public class QuantifyMessage {
     public String toString() {
         return "QuantifyMessage{" +
                 "isOpenJin=" + isOpenJin +
-                ", msg='" + msg + '\'' +
+                ", msgs='" + msg + '\'' +
                 '}';
     }
 }

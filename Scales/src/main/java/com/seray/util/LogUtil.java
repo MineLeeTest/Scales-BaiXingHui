@@ -3,6 +3,8 @@ package com.seray.util;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.Date;
+
 
 /**
  * 调试Log工具类
@@ -14,7 +16,7 @@ public class LogUtil {
     private static final int INFO = 3;
     private static final int WARN = 4;
     private static final int ERROR = 5;
-    private static final int LEVEL = NOTHING;
+    private static final int LEVEL = VERBOSE;
     private static final String SEPARATOR = ",";
 
     public static void v(String message) {
@@ -57,7 +59,7 @@ public class LogUtil {
             if (TextUtils.isEmpty(tag)) {
                 tag = getDefaultTag(stackTraceElement);
             }
-            Log.v(tag, getLogInfo(stackTraceElement) + message);
+            Log.v(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
@@ -65,7 +67,7 @@ public class LogUtil {
         if (LEVEL <= DEBUG) {
             StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
             String tag = getDefaultTag(stackTraceElement);
-            Log.d(tag, getLogInfo(stackTraceElement) + message);
+            Log.d(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
@@ -75,16 +77,17 @@ public class LogUtil {
             if (TextUtils.isEmpty(tag)) {
                 tag = getDefaultTag(stackTraceElement);
             }
-            Log.d(tag, getLogInfo(stackTraceElement) + message);
+            Log.d(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
     public static void i(String message) {
-        if (LEVEL <= INFO) {
-            StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
-            String tag = getDefaultTag(stackTraceElement);
-            Log.i(tag, getLogInfo(stackTraceElement) + message);
-        }
+//        if (LEVEL <= INFO) {
+        StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
+        String tag = getDefaultTag(stackTraceElement);
+        String info = new Date().toString() + "--" + message;
+        Log.i(tag, getLogInfo(stackTraceElement) + "--" + info);
+//        }
     }
 
     public static void i(String tag, String message) {
@@ -93,7 +96,7 @@ public class LogUtil {
             if (TextUtils.isEmpty(tag)) {
                 tag = getDefaultTag(stackTraceElement);
             }
-            Log.i(tag, getLogInfo(stackTraceElement) + message);
+            Log.i(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
@@ -101,7 +104,7 @@ public class LogUtil {
         if (LEVEL <= WARN) {
             StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
             String tag = getDefaultTag(stackTraceElement);
-            Log.w(tag, getLogInfo(stackTraceElement) + message);
+            Log.w(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
@@ -111,7 +114,7 @@ public class LogUtil {
             if (TextUtils.isEmpty(tag)) {
                 tag = getDefaultTag(stackTraceElement);
             }
-            Log.w(tag, getLogInfo(stackTraceElement) + message);
+            Log.w(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
@@ -121,7 +124,7 @@ public class LogUtil {
             if (TextUtils.isEmpty(tag)) {
                 tag = getDefaultTag(stackTraceElement);
             }
-            Log.e(tag, getLogInfo(stackTraceElement) + message);
+            Log.e(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
@@ -129,11 +132,11 @@ public class LogUtil {
         if (LEVEL <= ERROR) {
             StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[3];
             String tag = getDefaultTag(stackTraceElement);
-            Log.e(tag, getLogInfo(stackTraceElement) + message);
+            Log.e(tag, getLogInfo(stackTraceElement) + "--" + new Date().toString() + "--" + message);
         }
     }
 
     public static void l(String tag, String msg) {
-        Log.i(tag, msg);
+        Log.i(tag, "--" + new Date().toString() + "--" + msg);
     }
 }

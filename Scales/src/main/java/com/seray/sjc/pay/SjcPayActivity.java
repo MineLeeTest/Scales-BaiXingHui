@@ -460,7 +460,7 @@
 //
 //                        LogUtil.i("queryQRPayResult", "rsp = " + (body == null ? "null" : body.toString()));
 //
-//                        if (body != null && body.success && (body.msg != null && body.msg.payStatus.equals("1"))) {
+//                        if (body != null && body.success && (body.msgs != null && body.msgs.payStatus.equals("1"))) {
 //                            cancelQCPay = false;
 //                            QCCodePaySuccess();
 //                        } else {
@@ -601,14 +601,14 @@
 //                        }
 //
 //                        if (!response.body().success) {
-//                            generateQRCodeFail(response.body().errorMsg);
-//                            LogUtil.e("downloadQRPayUrl", response.body().errorMsg);
+//                            generateQRCodeFail(response.body().error_msg);
+//                            LogUtil.e("downloadQRPayUrl", response.body().error_msg);
 //                            return;
 //                        }
-//                        LogUtil.i("downloadQRPayUrl", response.body().msg.toString());
+//                        LogUtil.i("downloadQRPayUrl", response.body().msgs.toString());
 //
 //                        reqPayCount++; // 订单号+1
-//                        showQrCode(response.body().msg);
+//                        showQrCode(response.body().msgs);
 //                    }
 //
 //                    @Override

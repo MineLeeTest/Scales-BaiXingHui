@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -20,25 +19,10 @@ import android.widget.TextView;
 
 import com.seray.cache.CacheHelper;
 import com.seray.information.InformationActivity;
-import com.seray.sjc.AppExecutors;
-import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.db.dao.ConfigDao;
-import com.seray.sjc.entity.device.Config;
-import com.seray.sjc.entity.device.SjcParamInfo;
-import com.seray.sjc.report.NewReportActivity;
-//import com.seray.sjc.work.CheckSyncDataWork;
 import com.seray.util.HttpUtils;
 import com.seray.util.LogUtil;
 import com.seray.util.NumFormatUtil;
 import com.seray.view.CustomTipDialog;
-import com.seray.view.InputImageRecognizeDialog;
-
-import java.util.UUID;
-
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkInfo;
-import androidx.work.WorkManager;
 
 public class ManageActivity extends BaseActivity {
 
@@ -67,7 +51,7 @@ public class ManageActivity extends BaseActivity {
     // 商品分类
     public void onCategoryManagerClick(View view) {
         super.onClick(view);
-        startActivity(SelectActivity.class);
+//        startActivity(SelectActivity.class);
     }
 
 //    // 业务数据同步
@@ -134,7 +118,7 @@ public class ManageActivity extends BaseActivity {
     // 去报表
     public void startReportActivity(View view) {
         super.onClick(view);
-        startActivity(NewReportActivity.class);
+//        startActivity(NewReportActivity.class);
     }
 
     // 去运维管理中心
@@ -174,7 +158,7 @@ public class ManageActivity extends BaseActivity {
 //                    }
 //                    AppExecutors.getInstance().insertIO().submit(() -> {
 //                        ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-//                        Config config = new Config(SjcParamInfo.MinRecognizeValue, String.valueOf(value));
+//                        ConfigADB config = new ConfigADB(SjcParamInfo.MinRecognizeValue, String.valueOf(value));
 //                        configDao.save(config);
 //                        // 更新数据
 ////                        CacheHelper.prepareParamInfo();

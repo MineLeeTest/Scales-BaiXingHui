@@ -48,10 +48,10 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".SearchActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape" />
+<!--        <activity-->
+<!--            android:name=".SearchActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+<!--            android:screenOrientation="landscape" />-->
 
         <activity
             android:name=".TotalActivity"
@@ -84,15 +84,15 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-        <activity
-            android:name=".SelectActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape" />
+<!--        <activity-->
+<!--            android:name=".SelectActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+<!--            android:screenOrientation="landscape" />-->
 
-        <activity
-            android:name="com.seray.sjc.report.NewReportActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape" />
+<!--        <activity-->
+<!--            android:name="com.seray.sjc.report.NewReportActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+<!--            android:screenOrientation="landscape" />-->
 
         <activity
             android:name=".DateSelectActivity"
@@ -104,13 +104,13 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-        <activity
-            android:name="com.seray.sjc.pay.SjcPayActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden" />
+<!--        <activity-->
+<!--            android:name="com.seray.sjc.pay.SjcPayActivity"-->
+<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+<!--            android:screenOrientation="landscape"-->
+<!--            android:windowSoftInputMode="stateHidden" />-->
 
-        <activity
+   <!--     <activity
             android:name="com.seray.sjc.report.ReportSjcDetailActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
@@ -118,7 +118,7 @@
         <activity
             android:name="com.seray.sjc.report.ReportSjcSubtotalActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape" />-->
         <activity
             android:name=".TestActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
@@ -128,12 +128,10 @@
             android:name="com.seray.service.BatteryService"
             android:description="@string/read_battery_service"
             android:exported="false" />
-
         <service
-            android:name="com.seray.service.ImageRecognizeService"
-            android:description="@string/image_recognize_service"
+            android:name="com.seray.service.HeartBeatService"
+            android:description="@string/service_heart_beat"
             android:exported="false" />
-
         <service
             android:name="com.seray.service.DisplayService"
             android:description="@string/back_display_service"

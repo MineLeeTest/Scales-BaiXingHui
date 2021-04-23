@@ -20,12 +20,12 @@ public class SjcUtil {
 
     public static String getCurPayTypeName(@NonNull String payType) {
         String payTypeName = "现金支付";
-        for (int i = 0; i < CacheHelper.PayTypeInfoList.size(); i++) {
-            if (payType.equals(CacheHelper.PayTypeInfoList.get(i).getPayType())) {
-                payTypeName = CacheHelper.PayTypeInfoList.get(i).getPayName();
-                break;
-            }
-        }
+//        for (int i = 0; i < CacheHelper.PayTypeInfoList.size(); i++) {
+//            if (payType.equals(CacheHelper.PayTypeInfoList.get(i).getPayType())) {
+//                payTypeName = CacheHelper.PayTypeInfoList.get(i).getPayName();
+//                break;
+//            }
+//        }
         return payTypeName;
     }
 

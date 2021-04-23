@@ -26,7 +26,7 @@ public class LocalDataCleanWork extends Worker {
         AppDatabase instance = AppDatabase.getInstance();
         try {
             instance.beginTransaction();
-            instance.autoClean();
+//            instance.autoClean();
             instance.setTransactionSuccessful();
         } catch (Exception e) {
             LogUtil.e("自动清除数据失败！");

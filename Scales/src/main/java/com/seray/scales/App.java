@@ -13,9 +13,8 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 
-import com.seray.cache.CacheHelper;
 import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.entity.device.Config;
+import com.seray.sjc.entity.device.ConfigADB;
 import com.seray.sjc.poster.DisplayPoster;
 import com.seray.sjc.util.CrashHandler;
 import com.seray.util.LogUtil;
@@ -46,6 +45,7 @@ public class App extends Application {
     @SuppressLint("InvalidWakeLockTag")
     @Override
     public void onCreate() {
+
         super.onCreate();
         myApplication = this;
         DisplayPoster.init();
@@ -71,8 +71,8 @@ public class App extends Application {
      */
     protected String getVersionName() {
         String versionName = getPackageInfo().versionName;
-        Config config = new Config("VersionName", versionName);
-        AppDatabase.getInstance().getConfigDao().save(config);
+        ConfigADB configADB = new ConfigADB("VersionName", versionName);
+        AppDatabase.getInstance().getConfigDao().save(configADB);
         return versionName;
     }
 

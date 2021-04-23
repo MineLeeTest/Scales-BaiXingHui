@@ -11,7 +11,7 @@ public class ResultData implements Serializable {
     public String toString() {
         return "ResultObj{" +
                 "code='" + code + '\'' +
-                ", msg='" + msg + '\'' +
+                ", msgs='" + msg + '\'' +
                 ", uuid='" + uuid + '\'' +
                 '}';
     }

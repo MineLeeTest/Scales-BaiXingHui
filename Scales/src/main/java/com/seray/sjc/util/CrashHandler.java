@@ -122,7 +122,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 infos.put("versionCode", versionCode);
             }
         } catch (NameNotFoundException e) {
-            Log.e(TAG, "an error occured when collect package msg", e);
+            Log.e(TAG, "an error occured when collect package msgs", e);
         }
         Field[] fields = Build.class.getDeclaredFields();
         for (Field field : fields) {
@@ -131,7 +131,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 infos.put(field.getName(), field.get(null).toString());
                 Log.d(TAG, field.getName() + " : " + field.get(null));
             } catch (Exception e) {
-                Log.e(TAG, "an error occured when collect crash msg", e);
+                Log.e(TAG, "an error occured when collect crash msgs", e);
             }
         }
     }
@@ -166,7 +166,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             String time = formatter.format(new Date());
             String fileName = "crash-" + time + "-" + timestamp + ".log";
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-                String path = "/sdcard/crash/msg";
+                String path = "/sdcard/crash/msgs";
                 File dir = new File(path);
                 if (!dir.exists()) {
                     dir.mkdirs();

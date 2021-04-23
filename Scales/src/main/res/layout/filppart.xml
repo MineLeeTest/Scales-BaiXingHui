@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:weightSum="4">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="4">
 
     <LinearLayout
+        android:id="@+id/llpro1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -30,7 +31,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu2"
@@ -49,7 +50,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu3"
@@ -67,11 +68,12 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llpro2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -95,7 +97,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu5"
@@ -115,7 +117,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu6"
@@ -134,11 +136,12 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llpro3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -162,7 +165,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu8"
@@ -182,7 +185,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu9"
@@ -201,11 +204,12 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/llpro4"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -229,7 +233,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/plu11"
@@ -249,7 +253,7 @@
             app:autoSizeMaxTextSize="@dimen/pluTextSize"
             app:autoSizeMinTextSize="@dimen/pluMinTextSize"
             app:autoSizeStepGranularity="2sp"
-            app:autoSizeTextType="uniform"/>
+            app:autoSizeTextType="uniform" />
 
         <Button
             android:id="@+id/morebutton"
@@ -260,7 +264,7 @@
             android:background="@drawable/bg_btn_product"
             android:text="@string/scale_more"
             android:textColor="#ed6900"
-            android:textSize="@dimen/pluTextSize"/>
+            android:textSize="@dimen/pluTextSize" />
 
     </LinearLayout>
 

@@ -18,8 +18,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,6 +52,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
+import cn.hutool.json.JSONUtil;
 
 /**
  * <pre>
@@ -102,8 +102,6 @@ public final class LogUtils {
     private static final String ARGS = "args";
     private static final String PLACEHOLDER = " ";
     private static final Config CONFIG = new Config();
-    private static final Gson GSON = new GsonBuilder()
-            .setPrettyPrinting().serializeNulls().create();
 
     private static final ThreadLocal<SimpleDateFormat> SDF_THREAD_LOCAL = new ThreadLocal<>();
 
@@ -880,7 +878,7 @@ public final class LogUtils {
                 return formatJson(object.toString());
             }
             try {
-                return GSON.toJson(object);
+                return JSONUtil.toJsonStr(object);
             } catch (Throwable t) {
                 return object.toString();
             }

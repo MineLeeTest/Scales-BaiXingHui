@@ -1,5 +1,7 @@
 package com.seray.util;
 
+import android.text.TextUtils;
+
 import com.seray.instance.ResultData;
 
 import cn.hutool.core.codec.Base64;
@@ -25,6 +27,12 @@ public class AESTools {
 
     public static ResultData encrypt(ResultData resultData, String keyStr, String content) {
         try {
+            if (TextUtils.isEmpty(keyStr)) {
+                return resultData.setRetMsg(resultData, "2001", "密钥不能为空！");
+            }
+            if (TextUtils.isEmpty(content)) {
+                return resultData.setRetMsg(resultData, "2002", "加密内容不能为空！");
+            }
             //Base64 Decoded
             byte[] key = Base64.decode(keyStr);
             //构建
@@ -51,6 +59,11 @@ public class AESTools {
             return resultData.setRetMsg(resultData, "2044", "解签失败");
         }
     }
+
+//    public static ResultData getSign(ResultData resultData, String keyStr) {
+//       return encrypt(resultData, keyStr, );
+//
+//    }
 //
 //    public static ResultData IsIllegal(ResultData resultData, String key, String sign) {
 //        try {
@@ -58,7 +71,7 @@ public class AESTools {
 //            if (!"9000".equals(resultData.getCode())) {
 //                return resultData;
 //            }
-//            String[] ret = resultData.getMsg().toString().split(",");
+//            String[] ret = resultData.getMsgs().toString().split(",");
 //            if (ret.length != 5) {
 //                return resultData.setRetMsg(resultData, "208", "sign签名内容部分数据缺失！");
 //            }
@@ -88,19 +101,19 @@ public class AESTools {
 
     public static void main(String[] args) {
         byte[] bytes = new byte[12];
-        bytes[0]=(byte)0x00;
-        bytes[1]=(byte)0x08;
-        bytes[2]=(byte)0xF8;
-        bytes[3]=(byte)0xFC;
-        bytes[4]=(byte)0xF9;
-        bytes[5]=(byte)0xF0;
-        bytes[6]=(byte)0xF8;
-        bytes[7]=(byte)0xF0;
-        bytes[8]=(byte)0x80;
-        bytes[9]=(byte)0x78;
-        bytes[10]=(byte)0xFF;
-        bytes[11]=(byte)0xD8;
-        String t=new String(bytes);
+        bytes[0] = (byte) 0x00;
+        bytes[1] = (byte) 0x08;
+        bytes[2] = (byte) 0xF8;
+        bytes[3] = (byte) 0xFC;
+        bytes[4] = (byte) 0xF9;
+        bytes[5] = (byte) 0xF0;
+        bytes[6] = (byte) 0xF8;
+        bytes[7] = (byte) 0xF0;
+        bytes[8] = (byte) 0x80;
+        bytes[9] = (byte) 0x78;
+        bytes[10] = (byte) 0xFF;
+        bytes[11] = (byte) 0xD8;
+        String t = new String(bytes);
         System.out.println(t);
 
 //        System.out.println(changeF2Y("1"));
@@ -111,9 +124,9 @@ public class AESTools {
 //        String aesKey = "C2ckCioYP0ygY9yPw55jVA==";
 //        ResultData resultData = new ResultData();
 //        resultData = encrypt(resultData, aesKey, "123");
-//        System.out.println(resultData.getMsg());
-//        resultData = decrypt(resultData, aesKey, resultData.getMsg().toString());
-//        System.out.println(resultData.getMsg());
+//        System.out.println(resultData.getMsgs());
+//        resultData = decrypt(resultData, aesKey, resultData.getMsgs().toString());
+//        System.out.println(resultData.getMsgs());
 
     }
 }
