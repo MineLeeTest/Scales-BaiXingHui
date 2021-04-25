@@ -222,7 +222,6 @@
                         android:gravity="center_vertical|end"
                         android:includeFontPadding="false"
                         android:paddingRight="5dp"
-                        android:text="元"
                         android:textColor="@color/white"
                         android:textSize="@dimen/managerCategoryTextSize" />
 
@@ -280,16 +279,16 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
-                        android:layout_marginRight="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_weight="3"
-                        android:gravity="right"
+                        android:gravity="left"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/tvProName"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
+                            android:layout_marginStart="5dp"
                             android:gravity="bottom"
                             android:includeFontPadding="false"
                             android:textColor="@color/yellow"
@@ -338,7 +337,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0px"
                     android:layout_weight="3"
@@ -364,7 +363,7 @@
                         android:layout_marginStart="0dp"
                         android:layout_weight="4"
                         android:gravity="center_vertical|start"
-                        android:text="卖家:\n请刷卡"
+                        android:text="卖家请刷卡"
                         android:textColor="@color/LightGreen"
                         android:textSize="30sp" />
 
@@ -375,30 +374,30 @@
                         android:layout_marginStart="0dp"
                         android:layout_weight="4"
                         android:gravity="center_vertical|start"
-                        android:text="买家:\n请刷卡"
+                        android:text="买家请刷卡"
                         android:textColor="@color/LightPink"
-                        android:textSize="20sp" />
+                        android:textSize="30sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:text="@string/scale_account"
-                        android:textColor="@color/yellow"
-                        android:textSize="@dimen/pluTextSize" />
+                    <!--                    <TextView-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="match_parent"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:includeFontPadding="false"-->
+                    <!--                        android:text="@string/scale_account"-->
+                    <!--                        android:textColor="@color/yellow"-->
+                    <!--                        android:textSize="@dimen/pluTextSize" />-->
 
-                    <TextView
-                        android:id="@+id/allvegeprice"
-                        android:layout_width="0px"
-                        android:layout_height="match_parent"
-                        android:layout_weight="2.5"
-                        android:gravity="center"
-                        android:includeFontPadding="false"
-                        android:singleLine="true"
-                        android:text="@string/base_price"
-                        android:textColor="@color/yellow"
-                        android:textSize="@dimen/pluTextSize" />
+                    <!--                    <TextView-->
+                    <!--                        android:id="@+id/allvegeprice"-->
+                    <!--                        android:layout_width="0px"-->
+                    <!--                        android:layout_height="match_parent"-->
+                    <!--                        android:layout_weight="2.5"-->
+                    <!--                        android:gravity="center"-->
+                    <!--                        android:includeFontPadding="false"-->
+                    <!--                        android:singleLine="true"-->
+                    <!--                        android:text="@string/base_price"-->
+                    <!--                        android:textColor="@color/yellow"-->
+                    <!--                        android:textSize="@dimen/pluTextSize" />-->
 
                 </LinearLayout>
 
@@ -445,45 +444,77 @@
                         android:orientation="vertical">
 
                         <Button
-                            android:id="@+id/accuxbutton"
+                            android:id="@+id/sbtn_tare"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_marginStart="3dp"
                             android:layout_weight="1"
                             android:background="@drawable/bg_btn_control"
+                            android:lines="2"
+                            android:onClick="sbtnTare"
+                            android:singleLine="true"
+                            android:text="去皮"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/pluTextSize" />
+
+                        <Button
+                            android:id="@+id/sbtn_price"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_btn_control"
                             android:gravity="center"
-                            android:text="累计"
+                            android:onClick="sbtnPrice"
+                            android:text="改价"
                             android:textColor="@color/white"
                             android:textSize="@dimen/pluTextSize"
                             android:visibility="visible" />
 
                         <Button
-                            android:id="@+id/printout"
+                            android:id="@+id/accuxbutton"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_marginStart="3dp"
                             android:layout_marginTop="3dp"
                             android:layout_weight="1"
                             android:background="@drawable/bg_btn_control"
-                            android:lines="2"
-                            android:singleLine="true"
-                            android:text="现金"
-                            android:textColor="@color/white"
-                            android:textSize="@dimen/pluTextSize" />
-
-                        <ImageView
-                            android:id="@+id/pluorunm"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_marginStart="3dp"
-                            android:layout_marginTop="3dp"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_btn_control"
-                            android:contentDescription="@string/app_name"
                             android:gravity="center"
-                            android:padding="10dp"
-                            android:scaleType="centerInside"
-                            android:src="@drawable/pinming" />
+                            android:onClick="sbtnAccux"
+                            android:text="加入\n购物车"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/CartSize"
+                            android:visibility="visible" />
+
+
+                        <!--                        <Button-->
+                        <!--                            android:id="@+id/sbtn_clear"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="0dp"-->
+                        <!--                            android:layout_marginStart="3dp"-->
+                        <!--                            android:layout_marginTop="3dp"-->
+                        <!--                            android:layout_weight="1"-->
+                        <!--                            android:background="@drawable/bg_btn_control"-->
+                        <!--                            android:gravity="center"-->
+                        <!--                            android:text="取消"-->
+                        <!--                            android:textColor="@color/white"-->
+                        <!--                            android:textSize="@dimen/pluTextSize"-->
+                        <!--                            android:visibility="visible" />-->
+
+                        <!--                        <ImageView-->
+                        <!--                            android:id="@+id/pluorunm"-->
+                        <!--                            android:layout_width="match_parent"-->
+                        <!--                            android:layout_height="0dp"-->
+                        <!--                            android:layout_marginStart="3dp"-->
+                        <!--                            android:layout_marginTop="3dp"-->
+                        <!--                            android:layout_weight="1"-->
+                        <!--                            android:background="@drawable/bg_btn_control"-->
+                        <!--                            android:contentDescription="@string/app_name"-->
+                        <!--                            android:gravity="center"-->
+                        <!--                            android:padding="10dp"-->
+                        <!--                            android:scaleType="centerInside"-->
+                        <!--                            android:src="@drawable/pinming" />-->
 
                         <Button
                             android:id="@+id/pay"
@@ -494,9 +525,10 @@
                             android:layout_weight="1"
                             android:background="@drawable/bg_btn_control"
                             android:gravity="center"
-                            android:text="@string/zhifu"
+                            android:onClick="sbtnPay"
+                            android:text="支付\n(0笔)"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/pluTextSize" />
+                            android:textSize="@dimen/CartSize" />
 
                     </LinearLayout>
 

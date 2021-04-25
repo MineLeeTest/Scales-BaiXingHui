@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import com.seray.instance.ResultData;
 
 import cn.hutool.core.codec.Base64;
+import cn.hutool.core.lang.Validator;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
@@ -13,6 +15,9 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import java.math.BigDecimal;
 
 public class AESTools {
+    public static void main(String[] args) {
+//
+    }
 
     public static String getKey() {
         //随机生成密钥
@@ -56,7 +61,7 @@ public class AESTools {
             //解密为原字符串
             return resultData.setRetMsg(resultData, "9000", ret);
         } catch (Exception e) {
-            return resultData.setRetMsg(resultData, "2044", "解签失败");
+            return resultData.setRetMsg(resultData, "2045", "解签失败");
         }
     }
 
@@ -99,23 +104,22 @@ public class AESTools {
 //        }
 //    }
 
-    public static void main(String[] args) {
-        byte[] bytes = new byte[12];
-        bytes[0] = (byte) 0x00;
-        bytes[1] = (byte) 0x08;
-        bytes[2] = (byte) 0xF8;
-        bytes[3] = (byte) 0xFC;
-        bytes[4] = (byte) 0xF9;
-        bytes[5] = (byte) 0xF0;
-        bytes[6] = (byte) 0xF8;
-        bytes[7] = (byte) 0xF0;
-        bytes[8] = (byte) 0x80;
-        bytes[9] = (byte) 0x78;
-        bytes[10] = (byte) 0xFF;
-        bytes[11] = (byte) 0xD8;
-        String t = new String(bytes);
-        System.out.println(t);
-
+//    public static void main(String[] args) {
+//        byte[] bytes = new byte[12];
+//        bytes[0] = (byte) 0x00;
+//        bytes[1] = (byte) 0x08;
+//        bytes[2] = (byte) 0xF8;
+//        bytes[3] = (byte) 0xFC;
+//        bytes[4] = (byte) 0xF9;
+//        bytes[5] = (byte) 0xF0;
+//        bytes[6] = (byte) 0xF8;
+//        bytes[7] = (byte) 0xF0;
+//        bytes[8] = (byte) 0x80;
+//        bytes[9] = (byte) 0x78;
+//        bytes[10] = (byte) 0xFF;
+//        bytes[11] = (byte) 0xD8;
+//        String t = new String(bytes);
+//        System.out.println(t);
 //        System.out.println(changeF2Y("1"));
 //        System.out.println("" + changeF2Y("1000000"));
 //        System.out.println(URLDecoder.decode("%E7%9F%A5%E4%BA%86%E9%9D%9E%E7%9F%A5%E4%BA%86"));
@@ -127,6 +131,5 @@ public class AESTools {
 //        System.out.println(resultData.getMsgs());
 //        resultData = decrypt(resultData, aesKey, resultData.getMsgs().toString());
 //        System.out.println(resultData.getMsgs());
-
-    }
+//    }
 }

@@ -52,8 +52,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      */
     public static ExecutorService sqlQueryThread = AppExecutors.getInstance().queryIO();
 
-
-
     /**
      * 执行定时任务固定数量线程池
      */
@@ -128,11 +126,9 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_F3) {
-            mMisc.beep();
             shutDown();
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            mMisc.beep();
             finish();
         }
         return true;

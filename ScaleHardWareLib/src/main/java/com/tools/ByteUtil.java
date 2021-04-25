@@ -3,6 +3,10 @@ package com.tools;
 import android.annotation.SuppressLint;
 
 public class ByteUtil {
+
+
+
+
     public static String getHexStr(byte[] buffer, int offset, int len, String split) {
         StringBuilder str = new StringBuilder();
         int end = offset + len;

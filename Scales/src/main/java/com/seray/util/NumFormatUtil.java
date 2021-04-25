@@ -24,7 +24,8 @@ public class NumFormatUtil {
     public static final int PASSWORD_TO_REPORT = 3;
 
     //    public static DecimalFormat df2 = new DecimalFormat("######0.00");
-    public static DecimalFormat df3 = new DecimalFormat("######0.000");
+    public static DecimalFormat DF_WEIGHT = new DecimalFormat("######0.000");//重量单位
+    public static DecimalFormat DF_PRICE = new DecimalFormat("######0.00");//价格单位
     private static NumFormatUtil mUtil = null;
     private static Pattern pattern = Pattern.compile("^(-?[0-9\\.]+)$");
     private static Pattern isIntPattern = Pattern.compile("^(-?[0-9]+)$");
@@ -167,6 +168,7 @@ public class NumFormatUtil {
     public BigDecimal getDecimalSum(BigDecimal p, BigDecimal w) {
         return this.mul(p, w);
     }
+
 
     private BigDecimal mul(BigDecimal p, BigDecimal w) {
         BigDecimal b = p.multiply(w).setScale(1, BigDecimal.ROUND_HALF_UP);

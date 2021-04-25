@@ -14,8 +14,8 @@ import java.io.Serializable;
  */
 @Data
 public class GetUserByCardNoVM implements Serializable {
-    @SerializedName("card_id")
+    @SerializedName("CardNo")
     @Expose
-    public String card_id;
+    public String CardNo;
 
 }

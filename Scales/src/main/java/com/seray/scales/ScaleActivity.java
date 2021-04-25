@@ -1,14 +1,13 @@
 package com.seray.scales;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -33,10 +32,7 @@ import com.seray.sjc.annotation.DisplayType;
 import com.seray.sjc.api.net.HttpServicesFactory;
 import com.seray.sjc.api.request.GetUserByCardNoVM;
 import com.seray.sjc.api.result.ApiDataRsp;
-import com.seray.sjc.api.result.ProductDZCDTO;
 import com.seray.sjc.api.result.UserVipCardDetailDTO;
-import com.seray.sjc.db.AppDatabase;
-import com.seray.sjc.db.dao.ProductDao;
 import com.seray.sjc.entity.device.ProductADB;
 import com.seray.util.AESTools;
 import com.seray.util.FileHelp;
@@ -51,20 +47,14 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Response;
 
-
-/**
- * The type Scale activity.
- */
 public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.OnDataReceiveListener {
 
     private TextView mTimeView,//日期时间
@@ -76,23 +66,18 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             buyer,//买家
             seller,//卖家
             mMaxUnitView;//标题显示
+    private HandlerScale handlerScale = new HandlerScale(new WeakReference<>(this));
+    private HandlerICCard handlerICCard = new HandlerICCard(new WeakReference<>(this));
     private LinearLayout flippart;
     private ImageView mBatteryIv;
     private List<ProductADB> mProductList = new ArrayList<>();
     private ArrayList<Button> btnList = new ArrayList<>();
     private ProductADB proTradeNow = null;
-    private float currWeight = 0.0f, tareFloat = -1.0F, lastWeight = 0.0f, divisionValue = 0.02f;
-    private boolean isPlu = false, isByWeight = true;
-
-    private BigDecimal BASIC_TARE = new BigDecimal("0.000");
-    private ScheduledExecutorService advertThread = Executors.newScheduledThreadPool(1);
-    private ScaleHandler mScaleHandler = new ScaleHandler(new WeakReference<>(this));
-    private ICCardHandler icCardHandler = new ICCardHandler(new WeakReference<>(this));
     private JNIScale mScale;
     private NumFormatUtil mNumUtil = NumFormatUtil.getInstance();
     private BackDisplayBase backDisplay = null;
-    private String priceRealValue = "";
     private int RECUR_FLAG = 1;
+    ICCardSerialPortUtil icCardSerialPortUtil = new ICCardSerialPortUtil();
 
     //展示商品列表
     private void showPros() {
@@ -131,94 +116,45 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                     tvProName.setText(productADB.getPro_name());
                     //标记该商品已经被选中
                     proTradeNow = productADB;
+
                 }
             });
         }
 
     }
 
+    //开启定时循环
+    Runnable runnableTimer = () -> {
+        handlerScale.sendEmptyMessage(1);
+    };
 
-    private void lightScreenCyclicity() {
-        float w = mScale.getFloatNet();
-        if (isOL() || Math.abs(w - currWeight) > divisionValue) {
-            App.getApplication().openScreen();
-        }
-    }
+    //计算总价
+    private void countPirce() {
+        //获取总重的数据
+        String mTvWeightStr = mTvWeight.getText().toString().trim();
+        BigDecimal weight = NumFormatUtil.isNumeric(mTvWeightStr) ? new BigDecimal(mTvWeightStr) : new BigDecimal(0);
 
-    private Boolean isOL() {
-        return mScale.getStringNet().contains("OL");
-    }
+        //获取皮重的数据
+        String mtvTareStr = mTvTare.getText().toString().trim();
+        BigDecimal tare = NumFormatUtil.isNumeric(mtvTareStr) ? new BigDecimal(mtvTareStr) : new BigDecimal(0);
 
-    private void weightChangedCyclicity() {
-        if (isByWeight) {
-            String strNet = mScale.getStringNet().trim();
-            float tare = CacheHelper.isOpenJin ? tareFloat * 2 : tareFloat;
-            float fW = NumFormatUtil.isNumeric(strNet) ? Float.parseFloat(strNet) : 0;
-            fW = CacheHelper.isOpenJin ? fW * 2 : fW;
-            if (isOL()) {
-                if (tareFloat > 0) {
-                    mTvTare.setText(String.format("(当前扣重：%s)", NumFormatUtil.df3.format(tare)));
-                    mTvTare.setVisibility(View.VISIBLE);
-                    mTvTare.setTextColor(Color.RED);
-                } else {
-                    mTvTare.setVisibility(View.INVISIBLE);
-                }
-                mTvWeight.setText(strNet);
-            } else {
-                if (tareFloat > 0) {
-                    fW -= tare;
-                    mTvTare.setText(String.format("(当前扣重：%s)", NumFormatUtil.df3.format(tare)));
-                    mTvTare.setVisibility(View.VISIBLE);
-                    mTvTare.setTextColor(Color.RED);
-                } else {
-                    mTvTare.setVisibility(View.INVISIBLE);
-                }
-                mTvWeight.setText(NumFormatUtil.df3.format(fW));
+        //单价
+        String unitPriceStr = mTvUnitPrice.getText().toString().trim();
+        BigDecimal unitPrice = NumFormatUtil.isNumeric(unitPriceStr) ? new BigDecimal(unitPriceStr) : new BigDecimal(0);
+
+        if (null != proTradeNow) {
+            if (unitPrice.compareTo(BigDecimal.valueOf(proTradeNow.getMax_price())) > 0) {
+                showMessage("价格高于商品的最高价！");
+                return;
+            }
+            if (unitPrice.compareTo(BigDecimal.valueOf(proTradeNow.getMin_price())) < 0) {
+                showMessage("价格低于商品的最低价！");
+                return;
             }
         }
-        if (isStable()) {
-            backDisplay.showIsStable(true);
-            findViewById(R.id.stableflag).setVisibility(View.VISIBLE);
-        } else {
-            backDisplay.showIsStable(false);
-            findViewById(R.id.stableflag).setVisibility(View.INVISIBLE);
-        }
-        if (mScale.getZeroFlag()) {
-            backDisplay.showIsZero(true);
-            findViewById(R.id.zeroflag).setVisibility(View.VISIBLE);
-        } else {
-            backDisplay.showIsZero(false);
-            findViewById(R.id.zeroflag).setVisibility(View.INVISIBLE);
-        }
-        if (!isOL()) {
-            String wString = mTvWeight.getText().toString().trim();
-            String pString = mTvUnitPrice.getText().toString().trim();
-            if (TextUtils.isEmpty(wString)) {
-                mTvWeight.setText(R.string.base_weight);
-                wString = "0";
-            }
-            if (TextUtils.isEmpty(pString)) {
-                mTvUnitPrice.setText(R.string.base_price);
-                pString = "0";
-            }
-            BigDecimal w = BASIC_TARE, p = BASIC_TARE;
-            if (NumFormatUtil.isNumeric(wString)) {
-                w = new BigDecimal(wString);
-            }
-
-            if (NumFormatUtil.isNumeric(pString)) {
-                p = new BigDecimal(pString);
-            }
-            BigDecimal sum = mNumUtil.getDecimalSum(p, w);
-            mTvSubtotal.setText(String.valueOf(sum));
-        }
-    }
-
-    /**
-     * 判断秤稳定
-     */
-    private boolean isStable() {
-        return mScale.getStabFlag();
+        //计算总价
+        BigDecimal sum = mNumUtil.getDecimalSum((weight.subtract(tare)), unitPrice);
+        mTvSubtotal.setText(String.valueOf(sum));
     }
 
     @Override
@@ -228,15 +164,17 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         stopService(getSkipIntent(BatteryService.class));
         stopService(getSkipIntent(HeartBeatService.class));
         stopService(getSkipIntent(DisplayService.class));
-
-        advertThread.shutdownNow();
         timerThreads.shutdownNow();
-        mScaleHandler.removeCallbacksAndMessages(null);
+
+        handlerScale.removeCallbacksAndMessages(null);
+        handlerICCard.removeCallbacksAndMessages(null);
+        icCardSerialPortUtil.endRead();
         mController.cleanPresentations();
         mProductList.clear();
         mProductList = null;
         btnList.clear();
         btnList = null;
+
         android.os.Process.killProcess(android.os.Process.myPid());
     }
 
@@ -244,20 +182,22 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scalepage);
-
         //注册订阅事件
         EventBus.getDefault().register(this);
         //后台发送服务-电池电量订阅服务
         startService(getSkipIntent(BatteryService.class));
         //后台发送服务-心跳数据订阅服务
         startService(getSkipIntent(HeartBeatService.class));
-
         //初始化称重模块
         initJNI();
         //初始化控件
         initViews();
-
+        //展示数据库中的商品
         showPros();
+        //开启定时刷新线程
+        timerThreads.scheduleAtFixedRate(runnableTimer, 1500, 50, TimeUnit.MILLISECONDS);
+        //开启IC卡读取功能
+        icCardSerialPortUtil.startRead(this);
     }
 
     //初始化控件
@@ -274,9 +214,10 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         flippart = findViewById(R.id.flippart);
         mMaxUnitView = findViewById(R.id.maxUnit);
         mBatteryIv = findViewById(R.id.battery);
-
         //配置自动计算功能
         mTvTare.addTextChangedListener(new TWShowBackDisplay(1)); //商品的皮重
+        mTvWeight.addTextChangedListener(new TWShowBackDisplay(5));//商品的重量
+        tvProName.addTextChangedListener(new TWShowBackDisplay(2)); //商品的名称
         mTvUnitPrice.addTextChangedListener(new TWShowBackDisplay(3));//商品单价
         mTvSubtotal.addTextChangedListener(new TWShowBackDisplay(4));//商品总价
 
@@ -290,7 +231,6 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     private void initJNI() {
         try {
             mScale = JNIScale.getScale();
-            divisionValue = mScale.getDivisionValue();
             boolean isDirExists = FileHelp.isSerayDirExists();
             if (!isDirExists) {
                 App.getApplication().setScreenOffTime(60 * 60 * 1000);
@@ -348,208 +288,40 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         LogUtil.i("--------HeartBeatMsg---->" + heartBeatMsg.toString());
     }
 
-    /**
-     * 清除品名信息
-     */
-    void clearProductInfo() {
-        priceRealValue = "";
-        cleanTareFloat();
-    }
-
-
-    /**
-     * 重置tareFloat
-     */
-    void cleanTareFloat() {
-        tareFloat = -1.0F;
-    }
-
-
-    //
-    private void changeWeightType() {
-        isByWeight = true;
-    }
-
-
-    private BigDecimal getTotalMoney(List<ProductADB> list) {
-        BigDecimal sum = new BigDecimal("0.00");
-        for (int i = 0; i < list.size(); i++) {
-            BigDecimal amount = BigDecimal.valueOf(list.get(i).getPrice());
-            sum = sum.add(amount);
-        }
-        return sum;
-    }
-
-
-    private void assign() {
-        int index = mProductList.size();
-        if (index > 11)
-            index = 11;
-        clearPlu();
-        PLUValue(index);
-    }
-
-    private void clearPlu() {
-        for (int i = 0; i < btnList.size(); i++) {
-            btnList.get(i).setText("");
-            btnList.get(i).setTag(null);
-        }
-    }
-
-    private void PLUValue(int value) {
-        if (value == 0) {
-            clearPlu();
-            return;
-        }
-        for (int i = 0; i < value; i++) {
-            ProductADB product = mProductList.get(i);
-            btnList.get(i).setTag(product);
-            btnList.get(i).setText(product.getPro_name());
-        }
-    }
-
-
-    /**
-     * 处理显示单价
-     */
-    private void displayPrice() {
-        String temp = priceRealValue;
-        temp = formatPrice(temp);
-        mTvUnitPrice.setText(temp);
-    }
-
-    private String formatPrice(String temp) {
-        int len = temp.length();
-        int dotIndex = temp.indexOf('.');
-        if (len == 0)
-            temp = "0";
-        if (dotIndex > -1) {
-            if (dotIndex == len - 1)
-                temp += "00";
-            else if (dotIndex >= len - 2)
-                temp += "0";
-            else if (dotIndex == len - 3)
-                return temp;
-            else if (dotIndex < len - 3)
-                temp = temp.substring(0, dotIndex + 3);
-            else if (temp.endsWith("0"))
-                temp = temp.substring(0, len - 1);
-        } else {
-            temp += ".00";
-        }
-        return temp;
-    }
-
+    //监听右侧键盘点击事件
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         mMisc.beep();
         switch (keyCode) {
-            case KeyEvent.KEYCODE_A:
-                ACCUx(1);
+            case KeyEvent.KEYCODE_NUMPAD_DIVIDE:// 取消
                 return true;
-            case KeyEvent.KEYCODE_D:
-                ACCUx(2);
-                return true;
-            case KeyEvent.KEYCODE_B:
-                ACCUx(3);
-                return true;
-            case KeyEvent.KEYCODE_C:
-                ACCUx(4);
-                return true;
-            case KeyEvent.KEYCODE_BACK:// 单价保存
-
+            case KeyEvent.KEYCODE_BACK:// 返回按钮
                 return true;
             case KeyEvent.KEYCODE_MENU:// 桌秤
+                return true;
             case KeyEvent.KEYCODE_MOVE_HOME:// 地秤
                 startActivity(ManageActivity.class);
                 return true;
             case KeyEvent.KEYCODE_F1:// 去皮
-                cleanTareFloat();
-                if (mScale.tare()) {
-                    float curTare = mScale.getFloatTare();
-                    if (CacheHelper.isOpenJin)
-                        curTare *= 2;
-                    mTvTare.setText(NumFormatUtil.df3.format(curTare));
-                } else {
-                    showMessage("去皮失败");
-                }
                 return true;
             case KeyEvent.KEYCODE_F2:// 置零
-                if (mScale.zero()) {
-                    cleanTareFloat();
-                    mTvTare.setText(R.string.base_weight);
-                } else {
-                    showMessage("置零失败");
-                }
                 return true;
             case KeyEvent.KEYCODE_NUM_LOCK: // 退格
-                undoLast();
                 return true;
             case KeyEvent.KEYCODE_DEL:// 语音
                 return true;
-            case KeyEvent.KEYCODE_NUMPAD_0:
-                unitPriceValu("0");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_1:
-                unitPriceValu("1");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_2:
-                unitPriceValu("2");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_3:
-                unitPriceValu("3");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_4:
-                unitPriceValu("4");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_5:
-                unitPriceValu("5");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_6:
-                unitPriceValu("6");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_7:
-                unitPriceValu("7");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_8:
-                unitPriceValu("8");
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_9:
-                unitPriceValu("9");
-                return true;
-
-
-            case KeyEvent.KEYCODE_NUMPAD_DOT: // 一键清除
-//                clearEvent();
-
-                return true;
-
-
             case KeyEvent.KEYCODE_NUMPAD_ADD:// 价格修改操作
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_ENTER: // 打印
-//                keyEnter();
-//                clearTraders();
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_SUBTRACT:// 手动输入去皮重量
-                if (!isByWeight)
-                    return true;
-                createTareDialog();
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_MULTIPLY: // 计件计重切换
-                changeWeightType();
-                return true;
-            case KeyEvent.KEYCODE_NUMPAD_DIVIDE:// 取消
-                clearProductInfo();
-                return true;
-            case KeyEvent.KEYCODE_E: // 小数点
-                unitPriceValu(".");
                 return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
         int keyCode = event.getKeyCode();
@@ -565,241 +337,6 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 || super.dispatchKeyEvent(event);
     }
 
-//    public void clearTraders() {
-//        icCardHandler.post(() -> {
-//            System.out.println("---------clearTraders---------->");
-//            seller.setText("卖家\n请刷卡");
-//            buyer.setText("买家\n请刷卡");
-//        });
-//    }
-
-
-    @Override
-    public void onClick(View v) {
-        super.onClick(v);
-        switch (v.getId()) {
-            case R.id.pay:
-//                doPay();
-                showMessage("执行订单上传！");
-                break;
-            case R.id.printout:
-//                keyEnter();
-                break;
-            case R.id.scalelayout_fn:
-                Intent intent = getSkipIntent(TotalActivity.class);
-                switch (RECUR_FLAG) {
-                    case 1:
-                        intent.putExtra("Customer", 1);
-                        break;
-                    case 2:
-                        intent.putExtra("Customer", 2);
-                        break;
-                    case 3:
-                        intent.putExtra("Customer", 3);
-                        break;
-                    case 4:
-                        intent.putExtra("Customer", 4);
-                        break;
-                }
-                startActivity(intent);
-                break;
-        }
-    }
-
-
-    private void updateViews() {
-        sqlQueryThread.submit(new Runnable() {
-            @Override
-            public void run() {
-                ProductDao productDao = AppDatabase.getInstance().getProductDao();
-                mProductList = productDao.loadAll();
-                List<ProductADB> result = mProductList;
-                if (!result.isEmpty()) {
-                    mProductList.clear();
-                    mProductList.addAll(result);
-                }
-                mScaleHandler.sendEmptyMessage(3);
-            }
-        });
-    }
-
-
-    /**
-     * 创建并展示手动输入皮重对话框
-     */
-    void createTareDialog() {
-        CustomInputTareDialog tareDialog = new CustomInputTareDialog(ScaleActivity.this, CacheHelper.isOpenJin);
-        tareDialog.show();
-        tareDialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomInputTareDialog.OnPositiveClickListener() {
-            @Override
-            public void onPositiveClick(CustomInputTareDialog dialog, String weight) {
-                setTareFloat(weight);
-                dialog.dismiss();
-            }
-        });
-        tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, new CustomInputTareDialog.OnNegativeClickListener() {
-            @Override
-            public void onNegativeClick(CustomInputTareDialog dialog) {
-                dialog.dismiss();
-            }
-        });
-    }
-
-    /**
-     * 设置扣重
-     */
-    private void setTareFloat(String weight) {
-        if (weight.equals(".")) {
-            tareFloat = -1.0F;
-        } else if (NumFormatUtil.isNumeric(weight)) {
-            tareFloat = Float.parseFloat(weight);
-        }
-    }
-
-    /**
-     * 清除单价与重量
-     */
-    protected void clearEvent() {
-        if (isByWeight) {// 计重
-            if (CacheHelper.isChangePrice) {
-                priceRealValue = "";
-                mTvUnitPrice.setText(R.string.base_price);
-            }
-        } else {// 计件
-            mTvWeight.setText(R.string.base_weight_by_piece);
-        }
-    }
-
-    /**
-     * 撤销最后一个字符
-     */
-    private void undoLast() {
-        if (isByWeight) { // 计重
-            if (!priceRealValue.isEmpty()) {
-                priceRealValue = priceRealValue.substring(0, priceRealValue.length() - 1);
-                if (!priceRealValue.isEmpty() && priceRealValue.charAt(priceRealValue.length() - 1) == '.')
-                    priceRealValue = priceRealValue.substring(0, priceRealValue.length() - 1);
-            }
-            displayPrice();
-        } else { // 计件
-            String tv = mTvWeight.getText().toString();
-            if (!tv.isEmpty())
-                mTvWeight.setText(tv.substring(0, tv.length() - 1));
-        }
-    }
-
-    /**
-     * 键盘数字显示 处理保留两位小数问题
-     */
-    private void unitPriceValu(String num) {
-        if (isByWeight) {
-            if (CacheHelper.isChangePrice) {
-                if (isPlu) {
-                    isPlu = false;
-                    priceRealValue = "";
-                }
-                int dotIndex = priceRealValue.indexOf('.');
-                if (dotIndex == -1 && !num.equals(".")) {
-                    String ps = priceRealValue;
-                    if (ps.length() >= 4)
-                        return;
-                }
-                if (dotIndex > -1) {// 有小数点
-                    if (num.equals("."))
-                        return;
-                    if (dotIndex >= priceRealValue.length() - 2)
-                        priceRealValue += num;
-                    else {
-                        if (priceRealValue.charAt(priceRealValue.length() - 1) == '0')
-                            priceRealValue += num;
-                    }
-                } else { // 没有小数点
-                    if (num.equals(".")) {
-                        if (priceRealValue.isEmpty())
-                            priceRealValue = "0";
-                    } else {
-                        if (priceRealValue.equals("0"))
-                            priceRealValue = "";
-                    }
-                    priceRealValue += num;
-                }
-                displayPrice();
-            }
-        } else {// 计件
-            String iszero = mTvWeight.getText().toString().trim();
-            boolean wzero = iszero.equals("0");
-            if (wzero) {
-                mTvWeight.setText(num);
-            } else {
-                if (iszero.length() >= 4)
-                    return;
-                mTvWeight.setText(iszero + num);
-            }
-        }
-    }
-
-    /**
-     * 累加操作主方法
-     */
-    private void ACCCUx_add() {
-        // 当秤稳定时 或是 计件模式时
-        if (isStable() || !isByWeight) {
-//            String productName = vegenames.getText().toString();
-            // 当开启了无PLU不显示总价 选项 并且 品名为空时
-//            if (CacheHelper.isNoPluNoSum && productName.isEmpty())
-//                return;
-
-            String weight = mTvWeight.getText().toString().trim();
-
-            if (TextUtils.isEmpty(weight) || !NumFormatUtil.isNumeric(weight))
-                return;
-
-            String price = mTvUnitPrice.getText().toString().trim();
-
-            BigDecimal bigTare = mNumUtil.getDecimalTare(String.valueOf(tareFloat));
-            BigDecimal bigPrice = mNumUtil.getDecimalPrice(price);
-            BigDecimal number;
-
-            if (isByWeight) {
-                number = mNumUtil.getDecimalNet(weight);
-                if (CacheHelper.isOpenJin) {
-                    BigDecimal rate = new BigDecimal(2.0);
-                    number = number.divide(rate);
-                    bigPrice = bigPrice.multiply(rate);
-                }
-            } else {
-                number = new BigDecimal(weight);
-            }
-
-            BigDecimal transAmt = mNumUtil.getDecimalSum(bigPrice, number);
-
-//            if (isCanAddUp(transAmt, number)) {
-//                if (mSelectedProduct != null) {
-//                    mDetail = SjcDetail.getSjcDetail("", mSelectedProduct);
-//                } else {
-//                    mDetail = SjcDetail.getSjcDetail("");
-//                    mDetail.setPriceType(isByWeight ? PriceType.BY_PRICE : PriceType.BY_PIECE);
-//                    mDetail.setSaleUnit(isByWeight ? "公斤" : "件");
-//                    mDetail.setSalePrice(bigPrice);
-//                }
-//                mDetail.setDealPrice(bigPrice);
-//                mDetail.setDealCnt(number);
-//                mDetail.setDealAmt(transAmt);
-//                mDetail.setDiscountAmt(BigDecimal.ZERO);
-//                mDetail.setNetWeight(bigTare.compareTo(BigDecimal.ZERO) < 0 ? BASIC_TARE : bigTare);
-//                clearProductInfo();
-//            }
-        }
-    }
-
-
-    /**
-     * 累加操作
-     */
-    private void ACCUx(int fn) {
-        ACCCUx_add();
-    }
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -807,14 +344,13 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         this.RECUR_FLAG = getIntent().getIntExtra("FNS", RECUR_FLAG);
     }
 
-
     @Override
     protected void onResume() {
         mMaxUnitView.setText(String.format("%skg-%s", mScale.getMainUnitFull(), CacheHelper.device_id));
         super.onResume();
     }
 
-    @SuppressLint("SetTextI18n")
+    //接收读卡器返回数据
     @Override
     public void onICCardDataReceive(ICCardSerialPortUtil.DataReceType type, byte[] buffer, int size) {
         Message message = new Message();
@@ -822,19 +358,23 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         if (ICCardSerialPortUtil.DataReceType.success == type) {
             if (buffer.length != 12) {
                 message.obj = "卡号长度有误：" + buffer.length;
+            } else {
+                String cardID = ByteUtil.getCardNo(buffer);
+                if (null == cardID) {
+                    message.obj = "解析卡号失败！";
+                } else {
+                    ResultData resultData = getUserByICCard(cardID);
+                    message.what = 9;
+                    message.obj = resultData;
+                }
             }
-            String cardID = ByteUtil.getCardNo(buffer);
-            if (null == cardID) {
-                message.obj = "解析卡号失败！";
-            }
-            ResultData resultData = getUserByICCard(cardID);
-
         } else {
             message.obj = "读取卡号失败！";
         }
-        icCardHandler.sendMessage(message);
+        handlerICCard.sendMessage(message);
     }
 
+    //发送http请求，获取IC卡会员信息
     private ResultData getUserByICCard(String cardID) {
         ResultData resultData = new ResultData();
         try {
@@ -844,23 +384,25 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 return resultData;
             }
             String sign = resultData.getMsg() + "";
-            getUserByCardNoVM.setCard_id(cardID);
-            Response<ApiDataRsp<List<UserVipCardDetailDTO>>> response = HttpServicesFactory.getHttpServiceApi().getuserbycardno(CacheHelper.device_id + "", sign, getUserByCardNoVM).execute();
-            if (response.isSuccessful()) {
-
+            getUserByCardNoVM.setCardNo(cardID);
+            Response<ApiDataRsp<UserVipCardDetailDTO>> response = HttpServicesFactory.getHttpServiceApi().getuserbycardno(CacheHelper.device_id + "", sign, getUserByCardNoVM).execute();
+            if (!response.isSuccessful()) {
+                resultData.setRetMsg(response.code() + "", "-" + response.errorBody().toString());
+            } else {
+                resultData.setTrueMsg(response.body());
             }
             return resultData;
         } catch (Exception e) {
-//            return resultData.setRetMsg(resultData)
+            resultData.setRetMsg("2144", e.getMessage());
             return resultData;
         }
     }
 
-
-    private static class ICCardHandler extends Handler {
+    //处理读卡模块返回数据
+    private static class HandlerICCard extends Handler {
         WeakReference<ScaleActivity> mWeakReference;
 
-        ICCardHandler(WeakReference<ScaleActivity> weakReference) {
+        HandlerICCard(WeakReference<ScaleActivity> weakReference) {
             this.mWeakReference = weakReference;
         }
 
@@ -870,23 +412,95 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             ScaleActivity activity = mWeakReference.get();
             if (msg.what == -1) {
                 activity.showMessage(msg.obj.toString());
+                return;
+            }
+            if (msg.what == 9) {
+                ResultData resultData = (ResultData) msg.obj;
+                if (!resultData.isSuccess()) {
+                    activity.showMessage(resultData.getCode() + "-" + resultData.getMsg());
+                } else {
+                    ApiDataRsp<UserVipCardDetailDTO> apiDataRsp = (ApiDataRsp<UserVipCardDetailDTO>) resultData.getMsg();
+                    if (apiDataRsp.getSuccess()) {
+                        UserVipCardDetailDTO userVipCardDetailDTO = apiDataRsp.getMsgs();
+                        if ("买家".equals(userVipCardDetailDTO.getUser_type())) {
+                            activity.buyer.setText("买家:" + userVipCardDetailDTO.getUser_name() + "-" + userVipCardDetailDTO.getBalance());
+                            activity.buyer.setTag(userVipCardDetailDTO);
+                        } else if ("卖家".equals(userVipCardDetailDTO.getUser_type())) {
+                            activity.seller.setText("卖家:" + userVipCardDetailDTO.getUser_name());
+                            activity.seller.setTag(userVipCardDetailDTO);
+                        } else {
+                            activity.showMessage("没有【" + userVipCardDetailDTO.getUser_type() + "】该种类型的角色！");
+                        }
+                    } else {
+                        activity.showMessage(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
+                    }
+                }
             }
         }
     }
 
+    //去皮按钮点击事件
+    public void sbtnTare(View view) {
+        mMisc.beep();
+        CustomInputTareDialog tareDialog = new CustomInputTareDialog(ScaleActivity.this, "请输入去皮重量", "去皮重量单位为公斤（kg）");
+        tareDialog.show();
+        tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, weight) -> {
+            dialog.dismiss();
+            mTvTare.setText(NumFormatUtil.DF_WEIGHT.format(weight));
+            //计算总价
+            countPirce();
+        });
+        tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, Dialog::dismiss);
+    }
 
-    //显示重量
-    private static class ScaleHandler extends Handler {
+    //价格按钮点击事件
+    public void sbtnPrice(View view) {
+        mMisc.beep();
+        CustomInputTareDialog tareDialog = new CustomInputTareDialog(ScaleActivity.this, "请输入商品单价", "商品单价单位为元");
+        tareDialog.show();
+        tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, weight) -> {
+            dialog.dismiss();
+            mTvUnitPrice.setText(NumFormatUtil.DF_PRICE.format(weight));
+            //计算总价
+            countPirce();
+        });
+        tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, Dialog::dismiss);
+    }
+
+    //累加按钮点击事件
+    public void sbtnAccux(View view) {
+        mMisc.beep();
+        // 当秤稳定时 或是 计件模式时
+        if (mScale.getStabFlag()) {
+            String weight = mTvWeight.getText().toString().trim();//总重
+            String price = mTvUnitPrice.getText().toString().trim();//单价
+            String tare = mTvTare.getText().toString().trim();//皮重
+            String tvProNameStr = tvProName.getText().toString().trim();//商品名称
+            String mTvSubtotalStr = mTvSubtotal.getText().toString().trim();//商品总价
+            int proID = proTradeNow.getProduct_id();//商品id
+            showMessage("累计一个订单！");
+        } else {
+            showMessage("重量仍在变动！");
+        }
+    }
+
+    //支付按钮点击事件
+    public void sbtnPay(View view) {
+        mMisc.beep();
+    }
+
+
+    //处理称重模块返回数据
+    private static class HandlerScale extends Handler {
         WeakReference<ScaleActivity> mWeakReference;
 
-        ScaleHandler(WeakReference<ScaleActivity> weakReference) {
+        HandlerScale(WeakReference<ScaleActivity> weakReference) {
             this.mWeakReference = weakReference;
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-
             ScaleActivity activity = mWeakReference.get();
             if (activity != null) {
                 switch (msg.what) {
@@ -894,15 +508,49 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                         activity.weightChangedCyclicity();
                         activity.lightScreenCyclicity();
                         break;
-                    case 3:
-                        activity.assign();
-                        break;
                 }
             }
         }
     }
 
-    //在背面显示屏上显示单价、皮重、总价
+    //点亮屏幕
+    private void lightScreenCyclicity() {
+        App.getApplication().openScreen();
+    }
+
+    //显示称重模块读取的数据
+    private void weightChangedCyclicity() {
+        //获取电子秤返回的重量数据
+        String strNet = mScale.getStringNet().trim();
+        float fW = NumFormatUtil.isNumeric(strNet) ? Float.parseFloat(strNet) : 0;     //默认公斤kg
+        //展示重量
+        mTvWeight.setText(NumFormatUtil.DF_WEIGHT.format(fW));
+
+        if (mScale.getStringNet().contains("OL")) {
+            showMessage("超出量程范围！");
+            return;
+        }
+        //展示电子秤稳定状态
+        if (mScale.getStabFlag()) {
+            backDisplay.showIsStable(true);
+            findViewById(R.id.stableflag).setVisibility(View.VISIBLE);
+        } else {
+            backDisplay.showIsStable(false);
+            findViewById(R.id.stableflag).setVisibility(View.INVISIBLE);
+        }
+        //是否为0值
+        if (mScale.getZeroFlag()) {
+            backDisplay.showIsZero(true);
+            findViewById(R.id.zeroflag).setVisibility(View.VISIBLE);
+        } else {
+            backDisplay.showIsZero(false);
+            findViewById(R.id.zeroflag).setVisibility(View.INVISIBLE);
+        }
+        //计算总价
+        countPirce();
+    }
+
+    //通知背面显示屏上显示单价、皮重、总价
     private class TWShowBackDisplay implements TextWatcher {
         int flag;
 
@@ -925,13 +573,20 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 case 1:
                     backDisplay.showTare(s.toString()); //商品的皮重
                     break;
+                case 2:
+                    backDisplay.showProductName(s.toString()); //商品的名称
+                    break;
                 case 3:
                     backDisplay.showPrice(s.toString());//商品单价
                     break;
                 case 4:
                     backDisplay.showAmount(s.toString());//商品总价
                     break;
+                case 5:
+                    backDisplay.showWeight(s.toString());//商品的总重
+                    break;
             }
+
         }
     }
 

@@ -76,10 +76,10 @@ public class CacheHelper {
         }
     }
 
-
     public static boolean isDeviceRegistered() {
         System.out.println("---isDeviceRegistered---device_id----------->" + device_id);
-        return !device_id.equals(0);
+        System.out.println("---isDeviceRegistered---device_aes_key----------->" + device_aes_key);
+        return !device_id.equals(0) && !"empty".equals(device_aes_key);
     }
 
     //更新心跳数据
@@ -90,6 +90,7 @@ public class CacheHelper {
         data_version = heartBeatDeviceDzcDTO.getData_version();
         return true;
     }
+
     //更新商品列表
     public static boolean updatePros(@NonNull List<ProductDZCDTO> productDZCDTOS) {
         try {
@@ -121,21 +122,23 @@ public class CacheHelper {
     }
 
 
-
     public static boolean deviceRegistered(DeviceRegisterDTO deviceRegisterDTO) {
         try {
             if (!saveData(CFK_DEVICE_ID, deviceRegisterDTO.getDevice_dzc_id() + "")) {
+                System.out.println("--CFK_DEVICE_ID-saveData---false->");
                 return false;
             }
             device_id = deviceRegisterDTO.getDevice_dzc_id();
 
 
             if (!saveData(CFK_DEVICE_AES_KEY, deviceRegisterDTO.getUse_aes_key())) {
+                System.out.println("--CFK_DEVICE_AES_KEY-saveData---false->");
                 return false;
             }
             device_aes_key = deviceRegisterDTO.getUse_aes_key();
 
             if (!saveData(CFK_COMPANY_NAME, deviceRegisterDTO.getCompany_name())) {
+                System.out.println("--CFK_COMPANY_NAME-saveData---false->");
                 return false;
             }
             company_name = deviceRegisterDTO.getCompany_name();

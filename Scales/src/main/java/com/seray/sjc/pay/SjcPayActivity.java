@@ -35,23 +35,12 @@
 //import com.seray.sjc.SjcConfig;
 //import com.seray.sjc.annotation.DisplayType;
 //import com.seray.sjc.api.net.HttpServicesFactory;
-//import com.seray.sjc.api.request.ControlQRPayReq;
-//import com.seray.sjc.api.request.DownloadQRPayUrlReq;
 //import com.seray.sjc.api.result.ApiDataRsp;
-//import com.seray.sjc.api.result.ControlQRPayResult;
 //import com.seray.sjc.api.result.DownloadQRPayUrlRsp;
 //import com.seray.sjc.db.AppDatabase;
-//import com.seray.sjc.db.dao.SjcSubtotalDao;
-//import com.seray.sjc.entity.card.CardPayOrder;
-//import com.seray.sjc.entity.device.PayTypeInfo;
-//import com.seray.sjc.entity.order.OrderInfo;
-//import com.seray.sjc.entity.order.SjcDetail;
-//import com.seray.sjc.entity.order.SjcSubtotal;
 //import com.seray.sjc.poster.DisplayPoster;
 //import com.seray.sjc.util.SignUtils;
 //import com.seray.sjc.util.SjcUtil;
-//import com.seray.sjc.view.CpuCardManagerDialog;
-//import com.seray.sjc.work.UploadOrderWork;
 //import com.seray.util.FileHelp;
 //import com.seray.util.LogUtil;
 //import com.seray.util.NumFormatUtil;
@@ -111,13 +100,13 @@
 //
 //    private Handler mHandler = new Handler();
 //
-//    private OrderInfo orderInfo;//订单信息
+////    private OrderInfo orderInfo;//订单信息
 //
 //    private String mFromActivity;// 来源 区分单笔和累计
 //    private Runnable reqPayResRunnable = this::getPayCodePayResult;
 //
 //    // 当前使用的支付方式
-//    private PayTypeInfo payType = new PayTypeInfo("0101", "现金");
+////    private PayTypeInfo payType = new PayTypeInfo("0101", "现金");
 //
 //    private String rawTransOrderCode; // 原始订单号
 //
@@ -139,11 +128,11 @@
 //        setContentView(R.layout.activity_pay_for_order);
 //        EventBus.getDefault().register(this);
 //        ButterKnife.bind(this);
-//        if (CacheHelper.PayTypeInfoList == null || CacheHelper.PayTypeInfoList.isEmpty()) {
-//            showMessage("系统数据异常，请同步系统数据后再试");
-//            delayClose();
-//            return;
-//        }
+////        if (CacheHelper.PayTypeInfoList == null || CacheHelper.PayTypeInfoList.isEmpty()) {
+////            showMessage("系统数据异常，请同步系统数据后再试");
+////            delayClose();
+////            return;
+////        }
 //        mPayLayout.setOnClickListener(v -> {
 //        }); // 消费点击事件
 //        initData();

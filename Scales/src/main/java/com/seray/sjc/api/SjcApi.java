@@ -51,5 +51,5 @@ public interface SjcApi {
      * 获取商品列表
      */
     @POST("/dzc/getuserbycardno")
-    Call<ApiDataRsp<List<UserVipCardDetailDTO>>> getuserbycardno(@Header("device_id") String device_id, @Header("sign") String sign, @Body GetUserByCardNoVM getUserByCardNoVM);
+    Call<ApiDataRsp<UserVipCardDetailDTO>> getuserbycardno(@Header("device_id") String device_id, @Header("sign") String sign, @Body GetUserByCardNoVM getUserByCardNoVM);
 }

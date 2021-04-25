@@ -7,7 +7,7 @@
     <string name="back_display_service">后显示广告服务</string>
     <string name="zhifu">支付</string>
     <string name="base_piece">件</string>
-    <string name="scale_amount">总价</string>
+    <string name="scale_amount">总价(元)</string>
     <string name="base_unit_with_piece_1">元/件</string>
     <string name="base_unit_with_piece_2">元/kg</string>
     <string name="base_unit_with_piece_3">元/斤</string>
@@ -21,7 +21,7 @@
     <string name="scale_account">合计：</string>
     <string name="all">共</string>
     <string name="scale_piece">笔</string>
-    <string name="scale_product_title">品名</string>
+    <string name="scale_product_title">商品名称:</string>
 
     <string name="display_weight_unit_kg">净重（千克）</string>
     <string name="display_weight_unit_jin">净重（斤）</string>
@@ -108,7 +108,7 @@
     <string name="select_next_page">下一页</string>
     <string name="select_save_warnning">保存失败</string>
     <string name="total_tips">没有需要支付的订单信息</string>
-    <string name="setting_unit_type">当前称重单位为：</string>
+    <string name="setting_unit_type">当前称重单位为：公斤</string>
     <string name="setting_unit_type_msg">点击确定将切换称重单位</string>
     <string name="setting_screenOffTime_success">屏保时间设置成功</string>
 

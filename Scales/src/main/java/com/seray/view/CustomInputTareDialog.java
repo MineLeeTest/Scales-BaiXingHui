@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,9 +17,11 @@ import com.lzscale.scalelib.misclib.Misc;
 import com.seray.scales.R;
 import com.seray.util.NumFormatUtil;
 
+import java.math.BigDecimal;
+
 /**
  * Created by SR_Android on 2017/11/23.
- * 手动输入扣重重量
+ * 手动输入皮重、单价
  */
 
 public class CustomInputTareDialog extends Dialog implements View.OnClickListener {
@@ -28,13 +31,16 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
     private Context mContext;
     private Misc mMisc;
     private CustomInputTareDialog mDialog;
-    private TextView mWeightTv;
+    private TextView tv;
     private boolean isOpenJin = false;
+    private String titleMsg;
+    private String alertContent;
 
-    public CustomInputTareDialog(@NonNull Context context, boolean isOpenJin) {
+    public CustomInputTareDialog(@NonNull Context context, String titleMsg, String alertContent) {
         super(context, R.style.Dialog);
         mContext = context;
-        this.isOpenJin = isOpenJin;
+        this.titleMsg = titleMsg;
+        this.alertContent = alertContent;
     }
 
     @Override
@@ -42,65 +48,48 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_input_tare_dialog_layout);
         setCanceledOnTouchOutside(true);
-        setMessage();
-        mWeightTv = (TextView) findViewById(R.id.custom_input_tare_weight);
         mDialog = this;
+        tv = mDialog.findViewById(R.id.custom_input_tare_weight);
+        setMessage();
         mMisc = Misc.newInstance();
-        setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    mMisc.beep();
-                    String txt = mWeightTv.getText().toString();
-                    if (keyCode >= KeyEvent.KEYCODE_NUMPAD_0 && keyCode <= KeyEvent
-                            .KEYCODE_NUMPAD_9) {
-                        int i = txt.indexOf(".");
-                        if (i < 0 || (i > -1 && i > txt.length() - 4))
-                            txt += keyCode - KeyEvent.KEYCODE_NUMPAD_0;
-                    } else if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent
-                            .KEYCODE_9) {
-                        int i = txt.indexOf(".");
-                        if (i < 0 || (i > -1 && i > txt.length() - 4))
-                            txt += keyCode - KeyEvent.KEYCODE_0;
-                    } else if (keyCode == KeyEvent.KEYCODE_E) {
-                        if (!txt.contains("."))
-                            txt += ".";
-                    } else if (keyCode == KeyEvent.KEYCODE_NUM_LOCK) {
-                        if (!txt.isEmpty())
-                            txt = txt.substring(0, txt.length() - 1);
-                    } else if (keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) {
-                        txt = "";
-                    } else if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                        if (positiveClickListener != null) {
-                            if (txt.equals(".") || !NumFormatUtil.isNumeric(txt))
-                                txt = "0.000";
-                            float tare = Float.parseFloat(txt);
-                            if (isOpenJin) {
-                                if (tare > 0)
-                                    tare = tare / 2;
-                            }
-                            txt = Float.toString(tare);
-                            positiveClickListener.onPositiveClick(mDialog, txt);
-                        }
-                    } else if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_NUMPAD_DIVIDE) {
-                        if (negativeClickListener != null)
-                            negativeClickListener.onNegativeClick(mDialog);
-                    }
-                    mWeightTv.setText(txt);
+        this.setOnKeyListener((dialog, keyCode, event) -> {
+            System.out.println("-------------mDialog.setOnKeyListener-------------->" + keyCode);
+            System.out.println("-------------" + event.getAction() + "-------------->");
+
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                mMisc.beep();
+                String txt = tv.getText().toString();
+                if (keyCode >= KeyEvent.KEYCODE_NUMPAD_0 && keyCode <= KeyEvent
+                        .KEYCODE_NUMPAD_9) {
+                    int i = txt.indexOf(".");
+                    if (i < 0 || i > txt.length() - 4)
+                        txt += keyCode - KeyEvent.KEYCODE_NUMPAD_0;
+                } else if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent
+                        .KEYCODE_9) {
+                    int i = txt.indexOf(".");
+                    if (i < 0 || i > txt.length() - 4)
+                        txt += keyCode - KeyEvent.KEYCODE_0;
+                } else if (keyCode == KeyEvent.KEYCODE_E) {
+                    if (!txt.contains("."))
+                        txt += ".";
+                } else if (keyCode == KeyEvent.KEYCODE_NUM_LOCK) {
+                    if (!txt.isEmpty())
+                        txt = txt.substring(0, txt.length() - 1);
+                } else if (keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) {
+                    txt = "";
                 }
-                return true;
+                tv.setText(txt);
             }
+            return true;
         });
     }
 
     private void setMessage() {
-        TextView messageView = (TextView) findViewById(R.id.custom_input_tare_message);
-        String content = mContext.getString(R.string.setting_unit_type);
-        if (isOpenJin)
-            content += mContext.getString(R.string.manager_scale_jin);
-        else
-            content += mContext.getString(R.string.manager_scale_kg);
-        messageView.setText(content);
+        TextView messageView = findViewById(R.id.custom_input_alert_msg);
+        TextView tittleView = findViewById(R.id.custom_input_title_msg);
+        messageView.setText(this.alertContent);
+        tittleView.setText(this.titleMsg);
+
     }
 
     public void setOnPositiveClickListener(@StringRes int str, @Nullable OnPositiveClickListener listener) {
@@ -126,17 +115,21 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
         mMisc.beep();
         switch (v.getId()) {
             case R.id.custom_input_tare_positive:
-                String weight = mWeightTv.getText().toString();
-                if (weight.equals(".") || !NumFormatUtil.isNumeric(weight))
-                    weight = "0.000";
-                float tare = Float.parseFloat(weight);
-                if (isOpenJin) {
-                    if (tare > 0)
-                        tare = tare / 2;
+                String tvData = tv.getText().toString();
+                if (TextUtils.isEmpty(tvData) || !NumFormatUtil.isNumeric(tvData)) {
+                    tvData = "0";
                 }
-                weight = Float.toString(tare);
-                positiveClickListener.onPositiveClick(mDialog, weight);
+                positiveClickListener.onPositiveClick(mDialog, BigDecimal.valueOf(Double.parseDouble(tvData)));
+
+
+                if (R.id.tare == this.tv.getId()) {
+
+                }
+                if (R.id.unitprice == this.tv.getId()) {
+                    tv.setText(NumFormatUtil.DF_WEIGHT.format(tvData));
+                }
                 break;
+
             case R.id.custom_input_tare_negative:
                 negativeClickListener.onNegativeClick(mDialog);
                 break;
@@ -144,7 +137,7 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
     }
 
     public interface OnPositiveClickListener {
-        void onPositiveClick(CustomInputTareDialog dialog, String weight);
+        void onPositiveClick(CustomInputTareDialog dialog, BigDecimal weight);
     }
 
     public interface OnNegativeClickListener {
