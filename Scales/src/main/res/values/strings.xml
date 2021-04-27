@@ -4,7 +4,7 @@
     <string name="image_recognize_service">果蔬在线识别服务</string>
     <string name="read_battery_service">电池电量监听服务</string>
     <string name="service_heart_beat">定时心跳数据服务</string>
-    <string name="back_display_service">后显示广告服务</string>
+    <string name="back_display_service">后显示服务</string>
     <string name="zhifu">支付</string>
     <string name="base_piece">件</string>
     <string name="scale_amount">总价(元)</string>

@@ -27,6 +27,7 @@ import retrofit2.Response;
 
 public class StartActivity extends BaseActivity implements View.OnClickListener {
     Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         context = this.getBaseContext();
         //读取配置文件数据
         CacheHelper.prepareCacheData();
+        System.out.println("CacheHelper.getConfigMapString()------------------->" + CacheHelper.getConfigMapString());
         //没有注册过
         if (!CacheHelper.isDeviceRegistered()) {
             //提交注册信息
@@ -85,10 +87,12 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
                     return;
                 }
 
-                if (CacheHelper.deviceRegistered((DeviceRegisterDTO) apiDataRsp.getMsgs())) {
+                if (!CacheHelper.deviceRegistered((DeviceRegisterDTO) apiDataRsp.getMsgs())) {
                     showMessage("将注册信息存储到本地失败！");
                     return;
                 }
+                //已经注册过则进入交易界面
+                registed();
             }
 
             @Override
@@ -98,7 +102,6 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
             }
         });
     }
-
 
 
     /**

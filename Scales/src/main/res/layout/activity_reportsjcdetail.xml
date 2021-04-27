@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/black">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
 
     <LinearLayout
         android:id="@+id/rl_tabtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orderdetail_textcolor"
-        android:paddingTop="5dp"
         android:layout_below="@+id/rl_title"
+        android:background="@color/orderdetail_textcolor"
         android:orientation="horizontal"
+        android:paddingTop="5dp"
         android:paddingBottom="5dp"
-        android:weightSum="5">
+        android:weightSum="6">
 
         <TextView
             android:layout_width="0dp"
@@ -22,24 +22,6 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="商品名称"
-            android:textColor="@color/white"
-            android:textSize="@dimen/managerCategoryTextSize" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="计价类型"
-            android:textColor="@color/white"
-            android:textSize="@dimen/managerCategoryTextSize" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="成交数量"
             android:textColor="@color/white"
             android:textSize="@dimen/managerCategoryTextSize" />
 
@@ -57,7 +39,34 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:text="成交重量"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="成交皮重"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="成交总价"
+            android:textColor="@color/white"
+            android:textSize="@dimen/managerCategoryTextSize" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="选择"
             android:textColor="@color/white"
             android:textSize="@dimen/managerCategoryTextSize" />
 
@@ -71,10 +80,27 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp">
 
+        <Button
+            android:id="@+id/tv_scan"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/bg_btn_origin"
+            android:gravity="center"
+            android:onClick="return_cilck"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="返回"
+            android:textColor="@color/white"
+            android:textSize="32sp" />
+
+
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="120dp"
+            android:layout_toRightOf="@+id/tv_scan"
             android:text="本单详情"
             android:textColor="@color/white"
             android:textSize="32sp" />
@@ -87,19 +113,21 @@
             android:text=""
             android:textColor="@color/yellow"
             android:textSize="32sp"
-            tools:text="($108.99 元)" />
+            tools:text="(0.00 元)" />
 
-
-        <TextView
-            android:id="@+id/tv_paytpe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/tv_sum"
-            android:text=""
+        <Button
+            android:id="@+id/tv_cancel"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/bg_btn_origin"
+            android:gravity="center"
+            android:onClick="confirm_click"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="支付"
             android:textColor="@color/white"
-            android:textSize="32sp"
-            tools:text="现金 支付" />
+            android:textSize="32sp" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -107,7 +135,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/rl_tabtitle"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp" />
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp" />
 
 </RelativeLayout>

@@ -8,7 +8,8 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-feature android:name="android.hardware.camera.any" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -48,10 +49,10 @@
             </intent-filter>
         </activity>
 
-<!--        <activity-->
-<!--            android:name=".SearchActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-<!--            android:screenOrientation="landscape" />-->
+        <!--        <activity-->
+        <!--            android:name=".SearchActivity"-->
+        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+        <!--            android:screenOrientation="landscape" />-->
 
         <activity
             android:name=".TotalActivity"
@@ -84,15 +85,15 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-<!--        <activity-->
-<!--            android:name=".SelectActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-<!--            android:screenOrientation="landscape" />-->
+        <!--        <activity-->
+        <!--            android:name=".SelectActivity"-->
+        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+        <!--            android:screenOrientation="landscape" />-->
 
-<!--        <activity-->
-<!--            android:name="com.seray.sjc.report.NewReportActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-<!--            android:screenOrientation="landscape" />-->
+        <!--        <activity-->
+        <!--            android:name="com.seray.sjc.report.NewReportActivity"-->
+        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+        <!--            android:screenOrientation="landscape" />-->
 
         <activity
             android:name=".DateSelectActivity"
@@ -104,25 +105,24 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-<!--        <activity-->
-<!--            android:name="com.seray.sjc.pay.SjcPayActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-<!--            android:screenOrientation="landscape"-->
-<!--            android:windowSoftInputMode="stateHidden" />-->
-
-   <!--     <activity
+        <!--        <activity-->
+        <!--            android:name="com.seray.sjc.pay.SjcPayActivity"-->
+        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
+        <!--            android:screenOrientation="landscape"-->
+        <!--            android:windowSoftInputMode="stateHidden" />
+                <activity
+                    android:name="com.seray.sjc.report.ReportSjcSubtotalActivity"
+                    android:configChanges="orientation|keyboardHidden|keyboard"
+                    android:screenOrientation="landscape" />-->
+        <activity
             android:name="com.seray.sjc.report.ReportSjcDetailActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
         <activity
-            android:name="com.seray.sjc.report.ReportSjcSubtotalActivity"
-            android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape" />-->
-        <activity
             android:name=".TestActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
 
         <service
             android:name="com.seray.service.BatteryService"

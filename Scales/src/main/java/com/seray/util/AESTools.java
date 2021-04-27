@@ -17,6 +17,8 @@ import java.math.BigDecimal;
 public class AESTools {
     public static void main(String[] args) {
 //
+        int index = "0".indexOf("1230123");
+        System.out.println(index);
     }
 
     public static String getKey() {

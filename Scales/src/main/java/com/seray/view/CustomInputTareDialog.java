@@ -53,9 +53,6 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
         setMessage();
         mMisc = Misc.newInstance();
         this.setOnKeyListener((dialog, keyCode, event) -> {
-            System.out.println("-------------mDialog.setOnKeyListener-------------->" + keyCode);
-            System.out.println("-------------" + event.getAction() + "-------------->");
-
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 mMisc.beep();
                 String txt = tv.getText().toString();
@@ -120,16 +117,7 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
                     tvData = "0";
                 }
                 positiveClickListener.onPositiveClick(mDialog, BigDecimal.valueOf(Double.parseDouble(tvData)));
-
-
-                if (R.id.tare == this.tv.getId()) {
-
-                }
-                if (R.id.unitprice == this.tv.getId()) {
-                    tv.setText(NumFormatUtil.DF_WEIGHT.format(tvData));
-                }
                 break;
-
             case R.id.custom_input_tare_negative:
                 negativeClickListener.onNegativeClick(mDialog);
                 break;

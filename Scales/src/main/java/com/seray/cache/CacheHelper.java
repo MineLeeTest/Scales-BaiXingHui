@@ -74,6 +74,12 @@ public class CacheHelper {
         if (!TextUtils.isEmpty(dataVersion)) {
             data_version = dataVersion;
         }
+
+        //加载密钥
+        String aesKey = map.get(CFK_DEVICE_AES_KEY);
+        if (!TextUtils.isEmpty(aesKey)) {
+            device_aes_key = aesKey;
+        }
     }
 
     public static boolean isDeviceRegistered() {
@@ -129,19 +135,21 @@ public class CacheHelper {
                 return false;
             }
             device_id = deviceRegisterDTO.getDevice_dzc_id();
-
+            System.out.println("--CFK_DEVICE_ID-saveData---true->");
 
             if (!saveData(CFK_DEVICE_AES_KEY, deviceRegisterDTO.getUse_aes_key())) {
                 System.out.println("--CFK_DEVICE_AES_KEY-saveData---false->");
                 return false;
             }
             device_aes_key = deviceRegisterDTO.getUse_aes_key();
+            System.out.println("--CFK_DEVICE_AES_KEY-saveData---true->");
 
             if (!saveData(CFK_COMPANY_NAME, deviceRegisterDTO.getCompany_name())) {
                 System.out.println("--CFK_COMPANY_NAME-saveData---false->");
                 return false;
             }
             company_name = deviceRegisterDTO.getCompany_name();
+            System.out.println("--CFK_COMPANY_NAME-saveData---true->");
             return true;
         } catch (Exception e) {
             System.out.println("-----deviceRegistered----Exception---->" + e.getMessage());
