@@ -66,7 +66,7 @@ public class SjcDetail implements Serializable {
     public static SjcDetail getSjcDetail(@NonNull String transOrderCode, @NonNull ProductADB product) {
         SjcDetail detail = getSjcDetail(transOrderCode);
 //        detail.setGoodsInfoId(product.getProduct_id());
-//        detail.setGoodsName(product.getPro_name());
+//        detail.setGoodsName(product.getProduct_name());
 //        detail.setGoodsCode(product.get());
 //        detail.setSalePrice(product.getSalePrice());
 //        detail.setSaleUnit(product.getSaleUnit());

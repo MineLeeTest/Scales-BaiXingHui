@@ -48,12 +48,6 @@
                 <category android:name="android.intent.category.HOME" />
             </intent-filter>
         </activity>
-
-        <!--        <activity-->
-        <!--            android:name=".SearchActivity"-->
-        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-        <!--            android:screenOrientation="landscape" />-->
-
         <activity
             android:name=".TotalActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
@@ -85,40 +79,19 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-        <!--        <activity-->
-        <!--            android:name=".SelectActivity"-->
-        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-        <!--            android:screenOrientation="landscape" />-->
-
-        <!--        <activity-->
-        <!--            android:name="com.seray.sjc.report.NewReportActivity"-->
-        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-        <!--            android:screenOrientation="landscape" />-->
-
         <activity
             android:name=".DateSelectActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
         <activity
-            android:name="com.seray.information.InformationActivity"
+            android:name=".CartOrderActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
-
-        <!--        <activity-->
-        <!--            android:name="com.seray.sjc.pay.SjcPayActivity"-->
-        <!--            android:configChanges="orientation|keyboardHidden|keyboard"-->
-        <!--            android:screenOrientation="landscape"-->
-        <!--            android:windowSoftInputMode="stateHidden" />
-                <activity
-                    android:name="com.seray.sjc.report.ReportSjcSubtotalActivity"
-                    android:configChanges="orientation|keyboardHidden|keyboard"
-                    android:screenOrientation="landscape" />-->
         <activity
-            android:name="com.seray.sjc.report.ReportSjcDetailActivity"
+            android:name=".SearchActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
-
         <activity
             android:name=".TestActivity"
             android:configChanges="orientation|keyboardHidden|keyboard"

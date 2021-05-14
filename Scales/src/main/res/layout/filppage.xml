@@ -11,15 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="切换商品分类"
         android:textColor="@android:color/white"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
         android:textSize="28sp"/>
 
-        <include
-            android:layout_width="match_parent"
-            layout="@layout/filpvege"
-            android:layout_height="match_parent"/>
+    <include
+        layout="@layout/filpvege"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

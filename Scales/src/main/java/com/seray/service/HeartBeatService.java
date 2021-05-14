@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.lzscale.scalelib.misclib.Misc;
 import com.seray.cache.CacheHelper;
 import com.seray.instance.ResultData;
 import com.seray.message.HeartBeatMsg;
@@ -77,12 +78,8 @@ public class HeartBeatService extends Service {
         ResultData resultData = new ResultData();
         try {
             resultData = HardwareNetwork.getHeartBeatReq(context);
-            if (!resultData.isSuccess()) {
-                LogUtil.i(resultData.toString());
-                return resultData;
-            }
             RequestHeartBeatVM requestHeartBeatVM = (RequestHeartBeatVM) resultData.getMsg();
-
+            requestHeartBeatVM.setBattery_info(Misc.newInstance().readBattery() + "");
             Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> request = HttpServicesFactory.getHttpServiceApi()
                     .heart_beat(requestHeartBeatVM);
             LogUtil.i("----request-->" + request.request().url() + "----vm->" + requestHeartBeatVM.toString());
@@ -94,18 +91,15 @@ public class HeartBeatService extends Service {
                 return resultData;
             }
             ApiDataRsp apiDataRsp = response.body();
-            if (apiDataRsp == null) {
-                LogUtil.i("请求返回的body为null");
-                resultData.setRetMsg("5014", response.toString());
-                return resultData;
-            }
+            LogUtil.i("----response---data-->" + apiDataRsp.toString());
+
             if (!apiDataRsp.getSuccess()) {
                 LogUtil.i(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
                 resultData.setRetMsg("5015", response.toString());
                 return resultData;
             }
             HeartBeatDeviceDzcDTO heartBeatDeviceDzcDTO = (HeartBeatDeviceDzcDTO) apiDataRsp.getMsgs();
-
+            LogUtil.i("----response---data-->" + heartBeatDeviceDzcDTO.toString());
             if ("sync_products".equals(heartBeatDeviceDzcDTO.getOpreate_info()) && !CacheHelper.data_version.equals(heartBeatDeviceDzcDTO.getData_version())) {
                 //执行更新商品操作
                 LogUtil.i("开始更新商品！！！！！");
@@ -113,8 +107,12 @@ public class HeartBeatService extends Service {
                 if (resultData.isSuccess()) {
                     //更新成功后，标记数据版本
                     CacheHelper.updateHeartBeat(heartBeatDeviceDzcDTO);
+                    resultData.setRetMsg("90000", "发送心跳数据成功，更新商品成功！");
+                    return resultData;
                 } else {
                     LogUtil.e("--getProsNow()--failed----->" + resultData.toString());
+                    resultData.setRetMsg("90111", "发送心跳数据成功，更新商品失败！");
+                    return resultData;
                 }
             }
             resultData.setTrueMsg("发送心跳数据成功");

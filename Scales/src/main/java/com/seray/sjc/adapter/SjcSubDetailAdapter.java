@@ -1,20 +1,20 @@
 package com.seray.sjc.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.seray.instance.ProductCart;
+import com.seray.scales.CartOrderActivity;
 import com.seray.scales.R;
-import com.seray.sjc.entity.device.ProductADB;
-import com.seray.sjc.util.SjcUtil;
+import com.seray.sjc.api.request.ProductCart;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -25,12 +25,16 @@ import butterknife.ButterKnife;
  */
 public class SjcSubDetailAdapter extends RecyclerView.Adapter {
 
+    public List<ProductCart> productADBListChoice;
     private List<ProductCart> productADBList;
     private Context context;
+    private CartOrderActivity cartOrderActivity;
 
-    public SjcSubDetailAdapter(List<ProductCart> productADBList, Context context) {
-        this.productADBList = productADBList;
+    public SjcSubDetailAdapter(CartOrderActivity cartOrderActivity, List<ProductCart> productADBList, Context context) {
+        this.productADBList = new ArrayList<>(productADBList);//确保使用的不是同一个内存对象
+        this.productADBListChoice = new ArrayList<>(productADBList);//确保使用的不是同一个内存对象
         this.context = context;
+        this.cartOrderActivity = cartOrderActivity;
     }
 
     @NonNull
@@ -48,14 +52,44 @@ public class SjcSubDetailAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof DetailViewHolder) {
-            ((DetailViewHolder) holder).tvDealAmt.setText(productADBList.get(position).getTvProNameStr() + "");
-            ((DetailViewHolder) holder).tvDealCnt.setText(productADBList.get(position).getPrice() + "");
-            ((DetailViewHolder) holder).tvGoodename.setText(productADBList.get(position).getTvProNameStr());
-            ((DetailViewHolder) holder).tvPrictype.setText(SjcUtil.getPriceTypeString(productADBList.get(position).getPrice()));
-            ((DetailViewHolder) holder).tvDealPrice.setText(productADBList.get(position).getReal_price() + "");
+            ((DetailViewHolder) holder).tvMoney.setText(productADBList.get(position).getMoney_total() + "");
+            ((DetailViewHolder) holder).tvTare.setText(productADBList.get(position).getTare() + "");
+            ((DetailViewHolder) holder).tvGoodename.setText(productADBList.get(position).getProduct_name());
+            ((DetailViewHolder) holder).tvPrice.setText(productADBList.get(position).getPrice_real() + "");
+            ((DetailViewHolder) holder).tvWeight.setText(productADBList.get(position).getWeight() + "");
+            ((DetailViewHolder) holder).btnChoice.setTag(1);
+            ((DetailViewHolder) holder).btnChoice.setText(position + "");
+            ((DetailViewHolder) holder).btnChoice.setOnClickListener(btnChoiceClick);
+
+
+//            ((DetailViewHolder) holder).btnChoice.setTag(99, productADBList.get(position));
         }
 
     }
+
+
+    Button.OnClickListener btnChoiceClick = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Button btn = (Button) view;
+
+            int status = (Integer) btn.getTag();
+            int postion = Integer.parseInt(btn.getText().toString());
+            if (status == 1) {
+                btn.setTag(2);
+                btn.setBackgroundResource(R.drawable.uncheck);
+                productADBListChoice.remove(productADBList.get(postion));
+            } else {
+                btn.setTag(1);
+                btn.setBackgroundResource(R.drawable.checked);
+                productADBListChoice.add(productADBList.get(postion));
+            }
+            cartOrderActivity.change(productADBListChoice);
+        }
+    };
+
+//    public interface changeProductList(
+//    List<ProductCart> productADBList );
 
     @Override
     public int getItemViewType(int position) {
@@ -72,7 +106,6 @@ public class SjcSubDetailAdapter extends RecyclerView.Adapter {
     }
 
     public class EmptyViewHolder extends RecyclerView.ViewHolder {
-
         public EmptyViewHolder(View view) {
             super(view);
         }
@@ -83,17 +116,21 @@ public class SjcSubDetailAdapter extends RecyclerView.Adapter {
         @BindView(R.id.tv_goodename)
         TextView tvGoodename;
 
-        @BindView(R.id.tv_prictype)
-        TextView tvPrictype;
+        @BindView(R.id.tv_price)
+        TextView tvPrice;
 
-        @BindView(R.id.tv_dealCnt)
-        TextView tvDealCnt;
+        @BindView(R.id.tv_tare)
+        TextView tvTare;
 
-        @BindView(R.id.tv_dealPrice)
-        TextView tvDealPrice;
+        @BindView(R.id.tv_weight)
+        TextView tvWeight;
 
-        @BindView(R.id.tv_dealAmt)
-        TextView tvDealAmt;
+        @BindView(R.id.tv_money)
+        TextView tvMoney;
+
+        @BindView(R.id.btn_choice)
+        Button btnChoice;
+
 
         @BindView(R.id.rl_tabtitle)
         LinearLayout rlTabtitle;

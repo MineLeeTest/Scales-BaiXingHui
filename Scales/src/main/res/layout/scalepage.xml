@@ -287,117 +287,120 @@
                         <TextView
                             android:id="@+id/tvProName"
                             android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginStart="5dp"
                             android:gravity="bottom"
                             android:includeFontPadding="false"
+                            android:text="@string/tv_pro_text"
+                            android:textColor="@color/yellow"
+                            android:textSize="@dimen/managerCategoryTextSize" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:gravity="center_vertical|end"
+                        android:includeFontPadding="false"
+                        android:text="@string/scale_account"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/managerCategoryTextSize" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginStart="10dp"
+                        android:layout_weight="3"
+                        android:gravity="left"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvAllPrice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:gravity="bottom"
+                            android:includeFontPadding="false"
+                            android:text="@string/base_price"
                             android:textColor="@color/yellow"
                             android:textSize="@dimen/managerCategoryTextSize" />
 
-                        <!--                        <TextView-->
-                        <!--                            android:id="@+id/fnshow"-->
-                        <!--                            android:layout_width="wrap_content"-->
-                        <!--                            android:layout_height="match_parent"-->
-                        <!--                            android:layout_marginLeft="5dp"-->
-                        <!--                            android:gravity="bottom"-->
-                        <!--                            android:includeFontPadding="false"-->
-                        <!--                            android:textColor="@color/yellow"-->
-                        <!--                            android:textSize="@dimen/managerCategoryTextSize" />-->
-
-                        <!--                        <TextView-->
-                        <!--                            android:layout_width="wrap_content"-->
-                        <!--                            android:layout_height="match_parent"-->
-                        <!--                            android:layout_marginStart="5dp"-->
-                        <!--                            android:gravity="bottom"-->
-                        <!--                            android:includeFontPadding="false"-->
-                        <!--                            android:text="@string/all"-->
-                        <!--                            android:textColor="@color/white"-->
-                        <!--                            android:textSize="@dimen/managerCategoryTextSize" />-->
-
-                        <!--                        <TextView-->
-                        <!--                            android:id="@+id/totalvegenum"-->
-                        <!--                            android:layout_width="wrap_content"-->
-                        <!--                            android:layout_height="match_parent"-->
-                        <!--                            android:gravity="bottom"-->
-                        <!--                            android:includeFontPadding="false"-->
-                        <!--                            android:text="@string/base_weight_by_piece"-->
-                        <!--                            android:textColor="@color/yellow"-->
-                        <!--                            android:textSize="@dimen/managerCategoryTextSize" />-->
-
-                        <!--                        <TextView-->
-                        <!--                            android:layout_width="wrap_content"-->
-                        <!--                            android:layout_height="match_parent"-->
-                        <!--                            android:gravity="bottom"-->
-                        <!--                            android:includeFontPadding="false"-->
-                        <!--                            android:text="件"-->
-                        <!--                            android:textColor="@color/white"-->
-                        <!--                            android:textSize="@dimen/managerCategoryTextSize" />-->
-
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:gravity="bottom"
+                            android:includeFontPadding="false"
+                            android:text="元"
+                            android:textColor="@color/yellow"
+                            android:textSize="@dimen/managerCategoryTextSize" />
                     </LinearLayout>
-
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0px"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:gravity="bottom"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/buyer_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/seller_id"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/buyer"
-                        android:layout_width="0px"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="0dp"
-                        android:layout_weight="4"
-                        android:gravity="center_vertical|start"
-                        android:text="卖家请刷卡"
-                        android:textColor="@color/LightGreen"
-                        android:textSize="30sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/seller"
-                        android:layout_width="0px"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="买家："
+                            android:textColor="@color/LightGreen"
+                            android:textSize="25sp" />
+
+                        <TextView
+                            android:id="@+id/buyer"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="@string/tv_buyer_text"
+                            android:textColor="@color/LightGreen"
+                            android:textSize="25sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="0dp"
-                        android:layout_weight="4"
-                        android:gravity="center_vertical|start"
-                        android:text="买家请刷卡"
-                        android:textColor="@color/LightPink"
-                        android:textSize="30sp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <!--                    <TextView-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="match_parent"-->
-                    <!--                        android:gravity="center"-->
-                    <!--                        android:includeFontPadding="false"-->
-                    <!--                        android:text="@string/scale_account"-->
-                    <!--                        android:textColor="@color/yellow"-->
-                    <!--                        android:textSize="@dimen/pluTextSize" />-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="卖家："
+                            android:textColor="@color/LightPink"
+                            android:textSize="25sp" />
 
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/allvegeprice"-->
-                    <!--                        android:layout_width="0px"-->
-                    <!--                        android:layout_height="match_parent"-->
-                    <!--                        android:layout_weight="2.5"-->
-                    <!--                        android:gravity="center"-->
-                    <!--                        android:includeFontPadding="false"-->
-                    <!--                        android:singleLine="true"-->
-                    <!--                        android:text="@string/base_price"-->
-                    <!--                        android:textColor="@color/yellow"-->
-                    <!--                        android:textSize="@dimen/pluTextSize" />-->
+                        <TextView
+                            android:id="@+id/seller"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginStart="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="@string/tv_buyer_text"
+                            android:textColor="@color/LightPink"
+                            android:textSize="25sp" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -526,7 +529,7 @@
                             android:background="@drawable/bg_btn_control"
                             android:gravity="center"
                             android:onClick="sbtnPay"
-                            android:text="支付\n(0笔)"
+                            android:text="@string/tv_pay_text"
                             android:textColor="@color/white"
                             android:textSize="@dimen/CartSize" />
 

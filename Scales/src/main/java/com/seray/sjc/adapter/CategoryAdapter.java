@@ -5,7 +5,6 @@
 //import com.chad.library.adapter.base.BaseQuickAdapter;
 //import com.chad.library.adapter.base.BaseViewHolder;
 //import com.seray.scales.R;
-//import com.seray.sjc.entity.product.SjcCategory;
 //
 //import java.util.List;
 //

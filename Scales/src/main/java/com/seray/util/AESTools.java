@@ -16,9 +16,8 @@ import java.math.BigDecimal;
 
 public class AESTools {
     public static void main(String[] args) {
-//
-        int index = "0".indexOf("1230123");
-        System.out.println(index);
+
+        System.out.println(53 / 24);
     }
 
     public static String getKey() {

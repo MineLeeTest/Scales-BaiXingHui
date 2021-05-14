@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.seray.sjc.api.SjcApi;
+
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -14,6 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HttpServicesFactory {
 
     private static Retrofit httpRetrofitFactory;
+
     private static <T> T createService(@NonNull final Class<T> clazz) {
         if (httpRetrofitFactory == null) {
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
@@ -27,8 +30,8 @@ public class HttpServicesFactory {
                     .create();
 
             //获取设置的baseurl
-//            String curBaseUrl ="http://8.136.212.105:8108";
-            String curBaseUrl ="http://192.168.5.8:8108";
+            String curBaseUrl = "http://8.136.212.105:8108";
+//            String curBaseUrl = "http://192.168.5.8:8108";
             httpRetrofitFactory = new Retrofit.Builder()
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -37,6 +40,7 @@ public class HttpServicesFactory {
         }
         return httpRetrofitFactory.create(clazz);
     }
+
     public static void clearHttpFactory() {
         httpRetrofitFactory = null;
     }
@@ -45,5 +49,8 @@ public class HttpServicesFactory {
         return createService(SjcApi.class);
     }
 
+    public static synchronized SjcApi getHttpServiceApiSgin() {
+        return createService(SjcApi.class);
 
+    }
 }

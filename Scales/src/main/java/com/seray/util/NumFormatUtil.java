@@ -3,12 +3,15 @@ package com.seray.util;
 import android.text.TextUtils;
 
 import com.seray.cache.CacheHelper;
+import com.seray.sjc.api.request.ProductCart;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.regex.Pattern;
@@ -26,9 +29,38 @@ public class NumFormatUtil {
     //    public static DecimalFormat df2 = new DecimalFormat("######0.00");
     public static DecimalFormat DF_WEIGHT = new DecimalFormat("######0.000");//重量单位
     public static DecimalFormat DF_PRICE = new DecimalFormat("######0.00");//价格单位
+
+
     private static NumFormatUtil mUtil = null;
     private static Pattern pattern = Pattern.compile("^(-?[0-9\\.]+)$");
     private static Pattern isIntPattern = Pattern.compile("^(-?[0-9]+)$");
+    //计算总价
+    public static BigDecimal countPrice(List<ProductCart> list) {
+        BigDecimal all = new BigDecimal(0.00);
+        for (ProductCart productCart : list) {
+            all = all.add(productCart.getMoney_total());
+        }
+        return all;
+    }
+    public static void main(String[] args) {
+        //计算总价
+        List<ProductCart> pcChoice = new ArrayList<>();
+        ProductCart pc = new ProductCart();
+        pc.setMoney_total(new BigDecimal(10.00));
+        pcChoice.add(pc);
+        pc.setMoney_total(new BigDecimal(20.00));
+        pcChoice.add(pc);
+        pc.setMoney_total(new BigDecimal(30.00));
+        pcChoice.add(pc);
+        BigDecimal all = new BigDecimal(0.00);
+        for (ProductCart productCart : pcChoice) {
+            all = all.add(productCart.getMoney_total());
+            System.out.println(all);
+        }
+        System.out.println(NumFormatUtil.DF_PRICE.format(all));
+        ;
+
+    }
 
     private NumFormatUtil() {
     }

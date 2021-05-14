@@ -20,7 +20,7 @@ public class ProductADB {
     @ColumnInfo(name = "sequences")
     private Integer sequences;
 
-    @ColumnInfo(name = "pro_name")
+    @ColumnInfo(name = "product_name")
     private String pro_name;
 
     @ColumnInfo(name = "price")
@@ -107,5 +107,16 @@ public class ProductADB {
         this.img_url = img_url;
     }
 
-
+    @Override
+    public String toString() {
+        return "ProductADB{" +
+                "product_id=" + product_id +
+                ", sequences=" + sequences +
+                ", pro_name='" + pro_name + '\'' +
+                ", price=" + price +
+                ", max_price=" + max_price +
+                ", min_price=" + min_price +
+                ", img_url='" + img_url + '\'' +
+                '}';
+    }
 }

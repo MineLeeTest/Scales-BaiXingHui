@@ -127,7 +127,7 @@
 //
 //                    ProductADB bean = mProList.get(datePosition);
 //
-//                    String content = bean.getPro_name();
+//                    String content = bean.getProduct_name();
 //
 //                    btn.setTag(R.id.tag_second, bean);
 //
@@ -193,7 +193,7 @@
 //    private boolean isContained(ProductADB bean) {
 //        for (int i = 0; i < selectedList.size(); i++) {
 //            ProductADB product = selectedList.get(i);
-//            if (product.getPro_name().equals(bean.getPro_name())) {
+//            if (product.getProduct_name().equals(bean.getProduct_name())) {
 //                return true;
 //            }
 //        }
@@ -417,7 +417,7 @@
 //
 //                ProductADB bean = mProList.get(index);
 //
-//                String content = bean.getPro_name();
+//                String content = bean.getProduct_name();
 //
 //                btn.setTag(R.id.tag_second, bean);
 //

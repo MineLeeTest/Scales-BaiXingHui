@@ -37,6 +37,10 @@ public class RequestHeartBeatVM implements Serializable {
     @Expose
     private String info;
 
+    //电池信息
+    @Expose
+    private String battery_info;
+
     @Override
     public String toString() {
         return "RequestHeartBeatVM{" +

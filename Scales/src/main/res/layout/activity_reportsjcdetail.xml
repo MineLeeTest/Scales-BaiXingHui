@@ -39,7 +39,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="成交重量"
+            android:text="成交皮量"
             android:textColor="@color/white"
             android:textSize="@dimen/managerCategoryTextSize" />
 
@@ -48,7 +48,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="成交皮重"
+            android:text="成交总重"
             android:textColor="@color/white"
             android:textSize="@dimen/managerCategoryTextSize" />
 

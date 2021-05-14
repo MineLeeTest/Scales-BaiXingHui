@@ -23,6 +23,12 @@
     <string name="scale_piece">笔</string>
     <string name="scale_product_title">商品名称:</string>
 
+    <string name="tv_seller_text">请刷卡</string>
+    <string name="tv_buyer_text">请刷卡</string>
+    <string name="tv_pro_text">请选择商品</string>
+    <string name="tv_pay_text"> 支付\n(0笔)</string>
+
+
     <string name="display_weight_unit_kg">净重（千克）</string>
     <string name="display_weight_unit_jin">净重（斤）</string>
     <string name="display_weight_unit_piece">数量（件）</string>

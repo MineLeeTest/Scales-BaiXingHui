@@ -2,6 +2,7 @@ package com.seray.sjc.api;
 
 import com.seray.sjc.api.request.GetUserByCardNoVM;
 import com.seray.sjc.api.request.RequestHeartBeatVM;
+import com.seray.sjc.api.request.RequestOrderVM;
 import com.seray.sjc.api.request.RequestRegisterVM;
 import com.seray.sjc.api.result.HeartBeatDeviceDzcDTO;
 import com.seray.sjc.api.result.DeviceRegisterDTO;
@@ -9,14 +10,11 @@ import com.seray.sjc.api.result.ApiDataRsp;
 import com.seray.sjc.api.result.ProductDZCDTO;
 import com.seray.sjc.api.result.UserVipCardDetailDTO;
 
-import java.lang.annotation.Target;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Header;
-import retrofit2.http.HeaderMap;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 
 /**
@@ -46,6 +44,12 @@ public interface SjcApi {
      */
     @POST("/dzc/pro_find")
     Call<ApiDataRsp<List<ProductDZCDTO>>> pro_find(@Header("device_id") String device_id, @Header("sign") String sign);
+
+    /**
+     * 创建订单
+     */
+    @POST("/dzc/order_create")
+    Call<ApiDataRsp<String>> order_create(@Header("device_id") String device_id, @Header("sign") String sign, @Body RequestOrderVM vm);
 
     /**
      * 获取商品列表

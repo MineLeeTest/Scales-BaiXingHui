@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_tabtitle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="50dp"
     android:layout_below="@+id/rl_title"
     android:orientation="horizontal"
     android:padding="5dp"
@@ -28,53 +28,53 @@
         app:autoSizeTextType="uniform" />
 
     <TextView
-        android:id="@+id/tv_prictype"
+        android:id="@+id/tv_price"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="价格类型"
+        android:text="单价"
         android:textColor="@color/white"
         android:textSize="@dimen/configTextSize" />
 
     <TextView
-        android:id="@+id/tv_dealCnt"
+        android:id="@+id/tv_tare"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="成交数量"
+        android:text="皮重"
         android:textColor="@color/white"
         android:textSize="@dimen/configTextSize" />
 
     <TextView
-        android:id="@+id/tv_dealPrice"
+        android:id="@+id/tv_weight"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="成交单价"
+        android:text="总重"
         android:textColor="@color/white"
         android:textSize="@dimen/configTextSize" />
 
     <TextView
-        android:id="@+id/tv_dealAmt"
+        android:id="@+id/tv_money"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="成交总价"
+        android:text="总价"
         android:textColor="@color/white"
         android:textSize="@dimen/configTextSize" />
 
-    <CheckBox
-        android:id="@+id/cb_choice"
+    <Button
+        android:id="@+id/btn_choice"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_weight="1"
+        android:background="@drawable/checked"
         android:checked="true"
         android:gravity="center"
         android:textColor="@color/black"
-        android:textSize="@dimen/configTextSize"  />
+        android:textSize="1sp" />
 </LinearLayout>

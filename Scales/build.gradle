@@ -6,15 +6,15 @@ android {
         applicationId "com.seray.scales"
         minSdkVersion 17
         targetSdkVersion 26
-        versionCode 20210220
-        versionName "2.0.0"
+        versionCode 20210513
+        versionName "2.0.1"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
                 includeCompileClasspath = true
             }
         }
-        buildConfigField 'String', 'DB_NAME', '\"exd_minelee.db\"'
+        buildConfigField 'String', 'DB_NAME', '\"exd_minelee20210513.db\"'
         buildConfigField 'String', 'HTTP_BASE_URL', '"http://http://8.136.212.105:8108"'
         buildConfigField 'String', 'BUSSFILEPATH', '"bussnessfile"'
         multiDexEnabled = true

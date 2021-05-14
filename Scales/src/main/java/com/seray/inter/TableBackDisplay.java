@@ -122,7 +122,7 @@ public class TableBackDisplay extends BackDisplayBase {
         presentation.setSubtotalContent("0.00");
         presentation.setSubtotalAmount("0");
         presentation.setCustomerName("客户1");
-        presentation.setQRContent();
+//        presentation.setQRContent();
     }
 
     @Override

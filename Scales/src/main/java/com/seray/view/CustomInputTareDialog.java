@@ -2,11 +2,11 @@ package com.seray.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,7 +17,6 @@ import com.lzscale.scalelib.misclib.Misc;
 import com.seray.scales.R;
 import com.seray.util.NumFormatUtil;
 
-import java.math.BigDecimal;
 
 /**
  * Created by SR_Android on 2017/11/23.
@@ -28,19 +27,19 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
 
     private OnPositiveClickListener positiveClickListener;
     private OnNegativeClickListener negativeClickListener;
-    private Context mContext;
     private Misc mMisc;
     private CustomInputTareDialog mDialog;
     private TextView tv;
-    private boolean isOpenJin = false;
     private String titleMsg;
     private String alertContent;
+    private boolean isPassword;
 
-    public CustomInputTareDialog(@NonNull Context context, String titleMsg, String alertContent) {
+    public CustomInputTareDialog(@NonNull Context context, String titleMsg, String alertContent, boolean isPassword) {
         super(context, R.style.Dialog);
-        mContext = context;
         this.titleMsg = titleMsg;
         this.alertContent = alertContent;
+        this.isPassword = isPassword;
+
     }
 
     @Override
@@ -50,6 +49,7 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
         setCanceledOnTouchOutside(true);
         mDialog = this;
         tv = mDialog.findViewById(R.id.custom_input_tare_weight);
+        tv.setInputType(isPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT);
         setMessage();
         mMisc = Misc.newInstance();
         this.setOnKeyListener((dialog, keyCode, event) -> {
@@ -116,7 +116,7 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
                 if (TextUtils.isEmpty(tvData) || !NumFormatUtil.isNumeric(tvData)) {
                     tvData = "0";
                 }
-                positiveClickListener.onPositiveClick(mDialog, BigDecimal.valueOf(Double.parseDouble(tvData)));
+                positiveClickListener.onPositiveClick(mDialog, tvData);
                 break;
             case R.id.custom_input_tare_negative:
                 negativeClickListener.onNegativeClick(mDialog);
@@ -125,7 +125,7 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
     }
 
     public interface OnPositiveClickListener {
-        void onPositiveClick(CustomInputTareDialog dialog, BigDecimal weight);
+        void onPositiveClick(CustomInputTareDialog dialog, String data);
     }
 
     public interface OnNegativeClickListener {

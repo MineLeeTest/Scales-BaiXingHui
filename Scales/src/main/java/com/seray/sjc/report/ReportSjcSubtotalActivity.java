@@ -126,7 +126,7 @@
 //                    mHandler.post(new Runnable() {
 //                        @Override
 //                        public void run() {
-//                            Intent intent = getSkipIntent(ReportSjcDetailActivity.class);
+//                            Intent intent = getSkipIntent(CartOrderActivity.class);
 //                            intent.putExtra("sjcsubtotal", sjcSubtotalWithSjcDetail);
 //                            startActivity(intent);
 //                        }
@@ -139,7 +139,7 @@
 //    @Override
 //    public void clickItem(SjcSubtotalWithSjcDetail sjcSubtotal) {
 //        super.onClick(null);
-//        Intent intent = new Intent(ReportSjcSubtotalActivity.this,ReportSjcDetailActivity.class);
+//        Intent intent = new Intent(ReportSjcSubtotalActivity.this,CartOrderActivity.class);
 //        intent.putExtra("sjcsubtotal",sjcSubtotal);
 //        startActivity(intent);
 //    }
