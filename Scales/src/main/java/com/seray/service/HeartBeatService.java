@@ -47,9 +47,11 @@ public class HeartBeatService extends Service {
         mRunnable = new HeartBeatRunnable();
     }
 
+    private final long TIMES = 5 * 60;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        batteryThread.scheduleAtFixedRate(mRunnable, 20, 30, TimeUnit.SECONDS);
+        batteryThread.scheduleAtFixedRate(mRunnable, 60, TIMES, TimeUnit.SECONDS);
         return START_NOT_STICKY;
     }
 
@@ -158,7 +160,7 @@ public class HeartBeatService extends Service {
                 return resultData.setRetMsg(resultData, "6002", "将商品列表信息存储到本地失败！");
             }
 
-            List<ProductADB> list = AppDatabase.getInstance().getProductDao().loadAll();
+//            List<ProductADB> list = AppDatabase.getInstance().getProductDao().loadAll();
             resultData.setTrueMsg("更新商品成功！");
             return resultData;
         } catch (IOException e) {

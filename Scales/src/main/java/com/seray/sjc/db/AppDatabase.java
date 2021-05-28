@@ -54,9 +54,6 @@ public abstract class AppDatabase extends RoomDatabase {
     public abstract ProductDao getProductDao();
 
 
-
-
-
     public void dataReset(DataResetCallback callback) {
         boolean isSuccess = true;
         try {

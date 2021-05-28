@@ -22,7 +22,7 @@ public interface ProductDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void save(ProductADB productADB);
 
-    @Query("SELECT * FROM " + ProductADB.TABLE_NAME)
+    @Query("SELECT * FROM " + ProductADB.TABLE_NAME+" order by sequences desc")
     List<ProductADB> loadAll();
 
     @Query("SELECT * FROM " + ProductADB.TABLE_NAME + " WHERE  'product_id' =:product_id")

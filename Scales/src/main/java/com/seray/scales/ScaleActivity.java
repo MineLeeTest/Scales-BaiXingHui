@@ -3,7 +3,6 @@ package com.seray.scales;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,7 +11,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,7 +24,7 @@ import com.seray.inter.LandBackDisplay;
 import com.seray.inter.TableBackDisplay;
 import com.seray.message.BatteryMsg;
 import com.seray.message.HeartBeatMsg;
-import com.seray.service.BatteryService;
+//import com.seray.service.BatteryService;
 import com.seray.service.DisplayService;
 import com.seray.service.HeartBeatService;
 import com.seray.sjc.annotation.DisplayType;
@@ -53,14 +51,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.json.JSONUtil;
 import retrofit2.Response;
+
 
 public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.OnDataReceiveListener {
 
@@ -160,7 +156,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        stopService(getSkipIntent(BatteryService.class));
+//        stopService(getSkipIntent(BatteryService.class));
         stopService(getSkipIntent(HeartBeatService.class));
         stopService(getSkipIntent(DisplayService.class));
         timerThreads.shutdownNow();
@@ -183,8 +179,8 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         setContentView(R.layout.scalepage);
         //注册订阅事件
         EventBus.getDefault().register(this);
-        //后台发送服务-电池电量订阅服务
-        startService(getSkipIntent(BatteryService.class));
+//        //后台发送服务-电池电量订阅服务
+//        startService(getSkipIntent(BatteryService.class));
         //后台发送服务-心跳数据订阅服务
         startService(getSkipIntent(HeartBeatService.class));
         //初始化称重模块
@@ -534,6 +530,12 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             showMessage("加入购物车失败，没有选择商品！");
             return;
         }
+        if (null == productCartList) {
+            productCartList = new ArrayList<ProductCart>();
+        }
+        //账户余额
+        BigDecimal buerBalnce = BigDecimal.valueOf(Double.parseDouble(buyerTag.getBalance()));
+
 
         // 当秤稳定时 或是 计件模式时
         if (mScale.getStabFlag()) {
@@ -550,7 +552,6 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 return;
             }
 
-
             int proID = proTradeNow.getProduct_id();//商品id
 
             if (vm == null) {
@@ -566,12 +567,19 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             }
 
             ProductCart productCart = new ProductCart(proID, tvProNameStr, price, realPrice, tare, weight, mTvSubtotalStr);
-            if (null == productCartList) {
-                productCartList = new ArrayList<ProductCart>();
-            }
+
             productCartList.add(productCart);
+            //当前商品列表总价
+            BigDecimal allPrice = NumFormatUtil.countPrice(productCartList);
+            if (allPrice.compareTo(buerBalnce) > 0) {
+                productCartList.remove(productCart);
+                showMessage("买家账户余额已经超出商品总价，余额不足！");
+                return;
+            }
+
             pay.setText("支付\n(" + productCartList.size() + "笔)");
             tvAllPrice.setText(NumFormatUtil.countPrice(productCartList) + "");
+
             showMessage("加入购物车成功！");
         } else {
             showMessage("重量仍在变动！");
@@ -587,8 +595,8 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             return;
         }
 
-        vm.setProductCartList(productCartList);
 
+        vm.setProductCartList(productCartList);
         Intent intent = new Intent(this, CartOrderActivity.class);
         intent.putExtra("RequestOrderVM", (Serializable) vm);
         startActivity(intent);

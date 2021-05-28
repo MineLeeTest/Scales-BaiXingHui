@@ -97,10 +97,10 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-        <service
-            android:name="com.seray.service.BatteryService"
-            android:description="@string/read_battery_service"
-            android:exported="false" />
+<!--        <service-->
+<!--            android:name="com.seray.service.BatteryService"-->
+<!--            android:description="@string/read_battery_service"-->
+<!--            android:exported="false" />-->
         <service
             android:name="com.seray.service.HeartBeatService"
             android:description="@string/service_heart_beat"
