@@ -29,6 +29,7 @@
             android:layout_weight="0.5"
             android:background="@drawable/selector"
             android:text="@string/test_toSetting"
+            android:visibility="gone"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize"/>
     </LinearLayout>
@@ -46,6 +47,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector"
             android:text="@string/test_manager"
+            android:visibility="gone"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize"/>
 
@@ -53,7 +55,6 @@
             android:id="@+id/btn_4"
             android:layout_width="0px"
             android:layout_height="@dimen/settingButtonHeight"
-            android:layout_marginLeft="10dp"
             android:layout_weight="1"
             android:background="@drawable/selector"
             android:text="@string/test_network"
@@ -73,6 +74,7 @@
             android:layout_weight="1"
             android:background="@drawable/selector"
             android:text="@string/test_clear"
+            android:visibility="gone"
             android:onClick="projectResetClick"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize"/>
@@ -81,7 +83,7 @@
             android:id="@+id/btn_8"
             android:layout_width="0px"
             android:layout_height="@dimen/settingButtonHeight"
-            android:layout_marginStart="10dp"
+
             android:layout_weight="1"
             android:background="@drawable/selector"
             android:text="@string/test_clear_calibration"
@@ -94,6 +96,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <Button

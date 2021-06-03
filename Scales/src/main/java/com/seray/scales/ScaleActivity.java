@@ -313,20 +313,17 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         mMisc.beep();
+        showMessage("-->" + keyCode);
         switch (keyCode) {
             case KeyEvent.KEYCODE_NUMPAD_DIVIDE:// 取消
                 return true;
             case KeyEvent.KEYCODE_BACK:// 返回按钮
                 return true;
-            case KeyEvent.KEYCODE_MENU:// 桌秤
+            case KeyEvent.KEYCODE_MENU:
+                openManageKey(NumFormatUtil.PASSWORD_TO_SETTING);
                 return true;
             case KeyEvent.KEYCODE_MOVE_HOME:// 地秤
                 startActivity(ManageActivity.class);
-                return true;
-            case KeyEvent.KEYCODE_F1:// 去皮
-                return true;
-            case KeyEvent.KEYCODE_F2:// 置零
-                reset();
                 return true;
             case KeyEvent.KEYCODE_NUM_LOCK: // 退格
                 return true;
@@ -340,6 +337,13 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 return true;
             case KeyEvent.KEYCODE_NUMPAD_MULTIPLY: // 计件计重切换
                 return true;
+            case KeyEvent.KEYCODE_F3:
+                break;
+            case KeyEvent.KEYCODE_F2:
+                reset();
+                break;
+            case KeyEvent.KEYCODE_F1:
+                break;
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -431,6 +435,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         }
     }
 
+
     //处理读卡模块返回数据
     private static class HandlerICCard extends Handler {
         WeakReference<ScaleActivity> mWeakReference;
@@ -470,6 +475,25 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 }
             }
         }
+    }
+
+    //直接输入总价点击事件
+    public void changeMoney(View view) {
+        mMisc.beep();
+        //规格包装的商品不用计价，直接输入总价
+        if (proTradeNow != null && proTradeNow.getProduct_id() == 46) {
+            CustomInputTareDialog tareDialog = new CustomInputTareDialog(ScaleActivity.this, "请输入商品总价", "商品单价单位为元", Boolean.FALSE);
+            tareDialog.show();
+            tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, weight) -> {
+                dialog.dismiss();
+                mTvSubtotal.setText(NumFormatUtil.DF_PRICE.format(Double.parseDouble(weight)));
+            });
+            tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, Dialog::dismiss);
+        } else {
+            showMessage("直接输入总价，请先选择【包装】商品！");
+        }
+
+
     }
 
     //去皮按钮点击事件
@@ -594,8 +618,6 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             showMessage("当前购物车没有商品！");
             return;
         }
-
-
         vm.setProductCartList(productCartList);
         Intent intent = new Intent(this, CartOrderActivity.class);
         intent.putExtra("RequestOrderVM", (Serializable) vm);
@@ -659,8 +681,12 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             backDisplay.showIsZero(false);
             findViewById(R.id.zeroflag).setVisibility(View.INVISIBLE);
         }
-        //计算总价
-        countPirce();
+
+        //规格包装的商品不用计价，直接输入总价
+        if (!(proTradeNow != null && proTradeNow.getProduct_id() == 46)) {
+            //计算总价
+            countPirce();
+        }
     }
 
     //通知背面显示屏上显示单价、皮重、总价

@@ -90,7 +90,7 @@ public class SettingActivity extends BaseActivity {
         super.onClick(v);
         switch (v.getId()) {
             case R.id.btn_1:
-                openManageKey(NumFormatUtil.PASSWORD_TO_OPERATION, null);
+                openManageKey(NumFormatUtil.PASSWORD_TO_OPERATION);
                 break;
             case R.id.btn_2:
                 startActivity(ConfigActivity.class);

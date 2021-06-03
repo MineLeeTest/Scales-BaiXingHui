@@ -124,7 +124,7 @@ public class ManageActivity extends BaseActivity {
     // 去运维管理中心
     public void startSettingActivity(View view) {
         super.onClick(view);
-        openManageKey(NumFormatUtil.PASSWORD_TO_SETTING, null);
+        openManageKey(NumFormatUtil.PASSWORD_TO_SETTING );
     }
 
     @Override
@@ -204,7 +204,7 @@ public class ManageActivity extends BaseActivity {
                     @Override
                     public void onPositiveClick(CustomTipDialog dialog) {
                         dialog.dismiss();
-                        openManageKey(NumFormatUtil.PASSWORD_TO_UNIT, mChangeWeightBtn);
+                        openManageKey(NumFormatUtil.PASSWORD_TO_UNIT );
                     }
                 });
                 break;

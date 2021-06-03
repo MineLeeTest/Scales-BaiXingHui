@@ -38,19 +38,19 @@ import com.wang.avi.AVLoadingIndicatorView;
 import org.greenrobot.eventbus.EventBus;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 
 public abstract class BaseActivity extends AppCompatActivity implements OnClickListener {
-
-    /**
-     * 执行数据库查询固定数量线程池
-     */
-    public static ExecutorService sqlQueryThread = AppExecutors.getInstance().queryIO();
 
     /**
      * 执行定时任务固定数量线程池
@@ -65,10 +65,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      * 后显示控制器
      */
     public DisplayController mController;
-    /**
-     * 打印控制器
-     */
-//    public CustomPrinter mCustomPrinter = CustomPrinter.getInstance();
 
     protected Dialog mLoadingDialog;
     private AVLoadingIndicatorView mLoadingDialogImage;
@@ -125,12 +121,6 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_F3) {
-            shutDown();
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-        }
         return true;
     }
 
@@ -190,101 +180,65 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         }
     }
 
+    private String getPwd() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DATE, -1);
+        return "320" + new SimpleDateFormat("MMdd", Locale.getDefault()).format(cal.getTime());
+
+    }
+
     /**
-     * 创建密码对话框并支持小键盘输入
+     * 进入电子秤标定页面
      */
-    public void openManageKey(final int flag, final Button btn) {
+    public void openManageKey(final int flag) {
         LayoutInflater factory = LayoutInflater.from(this);
         View view = factory.inflate(R.layout.user_dialog, null);
-        final EditText userPwdEdit = (EditText) view.findViewById(R.id.password_edit);
-
+        final EditText userPwdEdit = view.findViewById(R.id.password_edit);
         userPwdEdit.setCursorVisible(false);
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.operation_usercode)
                 .setView(view)
-                .setPositiveButton(R.string.reprint_ok, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-//                        String userPwd = userPwdEdit.getText().toString();
-//                        if (userPwd.equals(randomPwd)) {
-                            canCloseDialog(dialog, true);
-                            switch (flag) {
-                                case NumFormatUtil.PASSWORD_TO_UNIT:
-                                    if (CacheHelper.isOpenJin) {
-                                        CacheHelper.isOpenJin = false;
-                                        if (btn != null) {
-                                            btn.setText(R.string.manager_change_weight_unit_2);
-                                        }
-                                    } else {
-                                        CacheHelper.isOpenJin = true;
-                                        if (btn != null) {
-                                            btn.setText(R.string.manager_change_weight_unit_1);
-                                        }
-                                    }
-                                    String curUnit = CacheHelper.isOpenJin ? getString(R.string
-                                            .manager_scale_jin) : getString(R.string
-                                            .manager_scale_kg);
-                                    showMessage(getResources().getString(R.string.setting_unit_type)
-                                            + curUnit);
-                                    EventBus.getDefault().post(new QuantifyMessage(CacheHelper
-                                            .isOpenJin));
-                                    break;
-                                case NumFormatUtil.PASSWORD_TO_OPERATION:
-                                    startActivity(OperationActivity.class);
-                                    break;
-                                case NumFormatUtil.PASSWORD_TO_SETTING:
-                                    startActivity(SettingActivity.class);
-                                    break;
-                                case NumFormatUtil.PASSWORD_TO_REPORT:
-//                                    startActivity(NewReportActivity.class);
-                                    break;
-                            }
-//                        } else {
-//                            canCloseDialog(dialog, false);
-//                            showMessage(getResources().getString(R.string
-//                                    .operation_usercode_wrong));
-//                            userPwdEdit.setText("");
-//                        }
-                    }
-                }).setNegativeButton(R.string.reprint_cancel, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        canCloseDialog(dialog, true);
-                    }
-                }).setOnKeyListener(new OnKeyListener() {
-
-                    @Override
-                    public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                            mMisc.beep();
-                            String txt = userPwdEdit.getText().toString();
-                            if (keyCode >= KeyEvent.KEYCODE_NUMPAD_0 && keyCode <= KeyEvent
-                                    .KEYCODE_NUMPAD_9) {
-                                txt += keyCode - KeyEvent.KEYCODE_NUMPAD_0;
-                            } else if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent
-                                    .KEYCODE_9) {
-                                txt += keyCode - KeyEvent.KEYCODE_0;
-                            } else if (keyCode == KeyEvent.KEYCODE_E) {
-                                txt += ".";
-                            } else if (keyCode == KeyEvent.KEYCODE_NUM_LOCK) {
-                                if (!txt.isEmpty()) {
-                                    txt = txt.substring(0, txt.length() - 1);
-                                }
-                            } else if (keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) {
-                                txt = "";
-                            } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                                InputMethodManager imm = (InputMethodManager) getSystemService
-                                        (INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(userPwdEdit.getWindowToken(),
-                                        InputMethodManager.HIDE_NOT_ALWAYS);
-                                return true;
-                            }
-                            userPwdEdit.setText(txt);
-                            userPwdEdit.setSelection(txt.length());
+                .setPositiveButton(R.string.reprint_ok, (dialog12, which) -> {
+                    canCloseDialog(dialog12, true);
+                    String pwd = userPwdEdit.getText().toString();
+                    if (getPwd().equals(pwd)) {
+                        switch (flag) {
+                            case NumFormatUtil.PASSWORD_TO_OPERATION:
+                                startActivity(OperationActivity.class);
+                                break;
+                            case NumFormatUtil.PASSWORD_TO_SETTING:
+                                startActivity(SettingActivity.class);
+                                break;
                         }
-                        return true;
                     }
+                }).setNegativeButton(R.string.reprint_cancel, (dialog13, which) -> canCloseDialog(dialog13, true)).setOnKeyListener((dialog1, keyCode, event) -> {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                        mMisc.beep();
+                        String txt = userPwdEdit.getText().toString();
+                        if (keyCode >= KeyEvent.KEYCODE_NUMPAD_0 && keyCode <= KeyEvent
+                                .KEYCODE_NUMPAD_9) {
+                            txt += keyCode - KeyEvent.KEYCODE_NUMPAD_0;
+                        } else if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent
+                                .KEYCODE_9) {
+                            txt += keyCode - KeyEvent.KEYCODE_0;
+                        } else if (keyCode == KeyEvent.KEYCODE_E) {
+                            txt += ".";
+                        } else if (keyCode == KeyEvent.KEYCODE_NUM_LOCK) {
+                            if (!txt.isEmpty()) {
+                                txt = txt.substring(0, txt.length() - 1);
+                            }
+                        } else if (keyCode == KeyEvent.KEYCODE_NUMPAD_DOT) {
+                            txt = "";
+                        } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService
+                                    (INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(userPwdEdit.getWindowToken(),
+                                    InputMethodManager.HIDE_NOT_ALWAYS);
+                            return true;
+                        }
+                        userPwdEdit.setText(txt);
+                        userPwdEdit.setSelection(txt.length());
+                    }
+                    return true;
                 }).create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
