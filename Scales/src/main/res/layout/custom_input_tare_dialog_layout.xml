@@ -22,15 +22,16 @@
         android:gravity="center"
         android:padding="5dp"
         android:textColor="@android:color/black"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:visibility="gone" />
     <!--        -->
     <TextView
         android:id="@+id/custom_input_tare_weight"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:gravity="center"
-        android:inputType="textPassword"
         android:hint="请点击右侧数字键盘进行输入"
+        android:inputType="textPassword"
         android:textColor="@android:color/holo_red_light"
         android:textColorHint="@android:color/darker_gray"
         android:textSize="25sp"
@@ -64,7 +65,159 @@
             android:text="@string/reprint_ok"
             android:textColor="@android:color/white"
             android:textSize="25sp" />
-
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll2"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="5"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="6"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="7"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="8"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll3"
+        android:layout_width="match_parent"
+        android:layout_height="85dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="9"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="."
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_press_green"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="@android:color/white"
+            android:textSize="25sp" />
+    </LinearLayout>
 </LinearLayout>

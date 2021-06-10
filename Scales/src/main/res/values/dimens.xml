@@ -8,7 +8,7 @@
     <dimen name="numPluTextSize">40sp</dimen>
     <dimen name="measureTextSize">65sp</dimen>
     <dimen name="configTextSize">25sp</dimen>
-
+    <dimen name="smallSize">20sp</dimen>
     <dimen name="settingButtonHeight">60dp</dimen>
 
     <dimen name="payResultTextSize">35sp</dimen>

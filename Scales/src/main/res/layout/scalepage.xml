@@ -459,7 +459,7 @@
                             android:singleLine="true"
                             android:text="去皮"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/pluTextSize" />
+                            android:textSize="@dimen/CartSize" />
 
                         <Button
                             android:id="@+id/sbtn_price"
@@ -473,9 +473,22 @@
                             android:onClick="sbtnPrice"
                             android:text="改价"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/pluTextSize"
+                            android:textSize="@dimen/CartSize"
                             android:visibility="visible" />
-
+                        <Button
+                            android:id="@+id/sbtn_reset"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="3dp"
+                            android:layout_marginTop="3dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_btn_control"
+                            android:gravity="center"
+                            android:onClick="sbtnReset"
+                            android:text="重置"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/CartSize"
+                            android:visibility="visible" />
                         <Button
                             android:id="@+id/accuxbutton"
                             android:layout_width="match_parent"
@@ -488,38 +501,8 @@
                             android:onClick="sbtnAccux"
                             android:text="加入\n购物车"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/CartSize"
+                            android:textSize="@dimen/smallSize"
                             android:visibility="visible" />
-
-
-                        <!--                        <Button-->
-                        <!--                            android:id="@+id/sbtn_clear"-->
-                        <!--                            android:layout_width="match_parent"-->
-                        <!--                            android:layout_height="0dp"-->
-                        <!--                            android:layout_marginStart="3dp"-->
-                        <!--                            android:layout_marginTop="3dp"-->
-                        <!--                            android:layout_weight="1"-->
-                        <!--                            android:background="@drawable/bg_btn_control"-->
-                        <!--                            android:gravity="center"-->
-                        <!--                            android:text="取消"-->
-                        <!--                            android:textColor="@color/white"-->
-                        <!--                            android:textSize="@dimen/pluTextSize"-->
-                        <!--                            android:visibility="visible" />-->
-
-                        <!--                        <ImageView-->
-                        <!--                            android:id="@+id/pluorunm"-->
-                        <!--                            android:layout_width="match_parent"-->
-                        <!--                            android:layout_height="0dp"-->
-                        <!--                            android:layout_marginStart="3dp"-->
-                        <!--                            android:layout_marginTop="3dp"-->
-                        <!--                            android:layout_weight="1"-->
-                        <!--                            android:background="@drawable/bg_btn_control"-->
-                        <!--                            android:contentDescription="@string/app_name"-->
-                        <!--                            android:gravity="center"-->
-                        <!--                            android:padding="10dp"-->
-                        <!--                            android:scaleType="centerInside"-->
-                        <!--                            android:src="@drawable/pinming" />-->
-
                         <Button
                             android:id="@+id/pay"
                             android:layout_width="match_parent"
@@ -532,7 +515,7 @@
                             android:onClick="sbtnPay"
                             android:text="@string/tv_pay_text"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/CartSize" />
+                            android:textSize="@dimen/smallSize" />
 
                     </LinearLayout>
 

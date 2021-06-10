@@ -11,11 +11,15 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lzscale.scalelib.misclib.Misc;
 import com.seray.scales.R;
 import com.seray.util.NumFormatUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -39,7 +43,41 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
         this.titleMsg = titleMsg;
         this.alertContent = alertContent;
         this.isPassword = isPassword;
+    }
 
+    private void setllBtn(LinearLayout llt) {
+        for (int i = 0; i < llt.getChildCount(); i++) {
+            View view = llt.getChildAt(i);
+            if (view instanceof Button) {
+                Button btn = (Button) view;
+                btn.setOnClickListener(v -> {
+                    mMisc.beep();
+                    //原有数字
+                    String txt = tv.getText().toString();
+                    //当前按键
+                    Button btn1 = (Button) view;
+                    String btnValue = btn1.getText().toString();
+
+                    if ("删除".equals(btnValue)) {
+                        if (txt.length() > 0) {
+                            txt = txt.substring(0, txt.length() - 1);
+                        } else {
+                            return;
+                        }
+                    } else if (".".equals(btnValue)) {
+                        if (txt.length() > 0) {
+                            int locDot = txt.indexOf(".");
+                            if (locDot == -1) {
+                                txt = txt + btnValue;
+                            }
+                        }
+                    } else {
+                        txt = txt + btnValue;
+                    }
+                    tv.setText(txt);
+                });
+            }
+        }
     }
 
     @Override
@@ -49,9 +87,19 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
         setCanceledOnTouchOutside(true);
         mDialog = this;
         tv = mDialog.findViewById(R.id.custom_input_tare_weight);
+        tv.setHint(alertContent);
+        LinearLayout ll1 = mDialog.findViewById(R.id.ll1);
+        setllBtn(ll1);
+        LinearLayout ll2 = mDialog.findViewById(R.id.ll2);
+        setllBtn(ll2);
+        LinearLayout ll3 = mDialog.findViewById(R.id.ll3);
+        setllBtn(ll3);
+
         tv.setInputType(isPassword ? InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD : InputType.TYPE_CLASS_TEXT);
         setMessage();
         mMisc = Misc.newInstance();
+
+
         this.setOnKeyListener((dialog, keyCode, event) -> {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 mMisc.beep();
@@ -80,6 +128,7 @@ public class CustomInputTareDialog extends Dialog implements View.OnClickListene
             return true;
         });
     }
+
 
     private void setMessage() {
         TextView messageView = findViewById(R.id.custom_input_alert_msg);

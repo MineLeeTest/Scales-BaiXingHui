@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.math.BigDecimal;
@@ -198,7 +199,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //初始化控件
     private void initViews() {
         mTimeView = findViewById(R.id.timer);//日期时间
-        mTimeView.setText(NumFormatUtil.getFormatDate());
+
         mTvUnitPrice = findViewById(R.id.unitprice); //商品单价
         mTvWeight = findViewById(R.id.weight);   //商品的重量
         mTvTare = findViewById(R.id.tare);//商品的皮重
@@ -477,6 +478,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         }
     }
 
+
     //直接输入总价点击事件
     public void changeMoney(View view) {
         mMisc.beep();
@@ -496,6 +498,12 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
 
     }
 
+    //重置按钮点击事件
+    public void sbtnReset(View view) {
+        mMisc.beep();
+        reset();
+    }
+
     //去皮按钮点击事件
     public void sbtnTare(View view) {
         mMisc.beep();
@@ -513,6 +521,11 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //改价按钮点击事件
     public void sbtnPrice(View view) {
         mMisc.beep();
+        if (null == proTradeNow) {
+            showMessage("请选择商品后，再进行改价！");
+            return;
+        }
+
         CustomInputTareDialog tareDialog = new CustomInputTareDialog(ScaleActivity.this, "请输入商品单价", "商品单价单位为元", Boolean.FALSE);
         tareDialog.show();
         tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, weight) -> {
@@ -642,6 +655,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                     case 1:
                         activity.weightChangedCyclicity();
                         activity.lightScreenCyclicity();
+                        activity.mTimeView.setText(NumFormatUtil.getFormatDate());
                         break;
                 }
             }
@@ -769,5 +783,23 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         seller.setTag(null);
 
         pay.setText(this.getResources().getString(R.string.tv_pay_text));
+    }
+
+
+    //网络是否可用
+    public static boolean pingIPAddress(String ipAddress) {
+        try {
+            //-c 1是指ping的次数为1次，-w 3是指超时时间为3s
+            Process process = Runtime.getRuntime()
+                    .exec("ping -c 1 -w 3 " + ipAddress);
+            //status为0表示ping成功
+            int status = process.waitFor();
+            if (status == 0) {
+                return true;
+            }
+        } catch (InterruptedException | IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
