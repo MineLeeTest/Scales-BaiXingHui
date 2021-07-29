@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 
 import com.seray.sjc.api.result.ProductDZCDTO;
 
+import java.math.BigDecimal;
+
 @Entity(tableName = ProductADB.TABLE_NAME)
 public class ProductADB {
 
@@ -23,6 +25,7 @@ public class ProductADB {
     @ColumnInfo(name = "product_name")
     private String pro_name;
 
+    //原始单价
     @ColumnInfo(name = "price")
     private Double price;
 
@@ -30,7 +33,7 @@ public class ProductADB {
     private Double max_price;
 
     @ColumnInfo(name = "min_price")
-    private Double min_price;
+    private Double min_price;//Room数据库仅支持Double类型，不支持BigDecimal
 
     @ColumnInfo(name = "img_url")
     private String img_url;
@@ -40,12 +43,12 @@ public class ProductADB {
     }
 
     public ProductADB(ProductDZCDTO productDZCDTO) {
-        this.product_id=productDZCDTO.getProduct_id();
-        this.sequences=productDZCDTO.getSequences();
+        this.product_id = productDZCDTO.getProduct_id();
+        this.sequences = productDZCDTO.getSequences();
         this.pro_name = productDZCDTO.getPro_name();
-        this.price=productDZCDTO.getPrice();
-        this.max_price=productDZCDTO.getMax_price();
-        this.min_price=productDZCDTO.getMin_price();
+        this.price = productDZCDTO.getPrice();
+        this.max_price = productDZCDTO.getMax_price();
+        this.min_price = productDZCDTO.getMin_price();
         this.img_url = productDZCDTO.getImg_url();
     }
 

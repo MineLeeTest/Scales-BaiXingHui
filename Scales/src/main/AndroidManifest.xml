@@ -97,10 +97,10 @@
             android:configChanges="orientation|keyboardHidden|keyboard"
             android:screenOrientation="landscape" />
 
-<!--        <service-->
-<!--            android:name="com.seray.service.BatteryService"-->
-<!--            android:description="@string/read_battery_service"-->
-<!--            android:exported="false" />-->
+        <!--        <service-->
+        <!--            android:name="com.seray.service.BatteryService"-->
+        <!--            android:description="@string/read_battery_service"-->
+        <!--            android:exported="false" />-->
         <service
             android:name="com.seray.service.HeartBeatService"
             android:description="@string/service_heart_beat"
@@ -108,6 +108,10 @@
         <service
             android:name="com.seray.service.DisplayService"
             android:description="@string/back_display_service"
+            android:exported="false" />
+        <service
+            android:name="com.seray.service.ShutdownService"
+            android:description="@string/service_shutdown"
             android:exported="false" />
 
     </application>

@@ -7,7 +7,25 @@
     android:layout_below="@+id/rl_title"
     android:orientation="horizontal"
     android:padding="5dp"
-    android:weightSum="6">
+    android:weightSum="7">
+
+    <TextView
+        android:id="@+id/tv_no"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:autoSizeMaxTextSize="@dimen/configTextSize"
+        android:autoSizeMinTextSize="@dimen/pluMinTextSize"
+        android:autoSizeStepGranularity="2sp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="序号"
+        android:textColor="@color/white"
+        android:textSize="@dimen/configTextSize"
+        app:autoSizeMaxTextSize="@dimen/configTextSize"
+        app:autoSizeMinTextSize="@dimen/pluMinTextSize"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform" />
 
     <TextView
         android:id="@+id/tv_goodename"

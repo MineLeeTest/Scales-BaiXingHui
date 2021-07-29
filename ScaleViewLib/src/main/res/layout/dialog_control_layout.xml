@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:layout_weight="1"
-        android:background="@drawable/bg_press_origin"
+        android:background="@drawable/bg_press_green"
         android:gravity="center"
         android:text="@string/dialog_positive"
         android:textColor="@android:color/white"

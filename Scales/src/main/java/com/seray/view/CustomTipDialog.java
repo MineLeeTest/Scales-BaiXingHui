@@ -2,13 +2,11 @@ package com.seray.view;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -18,10 +16,10 @@ import com.seray.scales.R;
 public class CustomTipDialog extends Dialog {
 
     private OnPositiveClickListener positiveClickListener;
+    private OnNegativeClickListener negativeClickListener;
     private Misc mMisc;
     private CustomTipDialog mDialog;
     private Context mContext;
-
     public CustomTipDialog(@NonNull Context context) {
         super(context, R.style.Dialog);
         mContext = context;
@@ -48,7 +46,7 @@ public class CustomTipDialog extends Dialog {
     }
 
     public void setTitle(@NonNull String str) {
-        TextView view = (TextView) findViewById(R.id.custom_tip_title);
+        TextView view = findViewById(R.id.custom_tip_title);
         view.setText(str);
     }
 
@@ -57,13 +55,10 @@ public class CustomTipDialog extends Dialog {
         Button button = (Button) findViewById(R.id.dialog_positive);
         button.setText(str);
         if (this.positiveClickListener != null) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mMisc.beep();
-                    positiveClickListener.onPositiveClick(mDialog);
-                    mDialog.dismiss();
-                }
+            button.setOnClickListener(v -> {
+                mMisc.beep();
+                positiveClickListener.onPositiveClick(mDialog);
+                mDialog.dismiss();
             });
         }
     }
@@ -73,49 +68,52 @@ public class CustomTipDialog extends Dialog {
         this.setOnPositiveClickListener(string, listener);
     }
 
-    public void setOnNegativeClickListener() {
-        Button button = (Button) findViewById(R.id.dialog_negative);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    public void setOnNegativeClickListenerPrivate(String name, @Nullable OnNegativeClickListener listener) {
+        this.negativeClickListener = listener;
+        Button button = findViewById(R.id.dialog_negative);
+        button.setText(name);
+        if (this.negativeClickListener != null) {
+            button.setOnClickListener(v -> {
                 mMisc.beep();
+                negativeClickListener.onNegativeClick(mDialog);
                 mDialog.dismiss();
-            }
-        });
+            });
+        }
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_tip_dialog_layout);
         setCanceledOnTouchOutside(false);
-        setOnNegativeClickListener();
         mMisc = Misc.newInstance();
         mDialog = this;
-        setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
-                        mMisc.beep();
-                        if (positiveClickListener != null) {
-                            positiveClickListener.onPositiveClick(mDialog);
-                            mDialog.dismiss();
-                            return true;
-                        }
-                    }
-                    if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_NUMPAD_DIVIDE) {
-                        mMisc.beep();
+        setOnKeyListener((dialog, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_NUMPAD_ENTER) {
+                    mMisc.beep();
+                    if (positiveClickListener != null) {
+                        positiveClickListener.onPositiveClick(mDialog);
                         mDialog.dismiss();
                         return true;
                     }
                 }
-                return false;
+                if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_NUMPAD_DIVIDE) {
+                    mMisc.beep();
+                    mDialog.dismiss();
+                    return true;
+                }
             }
+            return false;
         });
     }
 
     public interface OnPositiveClickListener {
         void onPositiveClick(CustomTipDialog dialog);
+    }
+
+    public interface OnNegativeClickListener {
+        void onNegativeClick(CustomTipDialog dialog);
     }
 }

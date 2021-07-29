@@ -47,11 +47,12 @@ public class HeartBeatService extends Service {
         mRunnable = new HeartBeatRunnable();
     }
 
-    private final long TIMES = 5 * 60;
+    private final long TIMES = 30;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        batteryThread.scheduleAtFixedRate(mRunnable, 60, TIMES, TimeUnit.SECONDS);
+        batteryThread.scheduleAtFixedRate(mRunnable, 1, TIMES, TimeUnit.MINUTES);
+//        batteryThread.scheduleAtFixedRate(mRunnable, 60, TIMES, TimeUnit.SECONDS);
         return START_NOT_STICKY;
     }
 
@@ -82,11 +83,13 @@ public class HeartBeatService extends Service {
             resultData = HardwareNetwork.getHeartBeatReq(context);
             RequestHeartBeatVM requestHeartBeatVM = (RequestHeartBeatVM) resultData.getMsg();
             requestHeartBeatVM.setBattery_info(Misc.newInstance().readBattery() + "");
+
             Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> request = HttpServicesFactory.getHttpServiceApi()
-                    .heart_beat(requestHeartBeatVM);
+                    .heart_beat(requestHeartBeatVM, requestHeartBeatVM.getDevice_dzc_id() + "");
             LogUtil.i("----request-->" + request.request().url() + "----vm->" + requestHeartBeatVM.toString());
             Response<ApiDataRsp<HeartBeatDeviceDzcDTO>> response = request.execute();
-            LogUtil.i("----response----->" + response.toString());
+            LogUtil.i("----response----->");
+
             if (!response.isSuccessful()) {
                 LogUtil.i("请求失败：" + response.toString());
                 resultData.setRetMsg("5013", response.toString());

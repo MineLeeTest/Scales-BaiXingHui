@@ -70,7 +70,7 @@ public class ICCardSerialPortUtil {
         byte[] buffer = new byte[1024];
         try {
             do {
-                Thread.sleep(30);
+                Thread.sleep(100);
                 if (mInputStream == null)
                     return;
                 count = mInputStream.read(buffer, size, buffer.length - size);

@@ -98,6 +98,17 @@ public class CacheHelper {
     }
 
     //更新商品列表
+    public static boolean updateProductADB(ProductADB productADB) {
+        if (null == productADB) {
+            return false;
+        }
+        ProductDao productDao = AppDatabase.getInstance().getProductDao();
+        productDao.save(productADB);
+        System.out.println("-JSONUtil.toJsonStr(productADB)----->" + JSONUtil.toJsonStr(productADB));
+        return true;
+    }
+
+    //更新商品列表
     public static boolean updatePros(@NonNull List<ProductDZCDTO> productDZCDTOS) {
         try {
             LogUtil.i("-----执行商品更新-----");

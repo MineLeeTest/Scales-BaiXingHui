@@ -158,6 +158,5 @@ public class DisplayService extends Service {
         IntentFilter filter = new IntentFilter();
         filter.addAction(SjcConfig.ACTION_DISPLAY_CONTROL);
         LocalBroadcastManager.getInstance(this).registerReceiver(mDisplayControlReceiver, filter);
-        LogUtil.d("广告后显示服务控制广播已注册！");
     }
 }

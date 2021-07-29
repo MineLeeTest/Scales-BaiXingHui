@@ -9,15 +9,19 @@ import android.widget.TextView;
 
 import com.seray.cache.CacheHelper;
 import com.seray.instance.ResultData;
+import com.seray.message.ClearCartMsg;
 import com.seray.sjc.adapter.SjcSubDetailAdapter;
 import com.seray.sjc.api.net.HttpServicesFactory;
 import com.seray.sjc.api.request.ProductCart;
 import com.seray.sjc.api.request.RequestOrderVM;
 import com.seray.sjc.api.result.ApiDataRsp;
+import com.seray.sjc.api.result.UserVipCardDetailDTO;
 import com.seray.util.AESTools;
 import com.seray.util.MD5Utils;
 import com.seray.util.NumFormatUtil;
 import com.seray.view.CustomInputTareDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -25,6 +29,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import lombok.SneakyThrows;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,18 +53,20 @@ public class CartOrderActivity extends BaseActivity {
     private SjcSubDetailAdapter sjcSubDetailAdapter;
 
     private RequestOrderVM vm = null;
+    private UserVipCardDetailDTO dto = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reportsjcdetail);
         ButterKnife.bind(this);
+
         vm = (RequestOrderVM) this.getIntent().getExtras().get("RequestOrderVM");
+        dto = (UserVipCardDetailDTO) this.getIntent().getExtras().get("UserVipCardDetailDTO");
 
         sjcdetailRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        sjcSubDetailAdapter = new SjcSubDetailAdapter(CartOrderActivity.this, vm.getProductCartList() != null ? vm.getProductCartList() : new ArrayList<ProductCart>(), this);
+        sjcSubDetailAdapter = new SjcSubDetailAdapter(CartOrderActivity.this, vm.getProductCartList() != null ? vm.getProductCartList() : new ArrayList<>(), this);
         sjcdetailRecyclerView.setAdapter(sjcSubDetailAdapter);
-
         shouPrice(sjcSubDetailAdapter.productADBListChoice);
     }
 
@@ -74,18 +82,18 @@ public class CartOrderActivity extends BaseActivity {
     public void confirm_click(View view) {
         mMisc.beep();
         BigDecimal allPrice = NumFormatUtil.countPrice(sjcSubDetailAdapter.productADBListChoice);
-        if (allPrice.compareTo(BigDecimal.valueOf(Double.valueOf("500.00"))) > 0) {
-            CustomInputTareDialog tareDialog = new CustomInputTareDialog(this, "请输会员交易密码", "会员注册时输入的6位交易密码！", Boolean.TRUE);
-            tareDialog.show();
-            tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, data) -> {
-                updateOrder(data, allPrice);
-                tareDialog.dismiss();
-            });
-            tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, Dialog::dismiss);
-        } else {
-            updateOrder("UNUSE000000", allPrice);
+        if (allPrice.compareTo(new BigDecimal(dto.getBalance())) > 0) {
+            showMessage("买家账户余额不足！如果买家刚才执行了充值，请返回交易界面请重新刷卡，买家的充值金额将会到账更新！");
+            return;
         }
 
+        CustomInputTareDialog tareDialog = new CustomInputTareDialog(this, "请输会员交易密码", "会员注册时输入的6位交易密码！", Boolean.TRUE);
+        tareDialog.show();
+        tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, data) -> {
+            updateOrder(data, allPrice);
+            tareDialog.dismiss();
+        });
+        tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, Dialog::dismiss);
     }
 
 
@@ -114,9 +122,32 @@ public class CartOrderActivity extends BaseActivity {
                     Thread.sleep(200);
                     mMisc.beep();
                     showMessage(resData.getCode() + "-" + resData.getMsgs());
+                    EventBus.getDefault().post(new ClearCartMsg("9000", "true"));
+                    CartOrderActivity.this.finish();
                 } else {
                     mMisc.beep();
                     showMessage(resData.getCode() + "-" + resData.getError_msg());
+                    if ("8000".equals(resData.getCode())) {
+                        String retStr = resData.getMsgs();
+
+                        String[] failedIds = retStr.split(",");
+                        List<ProductCart> upFailedlist = new ArrayList<>();
+                        for (ProductCart cart : vm.getProductCartList()) {
+                            for (String id : failedIds) {
+                                if (id.equals(cart.getProduct_id().toString())) {
+                                    upFailedlist.add(cart);
+                                }
+                            }
+                        }
+                        //改变当前界面购车内容
+                        sjcSubDetailAdapter.productADBList=upFailedlist;
+                        sjcSubDetailAdapter.productADBListChoice=upFailedlist;
+                        sjcSubDetailAdapter.notifyDataSetChanged();
+                        //显示价格
+                        change(upFailedlist);
+                        //改变称重界面购物车内容
+                        EventBus.getDefault().post(new ClearCartMsg("8000", upFailedlist));
+                    }
                 }
 
             }
@@ -132,6 +163,7 @@ public class CartOrderActivity extends BaseActivity {
 
     public void change(List<ProductCart> productADBList) {
         mMisc.beep();
+        //显示价格
         shouPrice(productADBList);
     }
 }

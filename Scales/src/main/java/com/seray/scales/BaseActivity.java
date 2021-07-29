@@ -33,6 +33,7 @@ import com.seray.sjc.AppExecutors;
 import com.seray.util.FileHelp;
 import com.seray.util.LogUtil;
 import com.seray.util.NumFormatUtil;
+import com.seray.view.CustomTipDialog;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     /**
      * 执行定时任务固定数量线程池
      */
-    public static ScheduledExecutorService timerThreads = Executors.newScheduledThreadPool(2);
+    public static ScheduledExecutorService timerThreads = Executors.newScheduledThreadPool(1);
 
     /**
      * 蜂鸣器控制器
@@ -102,22 +103,16 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         }
     }
 
-    private Toast mToast;
-    private String msg;
-    private Handler mHandler = new Handler();
-
-    Runnable showRun = new Runnable() {
-        @SuppressLint("ShowToast")
-        @Override
-        public void run() {
-            if (mToast == null) {
-                mToast = Toast.makeText(App.getApplication(), msg, Toast.LENGTH_SHORT);
-            } else {
-                mToast.setText(msg);
-            }
-            mToast.show();
-        }
-    };
+    View view;
+    Toast toast;
+    TextView tv_msg;
+    public void showToast(String str) {
+        tv_msg.setText(str);
+        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 20);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(view);
+        toast.show();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -130,6 +125,10 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         mMisc = Misc.newInstance();
         mController = DisplayController.getInstance();
         App.getApplication().addActivity(this);
+
+        view = LayoutInflater.from(this).inflate(R.layout.view_toast_custom, null);
+        toast = new Toast(this);
+        tv_msg = view.findViewById(R.id.tvToast);
     }
 
     @Override
@@ -152,19 +151,16 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      * 显示吐司
      */
     public void showMessage(int msg) {
-        try {
-            this.showMessage(getResources().getString(msg));
-        } catch (NotFoundException e) {
-
-        }
+        this.showMessage(getResources().getString(msg));
     }
 
     /**
      * 显示吐司
      */
     public void showMessage(final String msg) {
-        this.msg = msg;
-        mHandler.post(showRun);
+//        this.msg = msg;
+//        mHandler.post(showRun);
+        showToast(msg);
     }
 
     /**

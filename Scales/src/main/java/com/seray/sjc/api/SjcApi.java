@@ -37,7 +37,7 @@ public interface SjcApi {
      * 心跳包
      */
     @POST("/device_public/heart_beat")
-    Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> heart_beat(@Body RequestHeartBeatVM requestHeartBeatVM);
+    Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> heart_beat(@Body RequestHeartBeatVM requestHeartBeatVM, @Header("device_id") String device_id);
 
     /**
      * 获取商品列表

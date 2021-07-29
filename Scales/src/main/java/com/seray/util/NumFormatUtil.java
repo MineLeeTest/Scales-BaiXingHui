@@ -34,6 +34,7 @@ public class NumFormatUtil {
     private static NumFormatUtil mUtil = null;
     private static Pattern pattern = Pattern.compile("^(-?[0-9\\.]+)$");
     private static Pattern isIntPattern = Pattern.compile("^(-?[0-9]+)$");
+
     //计算总价
     public static BigDecimal countPrice(List<ProductCart> list) {
         BigDecimal all = new BigDecimal(0.00);
@@ -42,25 +43,7 @@ public class NumFormatUtil {
         }
         return all;
     }
-    public static void main(String[] args) {
-        //计算总价
-        List<ProductCart> pcChoice = new ArrayList<>();
-        ProductCart pc = new ProductCart();
-        pc.setMoney_total(new BigDecimal(10.00));
-        pcChoice.add(pc);
-        pc.setMoney_total(new BigDecimal(20.00));
-        pcChoice.add(pc);
-        pc.setMoney_total(new BigDecimal(30.00));
-        pcChoice.add(pc);
-        BigDecimal all = new BigDecimal(0.00);
-        for (ProductCart productCart : pcChoice) {
-            all = all.add(productCart.getMoney_total());
-            System.out.println(all);
-        }
-        System.out.println(NumFormatUtil.DF_PRICE.format(all));
-        ;
 
-    }
 
     private NumFormatUtil() {
     }
@@ -124,6 +107,18 @@ public class NumFormatUtil {
     public static String getFormatDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         return sdf.format(new Date());
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getFormatTime());
+    }
+
+    /**
+     * 生成页面显示
+     */
+    public static String getFormatTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("HHmm", Locale.getDefault());
+        return "9" + sdf.format(new Date());
     }
 
     /**

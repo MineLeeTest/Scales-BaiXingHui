@@ -437,13 +437,10 @@ public class TotalActivity extends BaseActivity implements SjcDetailAdapter.OnTo
         dialog.show();
         dialog.setTitle(R.string.test_clear_title);
         dialog.setMessage(msg);
-        dialog.setOnPositiveClickListener(R.string.reprint_ok, new CustomTipDialog.OnPositiveClickListener() {
-            @Override
-            public void onPositiveClick(CustomTipDialog dialog) {
+        dialog.setOnPositiveClickListener(R.string.reprint_ok, dialog1 -> {
 //                fnList.remove(position);
-                mAdapter.notifyDataSetChanged();
-                setTotalAmountShow();
-            }
+            mAdapter.notifyDataSetChanged();
+            setTotalAmountShow();
         });
     }
 }

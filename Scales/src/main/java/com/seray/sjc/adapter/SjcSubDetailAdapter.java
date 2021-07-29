@@ -26,13 +26,13 @@ import butterknife.ButterKnife;
 public class SjcSubDetailAdapter extends RecyclerView.Adapter {
 
     public List<ProductCart> productADBListChoice;
-    private List<ProductCart> productADBList;
+    public List<ProductCart> productADBList;
     private Context context;
     private CartOrderActivity cartOrderActivity;
 
     public SjcSubDetailAdapter(CartOrderActivity cartOrderActivity, List<ProductCart> productADBList, Context context) {
-        this.productADBList = new ArrayList<>(productADBList);//确保使用的不是同一个内存对象
-        this.productADBListChoice = new ArrayList<>(productADBList);//确保使用的不是同一个内存对象
+        this.productADBList = new ArrayList<>(productADBList);
+        this.productADBListChoice = new ArrayList<>(productADBList);
         this.context = context;
         this.cartOrderActivity = cartOrderActivity;
     }
@@ -52,19 +52,16 @@ public class SjcSubDetailAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof DetailViewHolder) {
-            ((DetailViewHolder) holder).tvMoney.setText(productADBList.get(position).getMoney_total() + "");
-            ((DetailViewHolder) holder).tvTare.setText(productADBList.get(position).getTare() + "");
+            ((DetailViewHolder) holder).tvNo.setText((position + 1) + "");
+            ((DetailViewHolder) holder).tvMoney.setText(productADBList.get(position).getMoney_total() + "元");
+            ((DetailViewHolder) holder).tvTare.setText(productADBList.get(position).getTare() + "kg");
             ((DetailViewHolder) holder).tvGoodename.setText(productADBList.get(position).getProduct_name());
-            ((DetailViewHolder) holder).tvPrice.setText(productADBList.get(position).getPrice_real() + "");
-            ((DetailViewHolder) holder).tvWeight.setText(productADBList.get(position).getWeight() + "");
+            ((DetailViewHolder) holder).tvPrice.setText(productADBList.get(position).getPrice_real() + "元");
+            ((DetailViewHolder) holder).tvWeight.setText(productADBList.get(position).getWeight() + "kg");
             ((DetailViewHolder) holder).btnChoice.setTag(1);
             ((DetailViewHolder) holder).btnChoice.setText(position + "");
             ((DetailViewHolder) holder).btnChoice.setOnClickListener(btnChoiceClick);
-
-
-//            ((DetailViewHolder) holder).btnChoice.setTag(99, productADBList.get(position));
         }
-
     }
 
 
@@ -116,6 +113,9 @@ public class SjcSubDetailAdapter extends RecyclerView.Adapter {
         @BindView(R.id.tv_goodename)
         TextView tvGoodename;
 
+        @BindView(R.id.tv_no)
+        TextView tvNo;
+
         @BindView(R.id.tv_price)
         TextView tvPrice;
 
@@ -130,7 +130,6 @@ public class SjcSubDetailAdapter extends RecyclerView.Adapter {
 
         @BindView(R.id.btn_choice)
         Button btnChoice;
-
 
         @BindView(R.id.rl_tabtitle)
         LinearLayout rlTabtitle;
