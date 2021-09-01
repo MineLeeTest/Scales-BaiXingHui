@@ -3,6 +3,7 @@ package com.seray.util;
 import android.text.TextUtils;
 
 import com.seray.instance.ResultData;
+import com.seray.sjc.api.net.HttpServicesFactory;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.lang.Validator;
@@ -12,12 +13,42 @@ import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Scanner;
 
 public class AESTools {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        String APP_DIR = System.getProperty("user.dir") + File.separator + "testforandroid";
+        System.out.println(APP_DIR);
+        File f = new File(APP_DIR);
+        if (!f.exists()) {
+            f.mkdirs();
+            System.out.println("111111");
 
-        System.out.println(53 / 24);
+        }else{
+            System.out.println("222222");
+        }
+        String APP_Name = APP_DIR + File.separator + HttpServicesFactory.APP_NAME;
+        System.out.println(APP_Name);
+        f = new File(APP_Name);
+
+        InputStream is = System.in;
+        FileOutputStream fos = new FileOutputStream(f);
+        BufferedInputStream bis = new BufferedInputStream(is);
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = bis.read(buffer)) != -1) {
+            fos.write(buffer, 0, len);
+        }
+        fos.flush();
+        fos.close();
+        bis.close();
+        is.close();
     }
 
     public static String getKey() {

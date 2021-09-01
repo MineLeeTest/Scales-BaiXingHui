@@ -4,9 +4,6 @@ import android.annotation.SuppressLint;
 
 public class ByteUtil {
 
-
-
-
     public static String getHexStr(byte[] buffer, int offset, int len, String split) {
         StringBuilder str = new StringBuilder();
         int end = offset + len;
@@ -48,14 +45,28 @@ public class ByteUtil {
         }
     }
 
-//    public static void main(String[] args) {
-//        byte[] bytes = new byte[4];
-//        bytes[0] = (byte) 0x5C;
-//        bytes[1] = (byte) 0x58;
-//        bytes[2] = (byte) 0xC6;
-//        bytes[3] = (byte) 0x8C;
-//        bytes = reveseBytes(bytes);
-//        String hex = getHexStr(bytes, 0, bytes.length, "");
-////        getCardNo(hex);
-//    }
+    public static String bytesToHexString(byte[] src) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString();
+    }
+
+    public static void main(String[] args) {
+        byte[] bytes = new byte[4];
+        bytes[0] = (byte) 0x20;
+        bytes[1] = (byte) 0x02;
+        bytes[2] = (byte) 0x0C;
+        bytes[3] = (byte) 0x04;
+        getCardNo(bytes);
+    }
 }

@@ -22,6 +22,7 @@ import com.seray.instance.ResultData;
 import com.seray.inter.BackDisplayBase;
 import com.seray.inter.LandBackDisplay;
 import com.seray.inter.TableBackDisplay;
+import com.seray.log.LLog;
 import com.seray.message.BatteryMsg;
 import com.seray.message.ClearCartMsg;
 import com.seray.message.HeartBeatMsg;
@@ -34,6 +35,7 @@ import com.seray.sjc.api.net.HttpServicesFactory;
 import com.seray.sjc.api.request.GetUserByCardNoVM;
 import com.seray.sjc.api.request.ProductCart;
 import com.seray.sjc.api.request.RequestOrderVM;
+import com.seray.sjc.api.request.RequestWatcherAlertVM;
 import com.seray.sjc.api.result.ApiDataRsp;
 import com.seray.sjc.api.result.UserVipCardDetailDTO;
 import com.seray.sjc.entity.device.ProductADB;
@@ -59,6 +61,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import cn.hutool.core.convert.impl.ByteArrayConverter;
+import cn.hutool.core.util.HexUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.OnDataReceiveListener {
@@ -259,7 +265,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             } else {
                 backDisplay.showWeightType(0);
                 backDisplay.showPlace("非本市");
-                backDisplay.showCustomerName("李飞龙");
+                backDisplay.showCustomerName("买家请刷卡");
             }
         } catch (Exception e) {
             LogUtil.e(e.getMessage());
@@ -299,6 +305,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     public void receiveShutdownMsg(ShutdownMsg shutdownMsg) {
         if ("11122".equals(shutdownMsg.getCode())) {
             showMessage(shutdownMsg.getMsg() + "");
+            speakNow(shutdownMsg.getMsg() + "");
         }
         if ("222111".equals(shutdownMsg.getCode())) {
             try {
@@ -333,6 +340,9 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //接收购物车页面中的上传订单返回项目
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveCartOrderActivity(ClearCartMsg msg) {
+        //清空本次交易产生的称重数据
+        weightsCache = null;
+
         //订单上传成功，则充值按钮
         if ("9000".equals(msg.getCode())) {
             reset(false);
@@ -353,6 +363,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         switch (keyCode) {
             //客户1
             case KeyEvent.KEYCODE_A:
+                speakNow("欢迎使用盛阳一户一秤系统！");
                 return true;
             //客户2
             case KeyEvent.KEYCODE_D:
@@ -362,7 +373,15 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 return true;
             //菜单---菜单
             case KeyEvent.KEYCODE_MENU:
-                openManageKey(NumFormatUtil.PASSWORD_TO_SETTING);
+                CustomInputTareDialog tareDialog = new CustomInputTareDialog(ScaleActivity.this, "请输入管理员密码", "请输入管理员密码", Boolean.TRUE);
+                tareDialog.show();
+                tareDialog.setOnPositiveClickListener(R.string.reprint_ok, (dialog, weight) -> {
+                    dialog.dismiss();
+                    if (getPwd().equals(weight)) {
+                        startActivity(SettingActivity.class);
+                    }
+                });
+                tareDialog.setOnNegativeClickListener(R.string.reprint_cancel, Dialog::dismiss);
                 return true;
             //开关
             case KeyEvent.KEYCODE_F3:
@@ -370,8 +389,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
 
             //计件---重置
             case KeyEvent.KEYCODE_NUMPAD_MULTIPLY:
-                mMisc.beep();
-                reset(true);
+                sbtnReset(null);
                 return true;
             // 语音--去皮
             case KeyEvent.KEYCODE_DEL:
@@ -437,19 +455,13 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //接收读卡器返回数据
     @Override
     public void onICCardDataReceive(ICCardSerialPortUtil.DataReceType type, byte[] buffer, int size) {
-//        ResultData rd = new ResultData();
-//        rd.setRetMsg("", "刷卡成功-查询卡片信息中");
-//        Message msg = new Message();
-//        msg.what = 9;
-//        msg.obj = rd;
-//        handlerICCard.handleMessage(msg);
-
-
         Message message = new Message();
         message.what = -1;
+        System.out.println(ByteUtil.bytesToHexString(buffer));
         if (ICCardSerialPortUtil.DataReceType.success == type) {
             if (buffer.length != 12) {
                 message.obj = "卡号长度有误：" + buffer.length;
+                System.out.println(ByteUtil.bytesToHexString(buffer));
             } else {
                 String cardID = ByteUtil.getCardNo(buffer);
                 if (null == cardID) {
@@ -477,7 +489,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             }
             String sign = resultData.getMsg() + "";
             getUserByCardNoVM.setCardNo(cardID);
-            System.out.println("--getuserbycardno--request---start------>");
+            System.out.println("--getuserbycardno--request---start------>" + CacheHelper.device_id);
             Response<ApiDataRsp<UserVipCardDetailDTO>> response = HttpServicesFactory.getHttpServiceApi().getuserbycardno(CacheHelper.device_id + "", sign, getUserByCardNoVM).execute();
             System.out.println("--getuserbycardno--request---end------>");
 
@@ -558,6 +570,50 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //重置按钮点击事件
     public void sbtnReset(View view) {
         mMisc.beep();
+        if (null != weightsCache && weightsCache.length() > 1) {
+
+            //称重了，却没有发起交易
+            RequestWatcherAlertVM vm = new RequestWatcherAlertVM();
+            vm.setWeight_data(weightsCache.toString());
+            weightsCache = null;
+            if (seller.getTag() != null) {
+                UserVipCardDetailDTO sellerDTO = (UserVipCardDetailDTO) seller.getTag();
+                vm.setSeller_card_id(sellerDTO.getUser_vip_card_id());
+                vm.setSeller_id(sellerDTO.getUser_vip_id());
+                vm.setSeller_name(sellerDTO.getUser_name());
+            } else {
+                return;
+            }
+
+            if (buyer.getTag() != null) {
+                UserVipCardDetailDTO buyerDTO = (UserVipCardDetailDTO) buyer.getTag();
+                vm.setBuyer_card_id(buyerDTO.getUser_vip_card_id());
+                vm.setBuyer_id(buyerDTO.getUser_vip_id());
+                vm.setBuyer_name(buyerDTO.getUser_name());
+            } else {
+                return;
+            }
+
+            ResultData resultData = new ResultData();
+            resultData = AESTools.encrypt(resultData, CacheHelper.device_aes_key, System.currentTimeMillis() + "," + CacheHelper.device_id);
+            if (!resultData.isSuccess()) {
+                showMessage(resultData.getCode() + "-" + resultData.getMsg());
+                return;
+            }
+            String sign = resultData.getMsg() + "";
+            LLog.i("哨兵模式请求：" + vm.toString());
+            HttpServicesFactory.getHttpServiceApi().watcher_alert(CacheHelper.device_id.toString(), sign, vm).enqueue(new Callback<ApiDataRsp<String>>() {
+                @Override
+                public void onResponse(Call<ApiDataRsp<String>> call, Response<ApiDataRsp<String>> response) {
+                    LLog.i("哨兵模式返回：" + response.body().getCode() + response.body().getError_msg());
+                }
+
+                @Override
+                public void onFailure(Call<ApiDataRsp<String>> call, Throwable t) {
+                    LLog.i("哨兵模式返回：" + t.getMessage());
+                }
+            });
+        }
         reset(true);
     }
 
@@ -747,16 +803,13 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             super.handleMessage(msg);
             ScaleActivity activity = mWeakReference.get();
             if (activity != null) {
-                switch (msg.what) {
-                    case 1:
-                        //显示重量
-                        activity.weightChangedCyclicity();
-                        //点亮屏幕
-                        activity.lightScreenCyclicity();
-                        //展示时间
-                        activity.mTimeView.setText(NumFormatUtil.getFormatDate());
-
-                        break;
+                if (msg.what == 1) {
+                    //显示重量
+                    activity.weightChangedCyclicity();
+                    //点亮屏幕
+                    activity.lightScreenCyclicity();
+                    //展示时间
+                    activity.mTimeView.setText(NumFormatUtil.getFormatDate());
                 }
             }
         }
@@ -768,7 +821,8 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     }
 
 
-//    float[] fws = new float[10];//存储10次数据，共需要10*200=2000毫秒
+    //记录每笔交易的称重次数
+    public static StringBuilder weightsCache = null;
 
     private static int averageTimes = 5;
     private static int weightCount = 0;
@@ -789,10 +843,10 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         }
         BigDecimal cacheWeight = new BigDecimal(strNet);     //默认公斤kg
 
-        if (cacheWeight.compareTo(new BigDecimal("0.000")) > 0 && null == buyer.getTag()) {
+        if (cacheWeight.compareTo(new BigDecimal("0.000")) > 0 && (null == buyer.getTag() || null == seller.getTag())) {
             weightCount = 0;
             currentWeight = new BigDecimal("0.000");
-            showMessage("买家尚未刷卡，称重不予以显示！");
+            showMessage("买卖双方尚未刷卡，称重不予以显示！");
             return;
         }
 
@@ -812,6 +866,8 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             if (pi.compareTo(cacheMax) >= 0)
                 cacheMax = pi;
         }
+
+
         if (cacheMax.compareTo(new BigDecimal("0.000")) != 0) {
             //差值的绝对值，大于指定阙值则显示称重
             BigDecimal absWeight = currentWeight.subtract(cacheMax).abs();
@@ -825,11 +881,20 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         //如果变动的重量高于maxFW则显示
         mTvWeight.setText(NumFormatUtil.DF_WEIGHT.format(cacheMax));
 
+        //记录本次的称重数值
+        if (weightsCache == null) {
+            weightsCache = new StringBuilder();
+        }
+        if (currentWeight.compareTo(maxFW) > 0) {
+            weightsCache.append(currentWeight).append(",");
+        }
         //规格包装的商品不用计价，直接输入总价
         if (!(proTradeNow != null && proTradeNow.getProduct_id() == 46)) {
             //计算总价
             countPirce();
         }
+
+
     }
 
     //通知背面显示屏上显示单价、皮重、总价
@@ -879,6 +944,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             }
 
         }
+
     }
 
     //重置交易界面信息
@@ -907,10 +973,12 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
 
         buyer.setText(this.getResources().getString(R.string.tv_buyer_text));
         buyer.setTag(null);
+
         if (isSellerClear) {
             seller.setText(this.getResources().getString(R.string.tv_seller_text));
             seller.setTag(null);
         }
+
         pay.setText(this.getResources().getString(R.string.tv_pay_text));
     }
 

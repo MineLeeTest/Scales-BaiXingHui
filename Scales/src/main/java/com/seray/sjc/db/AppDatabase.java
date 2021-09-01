@@ -5,8 +5,10 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.util.Log;
 
+import com.seray.log.FileIOUtils;
 import com.seray.scales.App;
 import com.seray.scales.BuildConfig;
+import com.seray.scaleviewlib.utils.Utils;
 import com.seray.sjc.db.dao.ConfigDao;
 import com.seray.sjc.db.dao.ProductDao;
 import com.seray.sjc.entity.device.ConfigADB;
@@ -30,17 +32,19 @@ public abstract class AppDatabase extends RoomDatabase {
     private static final Object sLock = new Object();
 
     private static AppDatabase INSTANCE;
+    public static final String DB_DIR = FileIOUtils.getSDCardPathByEnvironment() + File.separator + Utils.getApp().getPackageName() + ".db";
+    public static final String DB_NAME = "exd_dzc_db_20210811.db";
 
     public static AppDatabase getInstance() {
         synchronized (sLock) {
             if (INSTANCE == null) {
-                File databasePath = getDatabasePath();
-                if (databasePath == null) {
-                    databasePath = new File(BuildConfig.DB_NAME);
+                File file = new File(DB_DIR);
+                if (!file.exists()) {
+                    file.mkdirs();
                 }
+                File databasePath = new File(DB_DIR +File.separator + DB_NAME);
                 INSTANCE = Room.databaseBuilder(App.getApplication(),
                         AppDatabase.class, databasePath.getAbsolutePath())
-//                        .addMigrations(MIGRATION_1_2)
                         .allowMainThreadQueries()
                         .build();
             }

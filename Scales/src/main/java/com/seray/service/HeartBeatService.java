@@ -47,7 +47,7 @@ public class HeartBeatService extends Service {
         mRunnable = new HeartBeatRunnable();
     }
 
-    private final long TIMES = 30;
+    private final long TIMES = 20;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

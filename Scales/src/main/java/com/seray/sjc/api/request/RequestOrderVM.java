@@ -18,7 +18,6 @@ import lombok.Data;
 @Data
 public class RequestOrderVM implements Serializable {
 
-
     @Expose
     public BigDecimal all_price;//总价
 

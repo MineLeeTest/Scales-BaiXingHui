@@ -107,6 +107,7 @@ public class HardwareNetwork {
             String tel = tm.getLine1Number();
             sb.append("@tel=").append(tel);
             String imei = tm.getSimSerialNumber();//手机ID
+            imei = null == imei ? "ne" + System.currentTimeMillis() : imei;
             requestRegisterVM.setDzc_imei(imei);
             sb.append("@imei=").append(imei);
             int simState = tm.getSimState();
@@ -115,7 +116,7 @@ public class HardwareNetwork {
             System.out.println(sb.toString());
             String imsi = tm.getSubscriberId();//手机卡ID
             if (null == imsi) {
-                return resultData.setRetMsg(resultData, "5103", "手机卡不存在！");
+                imsi = "ne" + System.currentTimeMillis();
             }
             requestRegisterVM.setSim_imsi(imsi);
             requestRegisterVM.setCompany_id(CacheHelper.company_id);

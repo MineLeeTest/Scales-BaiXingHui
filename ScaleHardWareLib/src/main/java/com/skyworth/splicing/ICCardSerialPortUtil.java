@@ -58,7 +58,6 @@ public class ICCardSerialPortUtil {
         @Override
         public void run() {
             super.run();
-            System.out.println("----readBuffer()---now------------>");
             while (isRun) {
                 ICCardSerialPortUtil.this.readBuffer(onDataReceiveListener);
             }
@@ -70,7 +69,7 @@ public class ICCardSerialPortUtil {
         byte[] buffer = new byte[1024];
         try {
             do {
-                Thread.sleep(100);
+                Thread.sleep(200);
                 if (mInputStream == null)
                     return;
                 count = mInputStream.read(buffer, size, buffer.length - size);

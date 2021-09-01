@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.seray.cache.CacheHelper;
 import com.seray.instance.ResultData;
+import com.seray.log.LLog;
 import com.seray.sjc.api.SjcApi;
 import com.seray.sjc.api.net.HttpServicesFactory;
 import com.seray.sjc.api.request.RequestRegisterVM;
@@ -33,9 +34,11 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.load_layout);
         context = this.getBaseContext();
+        //初始化日志文件
+        LLog.init(true, true, 20);
+        LLog.info("---------开启程序----->805755083@qq.com copyright@ MineLee");
         //读取配置文件数据
         CacheHelper.prepareCacheData();
-        System.out.println("CacheHelper.getConfigMapString()------------------->" + CacheHelper.getConfigMapString());
         //没有注册过
         if (!CacheHelper.isDeviceRegistered()) {
             //提交注册信息
@@ -66,11 +69,13 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
         //发起注册请求
         showLoading("激活中,请稍后.......");
         SjcApi sjcApi = HttpServicesFactory.getHttpServiceApi();
+        LLog.i("激活请求：" + requestRegisterVM.toString());
         Call<ApiDataRsp<DeviceRegisterDTO>> request = sjcApi.register_device(requestRegisterVM);
         request.enqueue(new Callback<ApiDataRsp<DeviceRegisterDTO>>() {
             @Override
             public void onResponse(Call<ApiDataRsp<DeviceRegisterDTO>> call, Response<ApiDataRsp<DeviceRegisterDTO>> response) {
                 dismissLoading();
+                LLog.i("激活返回：" + response.body().toString());
                 if (!response.isSuccessful()) {
                     showMessage("请求失败：" + response.toString());
                     return;
@@ -98,6 +103,7 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void onFailure(Call<ApiDataRsp<DeviceRegisterDTO>> call, Throwable t) {
                 dismissLoading();
+                LLog.i("激活异常：" + t.getMessage());
                 showMessage(TextUtils.isEmpty(t.getMessage()) ? "激活失败" : "激活失败::" + t.getMessage());
             }
         });

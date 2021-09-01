@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -51,7 +52,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 
-public abstract class BaseActivity extends AppCompatActivity implements OnClickListener {
+public abstract class BaseActivity extends AppCompatActivity implements OnClickListener, TextToSpeech.OnInitListener {
 
     /**
      * 执行定时任务固定数量线程池
@@ -113,7 +114,23 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         toast.setView(view);
         toast.show();
     }
+    // TTS对象
+//    public TextToSpeech mTextToSpeech;
 
+//    private void initTextToSpeech() {
+//        // 参数Context,TextToSpeech.OnInitListener
+//        mTextToSpeech = new TextToSpeech(this, this);
+//        // 设置音调，值越大声音越尖（女生），值越小则变成男声,1.0是常规
+//        mTextToSpeech.setPitch(1.0f);
+//        // 设置语速
+//        mTextToSpeech.setSpeechRate(0.8f);
+//    }
+
+    public void speakNow(String alert) {
+//        if (mTextToSpeech != null && !mTextToSpeech.isSpeaking()) {
+//            mTextToSpeech.speak(alert, TextToSpeech.QUEUE_FLUSH, null);
+//        }
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return true;
@@ -129,6 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         view = LayoutInflater.from(this).inflate(R.layout.view_toast_custom, null);
         toast = new Toast(this);
         tv_msg = view.findViewById(R.id.tvToast);
+//        initTextToSpeech();
     }
 
     @Override
@@ -176,7 +194,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         }
     }
 
-    private String getPwd() {
+    public String getPwd() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
         return "320" + new SimpleDateFormat("MMdd", Locale.getDefault()).format(cal.getTime());
@@ -257,4 +275,28 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         mMisc.beep();
     }
 
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            /*
+                使用的是小米手机进行测试，打开设置，在系统和设备列表项中找到更多设置，
+            点击进入更多设置，在点击进入语言和输入法，见语言项列表，点击文字转语音（TTS）输出，
+            首选引擎项有三项为Pico TTs，科大讯飞语音引擎3.0，度秘语音引擎3.0。其中Pico TTS不支持
+            中文语言状态。其他两项支持中文。选择科大讯飞语音引擎3.0。进行测试。
+
+                如果自己的测试机里面没有可以读取中文的引擎，
+            那么不要紧，我在该Module包中放了一个科大讯飞语音引擎3.0.apk，将该引擎进行安装后，进入到
+            系统设置中，找到文字转语音（TTS）输出，将引擎修改为科大讯飞语音引擎3.0即可。重新启动测试
+            Demo即可体验到文字转中文语言。
+             */
+            // setLanguage设置语言
+//            int result = mTextToSpeech.setLanguage(Locale.CHINA);
+//            // TextToSpeech.LANG_MISSING_DATA：表示语言的数据丢失
+//            // TextToSpeech.LANG_NOT_SUPPORTED：不支持
+//            if (result == TextToSpeech.LANG_MISSING_DATA
+//                    || result == TextToSpeech.LANG_NOT_SUPPORTED) {
+//                Toast.makeText(this, "没有安装中文语音包！", Toast.LENGTH_SHORT).show();
+//            }
+        }
+    }
 }

@@ -59,6 +59,7 @@
     <string name="test_shutdown_msg">删除本地屏幕校准文件\n删除成功后，请关机重启</string>
     <string name="test_show_msg_1">校准文件已删除，请重启</string>
     <string name="test_clear_calibration">重新校准屏幕</string>
+    <string name="test_down_apk">更新APP</string>
     <string name="push_logo">配置NV位图(工厂)</string>
     <string name="print_logo">打印NV位图</string>
     <string name="test_toOpration">标定页面</string>
