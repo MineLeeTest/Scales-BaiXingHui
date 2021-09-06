@@ -161,6 +161,11 @@ public class LLog {
         getLogger().error(functionName + "-" + log + "-->" + msg);
     }
 
+    public static void e(String log, Exception e) {
+        String functionName = getFunctionName();
+        getLogger().error(functionName + "-" + log + "-->" + e.getMessage());
+    }
+
     /**
      * 输出或保存error日志
      *

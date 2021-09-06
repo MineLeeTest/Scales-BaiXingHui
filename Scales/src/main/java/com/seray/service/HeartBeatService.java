@@ -8,7 +8,9 @@ import android.os.IBinder;
 import com.lzscale.scalelib.misclib.Misc;
 import com.seray.cache.CacheHelper;
 import com.seray.instance.ResultData;
+import com.seray.log.LLog;
 import com.seray.message.HeartBeatMsg;
+import com.seray.message.MakeHeartBeatMsg;
 import com.seray.sjc.api.SjcApi;
 import com.seray.sjc.api.net.HttpServicesFactory;
 import com.seray.sjc.api.request.RequestHeartBeatVM;
@@ -22,6 +24,8 @@ import com.seray.util.HardwareNetwork;
 import com.seray.util.LogUtil;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +38,7 @@ import retrofit2.Response;
 
 public class HeartBeatService extends Service {
 
-    private ScheduledExecutorService batteryThread = null;
+    private ScheduledExecutorService heartbeatThread = null;
 
     private HeartBeatRunnable mRunnable = null;
     private Context context;
@@ -42,24 +46,26 @@ public class HeartBeatService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        batteryThread = Executors.newScheduledThreadPool(1);
+        heartbeatThread = Executors.newScheduledThreadPool(1);
         context = this;
         mRunnable = new HeartBeatRunnable();
+        //注册订阅事件
+        EventBus.getDefault().register(this);
     }
 
     private final long TIMES = 20;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        batteryThread.scheduleAtFixedRate(mRunnable, 1, TIMES, TimeUnit.MINUTES);
-//        batteryThread.scheduleAtFixedRate(mRunnable, 60, TIMES, TimeUnit.SECONDS);
+        heartbeatThread.scheduleAtFixedRate(mRunnable, 1, TIMES, TimeUnit.MINUTES);
+//        heartbeatThread.scheduleAtFixedRate(mRunnable, 60, TIMES, TimeUnit.SECONDS);
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        batteryThread.shutdownNow();
+        heartbeatThread.shutdownNow();
     }
 
     @Override
@@ -76,6 +82,13 @@ public class HeartBeatService extends Service {
         }
     }
 
+    //接收心跳数据信息
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void receiveMakeHeartBeatMsg(MakeHeartBeatMsg heartBeatMsg) {
+        if ("9000".equals(heartBeatMsg.getCode())) {
+            heartbeatThread.execute(mRunnable);
+        }
+    }
 
     private ResultData getHeartBeat() {
         ResultData resultData = new ResultData();
@@ -86,37 +99,38 @@ public class HeartBeatService extends Service {
 
             Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> request = HttpServicesFactory.getHttpServiceApi()
                     .heart_beat(requestHeartBeatVM, requestHeartBeatVM.getDevice_dzc_id() + "");
-            LogUtil.i("----request-->" + request.request().url() + "----vm->" + requestHeartBeatVM.toString());
+            LLog.i("----request-->" + request.request().url() + "----vm->" + requestHeartBeatVM.toString());
             Response<ApiDataRsp<HeartBeatDeviceDzcDTO>> response = request.execute();
-            LogUtil.i("----response----->");
+            LLog.i("----response----->");
 
             if (!response.isSuccessful()) {
-                LogUtil.i("请求失败：" + response.toString());
+                LLog.i("请求失败：" + response.toString());
                 resultData.setRetMsg("5013", response.toString());
                 return resultData;
             }
             ApiDataRsp apiDataRsp = response.body();
-            LogUtil.i("----response---data-->" + apiDataRsp.toString());
+            LLog.i("----response---data-->" + apiDataRsp.toString());
 
             if (!apiDataRsp.getSuccess()) {
-                LogUtil.i(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
+                LLog.i(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
                 resultData.setRetMsg("5015", response.toString());
                 return resultData;
             }
             HeartBeatDeviceDzcDTO heartBeatDeviceDzcDTO = (HeartBeatDeviceDzcDTO) apiDataRsp.getMsgs();
-            LogUtil.i("----response---data-->" + heartBeatDeviceDzcDTO.toString());
+            LLog.i("----response---data-->" + heartBeatDeviceDzcDTO.toString());
             if ("sync_products".equals(heartBeatDeviceDzcDTO.getOpreate_info()) && !CacheHelper.data_version.equals(heartBeatDeviceDzcDTO.getData_version())) {
                 //执行更新商品操作
-                LogUtil.i("开始更新商品！！！！！");
+                LLog.i("开始更新商品！！！！！");
                 resultData = getProsNow();
                 if (resultData.isSuccess()) {
                     //更新成功后，标记数据版本
                     CacheHelper.updateHeartBeat(heartBeatDeviceDzcDTO);
                     resultData.setRetMsg("90000", "发送心跳数据成功，更新商品成功！");
+                    LLog.i(resultData.toString());
                     return resultData;
                 } else {
-                    LogUtil.e("--getProsNow()--failed----->" + resultData.toString());
                     resultData.setRetMsg("90111", "发送心跳数据成功，更新商品失败！");
+                    LLog.i(resultData.toString());
                     return resultData;
                 }
             }
@@ -162,8 +176,6 @@ public class HeartBeatService extends Service {
             if (!CacheHelper.updatePros(productDZCDTOS)) {
                 return resultData.setRetMsg(resultData, "6002", "将商品列表信息存储到本地失败！");
             }
-
-//            List<ProductADB> list = AppDatabase.getInstance().getProductDao().loadAll();
             resultData.setTrueMsg("更新商品成功！");
             return resultData;
         } catch (IOException e) {

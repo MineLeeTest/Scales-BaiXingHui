@@ -42,36 +42,36 @@
 //        try {
 //            ResultData resultData = HardwareNetwork.getHeartBeatReq(context);
 //            if (!resultData.isSuccess()) {
-//                LogUtil.i(resultData.toString());
+//                LLog.i(resultData.toString());
 //                return Result.failure();
 //            }
 //            RequestHeartBeatVM requestHeartBeatVM = (RequestHeartBeatVM) resultData.getMsg();
 //            Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> request = HttpServicesFactory.getHttpServiceApi()
 //                    .heart_beat(requestHeartBeatVM);
-//            LogUtil.i("----request.request().url()-->" + request.request().url() + "----vm->" + requestHeartBeatVM.toString());
+//            LLog.i("----request.request().url()-->" + request.request().url() + "----vm->" + requestHeartBeatVM.toString());
 //            request.enqueue(new Callback<ApiDataRsp<HeartBeatDeviceDzcDTO>>() {
 //                @Override
 //                public void onResponse(Call<ApiDataRsp<HeartBeatDeviceDzcDTO>> call, Response<ApiDataRsp<HeartBeatDeviceDzcDTO>> response) {
-//                    LogUtil.i("-----response.toString(------->" + response.toString());
+//                    LLog.i("-----response.toString(------->" + response.toString());
 //                    if (!response.isSuccessful()) {
-//                        LogUtil.i("请求失败：" + response.toString());
+//                        LLog.i("请求失败：" + response.toString());
 //                        return;
 //                    }
 //                    ApiDataRsp apiDataRsp = response.body();
 //                    if (apiDataRsp == null) {
-//                        LogUtil.i("请求返回的body为null");
+//                        LLog.i("请求返回的body为null");
 //                        return;
 //                    }
 //
-//                    LogUtil.i("----UploadHeartWork----->" + apiDataRsp.toString());
+//                    LLog.i("----UploadHeartWork----->" + apiDataRsp.toString());
 //                    if (!apiDataRsp.getSuccess()) {
-//                        LogUtil.i(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
+//                        LLog.i(apiDataRsp.getCode() + "-" + apiDataRsp.getError_msg());
 //                        return;
 //                    }
 //                    HeartBeatDeviceDzcDTO heartBeatDeviceDzcDTO = (HeartBeatDeviceDzcDTO) apiDataRsp.getMsgs();
 //                    if ("sync_products".equals(heartBeatDeviceDzcDTO.getOpreate_info())) {
 //                        //执行更新商品操作
-//                        LogUtil.i("开始更新商品！！！！！");
+//                        LLog.i("开始更新商品！！！！！");
 //                    }
 //                }
 //

@@ -12,6 +12,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.Display;
 
+import com.seray.log.LLog;
 import com.seray.scales.R;
 import com.seray.sjc.AppExecutors;
 import com.seray.sjc.SjcConfig;
@@ -116,7 +117,7 @@ public class PicturePresentation extends BasePresentation {
 
             @Override
             public void onPageSelected(int position) {
-                LogUtil.i("Banner", "current position = " + position);
+                LLog.i("Banner current position = " + position);
 //                position--;
 //                if (position < mData.size()) {
 //                    ScreenResource screenResource = mData.get(position);
@@ -157,7 +158,7 @@ public class PicturePresentation extends BasePresentation {
 //        mVideoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 //            @Override
 //            public void onCompletion(MediaPlayer mp) {
-//                LogUtil.i("视频播放完成");
+//                LLog.i("视频播放完成");
 //                mVideoView.stopPlayback();
 //                mTopNewsView.isAutoPlay(true);
 //                mTopNewsView.startAutoPlay();
@@ -174,7 +175,7 @@ public class PicturePresentation extends BasePresentation {
 //        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
 //            @Override
 //            public void onPrepared(MediaPlayer mp) {
-//                LogUtil.i("视频加载完成");
+//                LLog.i("视频加载完成");
 //                mHandler.post(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -189,7 +190,7 @@ public class PicturePresentation extends BasePresentation {
 //        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 //            @Override
 //            public boolean onError(MediaPlayer mp, int what, int extra) {
-//                LogUtil.i("视频播放出错了-what=" + what + ",extra=" + extra);
+//                LLog.i("视频播放出错了-what=" + what + ",extra=" + extra);
 //                mVideoView.stopPlayback();
 //                mProgressBar.setVisibility(View.GONE);
 ////                if (null != listener) {

@@ -28,6 +28,6 @@ public interface ProductDao {
     @Query("SELECT * FROM " + ProductADB.TABLE_NAME + " WHERE  'product_id' =:product_id")
     ProductADB findByID(Integer product_id);
 
-    @Query("DELETE FROM " + ConfigADB.TABLE_NAME)
+    @Query("DELETE FROM " + ProductADB.TABLE_NAME)
     void delete();
 }

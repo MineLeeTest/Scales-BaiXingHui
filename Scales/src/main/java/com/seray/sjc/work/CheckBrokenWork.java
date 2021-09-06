@@ -54,7 +54,7 @@
 //                                if (response.isSuccessful()) {
 //                                    ApiDataRsp body = response.body();
 //                                    if (body != null && body.success) {
-//                                        LogUtil.i("拆机告警上传成功！");
+//                                        LLog.i("拆机告警上传成功！");
 //                                        return;
 //                                    }
 //                                }

@@ -2,10 +2,12 @@ package com.seray.cache;
 
 import android.text.TextUtils;
 
+import com.seray.log.LLog;
 import com.seray.sjc.api.result.DeviceRegisterDTO;
 import com.seray.sjc.api.result.HeartBeatDeviceDzcDTO;
 import com.seray.sjc.api.result.ProductDZCDTO;
 import com.seray.sjc.db.AppDatabase;
+import com.seray.sjc.db.DataResetCallback;
 import com.seray.sjc.db.dao.ConfigDao;
 import com.seray.sjc.db.dao.ProductDao;
 import com.seray.sjc.entity.device.ConfigADB;
@@ -21,34 +23,30 @@ import cn.hutool.json.JSONUtil;
 import lombok.NonNull;
 
 public class CacheHelper {
-
+    private static final String className = "com.seray.cache.CacheHelper";
     /**
      * 流水号排序号
      */
     public static int DATE_ID;
-
     public static boolean isOpenJin = false;//是否启用斤
     public static boolean isOpenBackDisplay = true;//是否第二屏幕
     public static boolean isChangePrice = true;//是否允许修改单价//默认开启
     public static boolean isOpenForceRecord = false; // 是否开启强制记录功能//默认关闭
     public static Integer company_id = 1;// 公司ID
 
-
     /*设备信息 用于激活验证*/
-    public static String CFK_DEVICE_ID = "CFK_DEVICE_ID";// 终端ID_KEY
+    private static String CFK_DEVICE_ID = "CFK_DEVICE_ID";// 终端ID_KEY
     public static Integer device_id = 0;// 终端ID
 
-    public static String CFK_DEVICE_AES_KEY = "CFK_DEVICE_AES_KEY";// 终端ID_KEY
+    private static String CFK_DEVICE_AES_KEY = "CFK_DEVICE_AES_KEY";// 终端ID_KEY
     public static String device_aes_key = "empty";// 终端密钥
 
-    public static String CFK_COMPANY_NAME = "CFK_COMPANY_NAME";// 公司名称KEY
+    private static String CFK_COMPANY_NAME = "CFK_COMPANY_NAME";// 公司名称KEY
     public static String company_name = "empty";// 公司名称
 
-    public static String CFK_DATA_VERSION = "CFK_DATA_VERSION";// APP版本
+    private static String CFK_DATA_VERSION = "CFK_DATA_VERSION";// APP版本
     public static String data_version = "empty";// APP版本
 
-
-    public static long HeartBeatTime = 30;// 秒钟心跳包发送时间间隔
 
     public static void prepareCacheData() {
         //获取缓存中所有的键值对
@@ -57,7 +55,6 @@ public class CacheHelper {
 
         //加载设备ID
         String deviceID = map.get(CFK_DEVICE_ID);
-        System.out.println("--deviceID------------>" + deviceID);
         if (!TextUtils.isEmpty(deviceID)) {
             if (NumFormatUtil.isNumeric(deviceID)) {
                 device_id = Integer.parseInt(deviceID);
@@ -83,8 +80,6 @@ public class CacheHelper {
     }
 
     public static boolean isDeviceRegistered() {
-        System.out.println("---isDeviceRegistered---device_id----------->" + device_id);
-        System.out.println("---isDeviceRegistered---device_aes_key----------->" + device_aes_key);
         return !device_id.equals(0) && !"empty".equals(device_aes_key);
     }
 
@@ -111,14 +106,14 @@ public class CacheHelper {
     //更新商品列表
     public static boolean updatePros(@NonNull List<ProductDZCDTO> productDZCDTOS) {
         try {
-            LogUtil.i("-----执行商品更新-----");
-            LogUtil.i("-----获取服务端商品列表个数【" + productDZCDTOS.size() + "】-----");
             ProductDao productDao = AppDatabase.getInstance().getProductDao();
+            LLog.i("-----执行商品更新-----");
+            LLog.i("-----获取服务端商品列表个数【" + productDZCDTOS.size() + "】-----");
             List<ProductADB> list = productDao.loadAll();
-            LogUtil.i("-----本地原有商品列表个数【" + list.size() + "】-----");
+            LLog.i("-----本地原有商品列表个数【" + list.size() + "】-----");
             //清空原有商品列表
             productDao.delete();
-            LogUtil.i("-----清空本地商品数据-----");
+            LLog.i("-----清空本地商品数据-----");
 
             if (productDZCDTOS.size() > 0) {
                 for (ProductDZCDTO productDZCDTO : productDZCDTOS) {
@@ -132,11 +127,11 @@ public class CacheHelper {
         }
     }
 
-    public static List<ProductADB> getPros() {
-        ProductDao productDao = AppDatabase.getInstance().getProductDao();
-        return productDao.loadAll();
-
-    }
+//    public static List<ProductADB> getPros() {
+//        ProductDao productDao =.getProductDao();
+//        return productDao.loadAll();
+//
+//}
 
 
     public static boolean deviceRegistered(DeviceRegisterDTO deviceRegisterDTO) {
@@ -177,6 +172,7 @@ public class CacheHelper {
             configDao.save(configADB);
             return true;
         } catch (Exception e) {
+            LLog.e(className + "-saveData-Exception()", e);
             return false;
         }
     }
@@ -184,13 +180,18 @@ public class CacheHelper {
     public static String getConfigMapString() {
         StringBuilder stringBuilder = new StringBuilder();
         try {
-            ConfigDao configDao = AppDatabase.getInstance().getConfigDao();
-            List<ConfigADB> configADBS = configDao.loadAll();
+            List<ConfigADB> configADBS = AppDatabase.getInstance().getConfigDao().loadAll();
             for (ConfigADB bean : configADBS) {
                 String configKey = bean.getConfigKey();
                 String configValue = bean.getConfigValue();
                 stringBuilder.append("[").append(configKey).append("]=[").append(configValue).append("],");
             }
+
+            List<ProductADB> productADBS = AppDatabase.getInstance().getProductDao().loadAll();
+            for (ProductADB bean : productADBS) {
+                stringBuilder.append("[").append(bean.getProduct_id() + bean.getPro_name()).append("]");
+            }
+
         } catch (Exception e) {
             stringBuilder.append("Exception-->").append(e.getMessage());
         }
@@ -208,4 +209,6 @@ public class CacheHelper {
         }
         return data;
     }
+
+
 }

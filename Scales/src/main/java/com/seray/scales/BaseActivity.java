@@ -3,6 +3,7 @@ package com.seray.scales;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
@@ -59,6 +60,8 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      */
     public static ScheduledExecutorService timerThreads = Executors.newScheduledThreadPool(1);
 
+    public static ScheduledExecutorService showTimeThreads = Executors.newScheduledThreadPool(1);
+
     /**
      * 蜂鸣器控制器
      */
@@ -107,13 +110,14 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
     View view;
     Toast toast;
     TextView tv_msg;
-    public void showToast(String str) {
-        tv_msg.setText(str);
-        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 20);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.setView(view);
-        toast.show();
-    }
+
+//    public void showToast(String str) {
+//        tv_msg.setText(str);
+//        toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 20);
+//        toast.setDuration(Toast.LENGTH_LONG);
+//        toast.setView(view);
+//        toast.show();
+//    }
     // TTS对象
 //    public TextToSpeech mTextToSpeech;
 
@@ -131,6 +135,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
 //            mTextToSpeech.speak(alert, TextToSpeech.QUEUE_FLUSH, null);
 //        }
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return true;
@@ -144,7 +149,7 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
         App.getApplication().addActivity(this);
 
         view = LayoutInflater.from(this).inflate(R.layout.view_toast_custom, null);
-        toast = new Toast(this);
+        baseContext = BaseActivity.this;
         tv_msg = view.findViewById(R.id.tvToast);
 //        initTextToSpeech();
     }
@@ -176,11 +181,29 @@ public abstract class BaseActivity extends AppCompatActivity implements OnClickL
      * 显示吐司
      */
     public void showMessage(final String msg) {
-//        this.msg = msg;
-//        mHandler.post(showRun);
-        showToast(msg);
+        this.msg = msg;
+        mHandler.post(showRun);
+//        showToast(msg);
     }
-
+    private Context baseContext;
+    public void showToast(String str) {
+        if (null == toast) {
+            toast = new Toast(baseContext);
+            toast.setGravity(Gravity.BOTTOM | Gravity.CENTER, 0, 20);
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(view);
+        }
+        tv_msg.setText(str);
+        toast.show();
+    }
+    private String msg;
+    private Handler mHandler = new Handler();
+    Runnable showRun = new Runnable() {
+        @Override
+        public void run() {
+            showToast(msg);
+        }
+    };
     /**
      * 设置是否允许关闭Dialog
      */

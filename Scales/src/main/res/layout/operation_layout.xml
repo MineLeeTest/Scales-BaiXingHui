@@ -10,14 +10,15 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_1"
             android:layout_width="0px"
             android:layout_height="@dimen/settingButtonHeight"
             android:layout_weight="0.5"
             android:background="@drawable/selector"
-            android:text="@string/test_toOpration"
             android:onClick="setWeight"
+            android:text="@string/test_toOpration"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize" />
     </LinearLayout>
@@ -27,18 +28,34 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_4"
             android:layout_width="0px"
             android:layout_height="@dimen/settingButtonHeight"
             android:layout_weight="1"
             android:background="@drawable/selector"
-            android:text="@string/test_network"
             android:onClick="setNet"
+            android:text="@string/test_network"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize" />
     </LinearLayout>
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_12"
+            android:layout_width="0px"
+            android:layout_height="@dimen/settingButtonHeight"
+            android:layout_weight="1"
+            android:background="@drawable/selector"
+            android:text="@string/test_clear_db"
+            android:onClick="setClearDB"
+            android:textColor="@drawable/tv_selector"
+            android:textSize="@dimen/managerTipTextSize" />
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -51,8 +68,8 @@
             android:layout_height="@dimen/settingButtonHeight"
             android:layout_weight="1"
             android:background="@drawable/selector"
-            android:text="@string/test_clear_calibration"
             android:onClick="setScreen"
+            android:text="@string/test_clear_calibration"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize" />
     </LinearLayout>
@@ -69,8 +86,25 @@
             android:layout_height="@dimen/settingButtonHeight"
             android:layout_weight="1"
             android:background="@drawable/selector"
-            android:text="@string/test_down_apk"
             android:onClick="setUpdateApp"
+            android:text="@string/test_down_apk"
+            android:textColor="@drawable/tv_selector"
+            android:textSize="@dimen/managerTipTextSize" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_82"
+            android:layout_width="0px"
+            android:layout_height="@dimen/settingButtonHeight"
+            android:layout_weight="1"
+            android:background="@drawable/selector"
+            android:onClick="setUpdateProducts"
+            android:text="@string/test_update_product"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize" />
     </LinearLayout>
@@ -87,8 +121,8 @@
             android:layout_height="@dimen/settingButtonHeight"
             android:layout_weight="1"
             android:background="@drawable/selector"
-            android:text="@string/test_exit"
             android:onClick="setExit"
+            android:text="@string/test_exit"
             android:textColor="@drawable/tv_selector"
             android:textSize="@dimen/managerTipTextSize" />
 
@@ -99,8 +133,8 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:background="@drawable/bg_press_red"
-            android:text="@string/operation_back"
             android:onClick="setClose"
+            android:text="@string/operation_back"
             android:textColor="@color/white"
             android:textSize="@dimen/managerTipTextSize" />
 

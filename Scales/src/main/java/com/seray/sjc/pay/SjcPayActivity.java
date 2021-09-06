@@ -419,16 +419,16 @@
 //        payResultQuerying = true; // 开始请求支付结果
 //        ControlQRPayReq req = new ControlQRPayReq();
 //        req.termId = CacheHelper.device_id;
-//        LogUtil.i("getPayCodePayResult", "termId = " + req.termId);
+//        LLog.i("getPayCodePayResult", "termId = " + req.termId);
 //        req.transOrderCode = this.orderInfo.getSjcSubtotal().getTransOrderCode();
-//        LogUtil.i("getPayCodePayResult", "transOrderCode = " + req.transOrderCode);
+//        LLog.i("getPayCodePayResult", "transOrderCode = " + req.transOrderCode);
 //        HashMap<String, String> params = new HashMap<>();
 //        params.put("termId", req.termId);
 //        params.put("transOrderCode", req.transOrderCode);
 //
 //        try {
 //            req.signMsg = SignUtils.sign(params, null, payType.getApiPriKey());
-//            LogUtil.i("getPayCodePayResult", "signMsg = " + req.signMsg);
+//            LLog.i("getPayCodePayResult", "signMsg = " + req.signMsg);
 //        } catch (IOException e) {
 //            LogUtil.e(e.getMessage());
 //            generateQRCodeFail("计算数据签名失败，请重试。");
@@ -447,7 +447,7 @@
 //
 //                        ControlQRPayResult body = response.body();
 //
-//                        LogUtil.i("queryQRPayResult", "rsp = " + (body == null ? "null" : body.toString()));
+//                        LLog.i("queryQRPayResult", "rsp = " + (body == null ? "null" : body.toString()));
 //
 //                        if (body != null && body.success && (body.msgs != null && body.msgs.payStatus.equals("1"))) {
 //                            cancelQCPay = false;
@@ -556,11 +556,11 @@
 //    private void getPayCodeUrl() {
 //        DownloadQRPayUrlReq qrPayReq = new DownloadQRPayUrlReq();
 //        qrPayReq.termId = CacheHelper.device_id;
-//        LogUtil.i("getPayCodeUrl", "termId = " + qrPayReq.termId);
+//        LLog.i("getPayCodeUrl", "termId = " + qrPayReq.termId);
 //        qrPayReq.transOrderCode = this.orderInfo.getSjcSubtotal().getTransOrderCode();
-//        LogUtil.i("getPayCodeUrl", "transOrderCode = " + qrPayReq.transOrderCode);
+//        LLog.i("getPayCodeUrl", "transOrderCode = " + qrPayReq.transOrderCode);
 //        qrPayReq.payMent = this.orderInfo.getSjcSubtotal().getTransAmt();
-//        LogUtil.i("getPayCodeUrl", "payMent = " + qrPayReq.payMent.toString());
+//        LLog.i("getPayCodeUrl", "payMent = " + qrPayReq.payMent.toString());
 //
 //        HashMap<String, String> params = new HashMap<>();
 //        params.put("termId", CacheHelper.device_id);
@@ -568,11 +568,11 @@
 //        params.put("payMent", String.valueOf(qrPayReq.payMent.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue()));
 //
 //        String apiPriKey = payType.getApiPriKey();
-//        LogUtil.i("getPayCodeUrl", "apiPriKey = " + apiPriKey);
+//        LLog.i("getPayCodeUrl", "apiPriKey = " + apiPriKey);
 //
 //        try {
 //            qrPayReq.signMsg = SignUtils.sign(params, null, apiPriKey);
-//            LogUtil.i("getPayCodeUrl", "signMsg = " + qrPayReq.signMsg);
+//            LLog.i("getPayCodeUrl", "signMsg = " + qrPayReq.signMsg);
 //        } catch (IOException e) {
 //            LogUtil.e(e.getMessage());
 //            generateQRCodeFail("计算数据签名失败，请重试。");
@@ -594,7 +594,7 @@
 //                            LogUtil.e("downloadQRPayUrl", response.body().error_msg);
 //                            return;
 //                        }
-//                        LogUtil.i("downloadQRPayUrl", response.body().msgs.toString());
+//                        LLog.i("downloadQRPayUrl", response.body().msgs.toString());
 //
 //                        reqPayCount++; // 订单号+1
 //                        showQrCode(response.body().msgs);

@@ -1,139 +1,135 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="app_name">盛阳易鲜达</string>
-    <string name="image_recognize_service">果蔬在线识别服务</string>
-    <string name="read_battery_service">电池电量监听服务</string>
-    <string name="service_heart_beat">定时心跳数据服务</string>
-    <string name="back_display_service">后显示服务</string>
-    <string name="service_shutdown">定时关机服务</string>
-    <string name="zhifu">支付</string>
-    <string name="base_piece">件</string>
-    <string name="scale_amount">总价(元)</string>
-    <string name="base_unit_with_piece_1">元/件</string>
-    <string name="base_unit_with_piece_2">元/kg</string>
-    <string name="base_unit_with_piece_3">元/斤</string>
-    <string name="base_unit_type_2">斤</string>
-    <string name="base_unit_type_1">kg</string>
-    <string name="base_weight_unit_by_scale">重量</string>
-    <string name="base_weight_unit_by_piece">数量</string>
-    <string name="base_weight">0.000</string>
-    <string name="base_weight_by_piece">0</string>
-    <string name="base_price">0.00</string>
-    <string name="scale_account">合计：</string>
-    <string name="all">共</string>
-    <string name="scale_piece">笔</string>
-    <string name="scale_product_title">商品名称:</string>
+    <string name="app_name" translatable="false">盛阳易鲜达</string>
+    <string name="image_recognize_service" translatable="false">果蔬在线识别服务</string>
+    <string name="read_battery_service" translatable="false">电池电量监听服务</string>
+    <string name="service_heart_beat" translatable="false">定时心跳数据服务</string>
+    <string name="back_display_service" translatable="false">后显示服务</string>
+    <string name="service_shutdown" translatable="false">定时关机服务</string>
+    <string name="zhifu" translatable="false">支付</string>
+    <string name="base_piece" translatable="false">件</string>
+    <string name="scale_amount" translatable="false">总价(元)</string>
+    <string name="base_unit_with_piece_1" translatable="false">元/件</string>
+    <string name="base_unit_with_piece_2" translatable="false">元/kg</string>
+    <string name="base_unit_with_piece_3" translatable="false">元/斤</string>
+    <string name="base_unit_type_2" translatable="false">斤</string>
+    <string name="base_unit_type_1" translatable="false">kg</string>
+    <string name="base_weight_unit_by_scale" translatable="false">重量</string>
+    <string name="base_weight_unit_by_piece" translatable="false">数量</string>
+    <string name="base_weight" translatable="false">0.000</string>
+    <string name="base_weight_by_piece" translatable="false">0</string>
+    <string name="base_price" translatable="false">0.00</string>
+    <string name="scale_account" translatable="false">合计：</string>
+    <string name="all" translatable="false">共</string>
+    <string name="scale_piece" translatable="false">笔</string>
+    <string name="scale_product_title" translatable="false">商品名称:</string>
+    <string name="tv_seller_text" translatable="false">请刷卡</string>
+    <string name="tv_buyer_text" translatable="false">请刷卡</string>
+    <string name="tv_pro_text" translatable="false">请选择商品</string>
+    <string name="tv_pay_text" translatable="false"> 支付\n(0笔)</string>
+    <string name="display_weight_unit_kg" translatable="false">净重（千克）</string>
+    <string name="display_weight_unit_jin" translatable="false">净重（斤）</string>
+    <string name="display_weight_unit_piece" translatable="false">数量（件）</string>
+    <string name="display_price_unit_kg" translatable="false">单价（元/千克）</string>
+    <string name="display_price_unit_jin" translatable="false">单价（元/斤）</string>
+    <string name="display_price_unit_piece" translatable="false">单价（元/件）</string>
+    <string name="total_amount" translatable="false">金额：</string>
+    <string name="total_product" translatable="false">商品</string>
+    <string name="total_weight" translatable="false">重量</string>
+    <string name="total_operation" translatable="false">操作</string>
+    <string name="total_clear_detail_msg" translatable="false">清空此客户已累计的订单信息</string>
+    <string name="total_clear_detail_error" translatable="false">无累计订单</string>
+    <string name="total_clear_item_msg" translatable="false">是否确认删除？</string>
+    <string name="grossweight" translatable="false">净重(kg)</string>
+    <string name="scale_more" translatable="false">更多>></string>
+    <string name="scale_price" translatable="false">单价(元)</string>
+    <string name="reprint" translatable="false">补印上笔交易信息？</string>
+    <string name="no_last_order" translatable="false">无缓存订单</string>
+    <string name="reprint_ok" translatable="false">确定</string>
+    <string name="reprint_cancel" translatable="false">取消</string>
+    <string name="test_exit" translatable="false">退出应用</string>
+    <string name="test_manager" translatable="false">运维测试</string>
+    <string name="test_clear_db" translatable="false">重置数据库</string>
+    <string name="test_network" translatable="false">网络设置</string>
+    <string name="test_toSetting" translatable="false">设置参数</string>
+    <string name="test_shutdown_msg" translatable="false">删除本地屏幕校准文件\n删除成功后，请关机重启</string>
+    <string name="test_show_msg_1" translatable="false">校准文件已删除，请重启</string>
+    <string name="test_clear_calibration" translatable="false">重新校准屏幕</string>
+    <string name="test_down_apk" translatable="false">更新APP</string>
+    <string name="test_update_product" translatable="false">更新商品</string>
+    <string name="push_logo" translatable="false">配置NV位图(工厂)</string>
+    <string name="print_logo" translatable="false">打印NV位图</string>
+    <string name="test_toOpration" translatable="false">标定页面</string>
+    <string name="test_clear" translatable="false">应用重置</string>
+    <string name="manager_setting_light" translatable="false">屏幕亮度</string>
+    <string name="manager_setting_screenOffTime" translatable="false">屏保时间</string>
+    <string name="test_clear_title" translatable="false">提醒</string>
+    <string name="operation_usercode" translatable="false">操作口令</string>
+    <string name="operation_reboot" translatable="false">重新启动</string>
+    <string name="operation_usercode_wrong" translatable="false">操作口令错误</string>
+    <string name="operation_exit" translatable="false">保存</string>
+    <string name="operation_max_weight_1" translatable="false">300.0</string>
+    <string name="operation_max_weight_2" translatable="false">30.0</string>
+    <string name="operation_demarcate_msg" translatable="false">为保证正常称量，请：\n重新标定并重启电子秤</string>
+    <string name="operation_back" translatable="false">返回</string>
+    <string name="manage_check" translatable="false">校正</string>
+    <string name="manager_reboot" translatable="false">重启</string>
+    <string name="manager_change_weight_unit_1" translatable="false">切换公斤</string>
+    <string name="manager_change_weight_unit_2" translatable="false">切换市斤</string>
+    <string name="manager_purchase_details" translatable="false">进货明细</string>
+    <string name="manager_product_info" translatable="false">电商平台</string>
+    <string name="manager_device_repair" translatable="false">故障申告</string>
+    <string name="manager_local_settings" translatable="false">设置</string>
+    <string name="manager_booth_detail" translatable="false">摊位信息</string>
+    <string name="manager_classify" translatable="false">分类管理</string>
+    <string name="manager_sale_details" translatable="false">销售明细查询</string>
+    <string name="manager_go_to_operation" translatable="false">运维中心</string>
+    <string name="manager_sync_data" translatable="false">业务数据同步</string>
+    <string name="manager_device_id" translatable="false">称号：</string>
+    <string name="manager_booth_name" translatable="false">摊位：</string>
+    <string name="manager_scale_jin" translatable="false">市斤</string>
+    <string name="manager_scale_kg" translatable="false">公斤</string>
+    <string name="manager_screen_time_unit_1" translatable="false">秒</string>
+    <string name="manager_screen_time_unit_2" translatable="false">分</string>
+    <string name="manager_screen_time_unit_3" translatable="false">小时</string>
+    <string name="manager_lock_screen_success" translatable="false">锁屏设置成功</string>
 
-    <string name="tv_seller_text">请刷卡</string>
-    <string name="tv_buyer_text">请刷卡</string>
-    <string name="tv_pro_text">请选择商品</string>
-    <string name="tv_pay_text"> 支付\n(0笔)</string>
-
-
-    <string name="display_weight_unit_kg">净重（千克）</string>
-    <string name="display_weight_unit_jin">净重（斤）</string>
-    <string name="display_weight_unit_piece">数量（件）</string>
-    <string name="display_price_unit_kg">单价（元/千克）</string>
-    <string name="display_price_unit_jin">单价（元/斤）</string>
-    <string name="display_price_unit_piece">单价（元/件）</string>
-
-    <string name="total_amount">金额：</string>
-    <string name="total_product">商品</string>
-    <string name="total_weight">重量</string>
-    <string name="total_operation">操作</string>
-    <string name="total_clear_detail_msg">清空此客户已累计的订单信息</string>
-    <string name="total_clear_detail_error">无累计订单</string>
-    <string name="total_clear_item_msg">是否确认删除？</string>
-
-    <string name="grossweight">净重(kg)</string>
-    <string name="scale_more">更多>></string>
-    <string name="scale_price">单价(元)</string>
-    <string name="reprint">补印上笔交易信息？</string>
-    <string name="no_last_order">无缓存订单</string>
-    <string name="reprint_ok">确定</string>
-    <string name="reprint_cancel">取消</string>
-    <string name="test_exit">退出应用</string>
-    <string name="test_manager">运维测试</string>
-    <string name="test_network">网络设置</string>
-    <string name="test_toSetting">设置参数</string>
-    <string name="test_shutdown_msg">删除本地屏幕校准文件\n删除成功后，请关机重启</string>
-    <string name="test_show_msg_1">校准文件已删除，请重启</string>
-    <string name="test_clear_calibration">重新校准屏幕</string>
-    <string name="test_down_apk">更新APP</string>
-    <string name="push_logo">配置NV位图(工厂)</string>
-    <string name="print_logo">打印NV位图</string>
-    <string name="test_toOpration">标定页面</string>
-    <string name="test_clear">应用重置</string>
-    <string name="manager_setting_light">屏幕亮度</string>
-    <string name="manager_setting_screenOffTime">屏保时间</string>
-    <string name="test_clear_title">提醒</string>
-
-    <string name="operation_usercode">操作口令</string>
-    <string name="operation_reboot">重新启动</string>
-    <string name="operation_usercode_wrong">操作口令错误</string>
-    <string name="operation_exit">保存</string>
-    <string name="operation_max_weight_1">300.0</string>
-    <string name="operation_max_weight_2">30.0</string>
-    <string name="operation_demarcate_msg">为保证正常称量，请：\n重新标定并重启电子秤</string>
-    <string name="operation_back">返回</string>
-    <string name="manage_check">校正</string>
-    <string name="manager_reboot">重启</string>
-    <string name="manager_change_weight_unit_1">切换公斤</string>
-    <string name="manager_change_weight_unit_2">切换市斤</string>
-    <string name="manager_purchase_details">进货明细</string>
-    <string name="manager_product_info">电商平台</string>
-    <string name="manager_device_repair">故障申告</string>
-    <string name="manager_local_settings">设置</string>
-    <string name="manager_booth_detail">摊位信息</string>
-    <string name="manager_classify">分类管理</string>
-    <string name="manager_sale_details">销售明细查询</string>
-    <string name="manager_go_to_operation">运维中心</string>
-    <string name="manager_sync_data">业务数据同步</string>
-    <string name="manager_device_id">称号：</string>
-    <string name="manager_booth_name">摊位：</string>
-    <string name="manager_scale_jin">市斤</string>
-    <string name="manager_scale_kg">公斤</string>
-    <string name="manager_screen_time_unit_1">秒</string>
-    <string name="manager_screen_time_unit_2">分</string>
-    <string name="manager_screen_time_unit_3">小时</string>
-    <string name="manager_lock_screen_success">锁屏设置成功</string>
-
-    <string name="cancel">取消</string>
+    <string name="cancel" translatable="false">取消</string>
 
 
-    <string name="fn_1">客户1</string>
-    <string name="fn_2">客户2</string>
-    <string name="fn_3">客户3</string>
-    <string name="fn_4">客户4</string>
+    <string name="fn_1" translatable="false">客户1</string>
+    <string name="fn_2" translatable="false">客户2</string>
+    <string name="fn_3" translatable="false">客户3</string>
+    <string name="fn_4" translatable="false">客户4</string>
 
-    <string name="pay_sum_owing">应付金额：</string>
-    <string name="pay_amount">实付金额：</string>
-    <string name="pay_odd_change">现金找零：</string>
-    <string name="pay_tips_money_error">支付金额大于应付金额，请重新输入</string>
-    <string name="select_first_page">已经是第一页</string>
-    <string name="select_final_page">已经是最后一页</string>
-    <string name="select_last_page">上一页</string>
-    <string name="select_next_page">下一页</string>
-    <string name="select_save_warnning">保存失败</string>
-    <string name="total_tips">没有需要支付的订单信息</string>
-    <string name="setting_unit_type">当前称重单位为：公斤</string>
-    <string name="setting_unit_type_msg">点击确定将切换称重单位</string>
-    <string name="setting_screenOffTime_success">屏保时间设置成功</string>
+    <string name="pay_sum_owing" translatable="false">应付金额：</string>
+    <string name="pay_amount" translatable="false">实付金额：</string>
+    <string name="pay_odd_change" translatable="false">现金找零：</string>
+    <string name="pay_tips_money_error" translatable="false">支付金额大于应付金额，请重新输入</string>
+    <string name="select_first_page" translatable="false">已经是第一页</string>
+    <string name="select_final_page" translatable="false">已经是最后一页</string>
+    <string name="select_last_page" translatable="false">上一页</string>
+    <string name="select_next_page" translatable="false">下一页</string>
+    <string name="select_save_warnning" translatable="false">保存失败</string>
+    <string name="total_tips" translatable="false">没有需要支付的订单信息</string>
+    <string name="setting_unit_type" translatable="false">当前称重单位为：公斤</string>
+    <string name="setting_unit_type_msg" translatable="false">点击确定将切换称重单位</string>
+    <string name="setting_screenOffTime_success" translatable="false">屏保时间设置成功</string>
 
-    <string name="goods_name">商品名称</string>
-    <string name="deal_count">成交量</string>
-    <string name="deal_amount">成交额</string>
-    <string name="today_sales_statistics">今日销售统计</string>
-    <string name="sales_statistics">销售统计</string>
-    <string name="price_type">计价类型</string>
+    <string name="goods_name" translatable="false">商品名称</string>
+    <string name="deal_count" translatable="false">成交量</string>
+    <string name="deal_amount" translatable="false">成交额</string>
+    <string name="today_sales_statistics" translatable="false">今日销售统计</string>
+    <string name="sales_statistics" translatable="false">销售统计</string>
+    <string name="price_type" translatable="false">计价类型</string>
 
-    <string name="req_qr_code_error_network">网络连接失败，请重试。</string>
-    <string name="req_qr_code_error_generate">二维码生成失败，请重试</string>
-    <string name="network_error">网络链接失败，请检查网络。</string>
-    <string name="start_active">设备激活</string>
-    <string name="start_web_setting">服务器设置</string>
-    <string name="start_web_message">自动补全IP或域名前缀\n端口号非必填项</string>
-    <string name="max_value">最大量程</string>
-    <string name="get_zero_code">获取零点值</string>
-    <string name="input_calibrate_weight">请输入砝码重量</string>
+    <string name="req_qr_code_error_network" translatable="false">网络连接失败，请重试。</string>
+    <string name="req_qr_code_error_generate" translatable="false">二维码生成失败，请重试</string>
+    <string name="network_error" translatable="false">网络链接失败，请检查网络。</string>
+    <string name="start_active" translatable="false">设备激活</string>
+    <string name="start_web_setting" translatable="false">服务器设置</string>
+    <string name="start_web_message" translatable="false">自动补全IP或域名前缀\n端口号非必填项</string>
+    <string name="max_value" translatable="false">最大量程</string>
+    <string name="get_zero_code" translatable="false">获取零点值</string>
+    <string name="input_calibrate_weight" translatable="false">请输入砝码重量</string>
 </resources>

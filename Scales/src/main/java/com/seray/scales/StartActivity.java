@@ -47,10 +47,14 @@ public class StartActivity extends BaseActivity implements View.OnClickListener 
             //已经注册过则进入交易界面
             registed();
         }
+
+        LLog.info("运行参数：" + CacheHelper.getConfigMapString());
     }
 
     //已经注册过则进入交易界面
     private void registed() {
+        //读取配置文件数据
+        CacheHelper.prepareCacheData();
         startActivity(ScaleActivity.class);
         StartActivity.this.finish();
     }

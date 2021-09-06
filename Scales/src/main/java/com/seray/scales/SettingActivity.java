@@ -8,13 +8,20 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 
+import com.seray.cache.CacheHelper;
+import com.seray.instance.ResultData;
 import com.seray.log.FileIOUtils;
 import com.seray.log.LLog;
+import com.seray.message.MakeHeartBeatMsg;
 import com.seray.scaleviewlib.utils.Utils;
 import com.seray.sjc.api.net.HttpServicesFactory;
+import com.seray.sjc.db.AppDatabase;
+import com.seray.sjc.db.DataResetCallback;
 import com.seray.util.FileHelp;
 import com.seray.util.NumFormatUtil;
 import com.seray.view.CustomTipDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -174,9 +181,28 @@ public class SettingActivity extends BaseActivity {
             startActivity(intent);
             App.getApplication().exit();
         });
+        dialog.setOnNegativeClickListenerPrivate("取消", dialog1 -> {
+            return;
+        });
     }
 
     public void setClose(View view) {
         this.finish();
+    }
+
+    public void setUpdateProducts(View view) {
+        EventBus.getDefault().post(new MakeHeartBeatMsg(new ResultData("9000", "heart_beat_nows")));
+    }
+
+    public void setClearDB(View view) {
+        AppDatabase.getInstance().dataReset(isSuccess -> {
+            if (isSuccess) {
+                showMessage("数据库重置成功,程序即将重启！");
+            } else {
+                showMessage("数据库重置失败,程序即将重启！");
+            }
+            App.getApplication().rebootApp();
+        });
+
     }
 }

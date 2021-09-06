@@ -79,13 +79,13 @@
 //            return false;
 //        }
 //        CARD_ID = cardInfo15.substring(24, 40);
-//        LogUtil.i(TAG, "卡号 " + CARD_ID);
+//        LLog.i(TAG, "卡号 " + CARD_ID);
 //        ISSUING_COMPANY = cardInfo15.substring(0, 8);
-//        LogUtil.i(TAG, "发卡机构代码 " + ISSUING_COMPANY);
+//        LLog.i(TAG, "发卡机构代码 " + ISSUING_COMPANY);
 //        ISSUING_COMPANY_2 = cardInfo15.substring(0, 16);
-//        LogUtil.i(TAG, "发卡机构代码 " + ISSUING_COMPANY_2);
+//        LLog.i(TAG, "发卡机构代码 " + ISSUING_COMPANY_2);
 //        CITY_CODE = cardInfo15.substring(20, 24);
-//        LogUtil.i(TAG, "发卡城市代码 " + CITY_CODE);
+//        LLog.i(TAG, "发卡城市代码 " + CITY_CODE);
 //
 //        // 读用户卡19文件
 //        String cardInfo19 = processResult(doUserCard("00B0990000"));
@@ -93,9 +93,9 @@
 //            return false;
 //        }
 //        CARD_TYPE = cardInfo19.substring(78, 80);
-//        LogUtil.i(TAG, "卡类型 " + CARD_TYPE);
+//        LLog.i(TAG, "卡类型 " + CARD_TYPE);
 //        CARD_CLASS = cardInfo19.substring(78, 81);
-//        LogUtil.i(TAG, "卡种 " + CARD_CLASS);
+//        LLog.i(TAG, "卡种 " + CARD_CLASS);
 //
 //        // 获取卡余额
 //        String balanceStr = processResult(doUserCard("805C000204"));
@@ -105,7 +105,7 @@
 //        balanceStr = balanceStr.substring(0, balanceStr.length() - 4);
 //        BALANCE = new BigDecimal(Long.parseLong(balanceStr, 16));
 //        BALANCE = BALANCE.divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
-//        LogUtil.i(TAG, "卡内余额 " + BALANCE.toString());
+//        LLog.i(TAG, "卡内余额 " + BALANCE.toString());
 //        return true;
 //    }
 //
@@ -142,9 +142,9 @@
 //            return false;
 //        }
 //        PSAM_ID = psamCardInfo.substring(0, psamCardInfo.length() - 3);
-//        LogUtil.i(TAG, "PSAM卡号 " + PSAM_ID);
+//        LLog.i(TAG, "PSAM卡号 " + PSAM_ID);
 //        PSAM_ID = psamCardInfo.substring(5);
-//        LogUtil.i(TAG, "PSAM ID " + PSAM_ID);
+//        LLog.i(TAG, "PSAM ID " + PSAM_ID);
 //
 //        // 获取PSAM终端号
 //        String psamTermInfo = processResult(doPsamCard("00B0960006"));
@@ -153,7 +153,7 @@
 //            return false;
 //        }
 //        PSAM_TERM_NO = psamTermInfo.substring(0, psamTermInfo.length() - 4);
-//        LogUtil.i(TAG, "PSAM终端号 " + PSAM_TERM_NO);
+//        LLog.i(TAG, "PSAM终端号 " + PSAM_TERM_NO);
 //
 //        // 获取当前时间
 //        Date operationDate = new Date();
@@ -176,7 +176,7 @@
 //        // 用户卡消费初始化
 //        BigDecimal payAmount = new BigDecimal("0.01");
 //        String transMoney = toHexString(payAmount);
-//        LogUtil.i(TAG, "交易金额 " + transMoney);
+//        LLog.i(TAG, "交易金额 " + transMoney);
 //
 //        //拼装指令
 //        String command = "805001020B" + "01" + transMoney + PSAM_TERM_NO;
@@ -192,10 +192,10 @@
 //        String balanceStr = prePayRsp.substring(0, 8);
 //        ED_BALANCE = new BigDecimal(Long.parseLong(balanceStr, 16));
 //        ED_BALANCE = ED_BALANCE.divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
-//        LogUtil.i(TAG, "消费前卡余额 " + ED_BALANCE.toString());
+//        LLog.i(TAG, "消费前卡余额 " + ED_BALANCE.toString());
 //
 //        TSN = prePayRsp.substring(8, 12);
-//        LogUtil.i(TAG, "卡片交易序列号 " + TSN);
+//        LLog.i(TAG, "卡片交易序列号 " + TSN);
 //        String randRev = prePayRsp.substring(22, 30);
 //
 //        command = "8070000024" + randRev + TSN + transMoney + "06" + dateStr + timeStr
@@ -214,9 +214,9 @@
 //        }
 //
 //        PSAM_TTN = rsp.substring(0, 8);
-//        LogUtil.i(TAG, "PSAM卡交易序列号 " + PSAM_TTN);
+//        LLog.i(TAG, "PSAM卡交易序列号 " + PSAM_TTN);
 //        String MAC1 = rsp.substring(8, 16);
-//        LogUtil.i(TAG, "MAC1 " + MAC1);
+//        LLog.i(TAG, "MAC1 " + MAC1);
 //
 //        // 操作用户卡，消费确认
 //        command = "805401000F" + PSAM_TTN + dateStr + timeStr + MAC1;
@@ -228,9 +228,9 @@
 //
 //        // 用户卡金额已经成功扣款
 //        TAC = result.substring(0, 8);
-//        LogUtil.i(TAG, "交易认证码 " + TAC);
+//        LLog.i(TAG, "交易认证码 " + TAC);
 //        String MAC2 = result.substring(8, 16);
-//        LogUtil.i(TAG, "MAC2 " + MAC2);
+//        LLog.i(TAG, "MAC2 " + MAC2);
 //
 //        // 操作PSAM，校验MAC2 MAC2验证失败不影响交易结果
 //        processResult(doPsamCard("8072000004" + MAC2));

@@ -206,8 +206,8 @@ public class HardwareNetwork {
                 .getSystemService(Context.STORAGE_SERVICE);
         try {
             Method getPathsMethod = sm.getClass().getMethod("getVolumePaths",
-                    null);
-            String[] path = (String[]) getPathsMethod.invoke(sm, null);
+                     null);
+            String[] path = (String[]) getPathsMethod.invoke(sm,  null);
 
             switch (type) {
                 case INTERNAL_STORAGE:

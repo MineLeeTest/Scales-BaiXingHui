@@ -53,7 +53,7 @@
 //
 //                String transOrderCode = subtotal.getTransOrderCode();
 //
-//                LogUtil.i("订单上传开始！" + transOrderCode);
+//                LLog.i("订单上传开始！" + transOrderCode);
 //
 ////                // 提交订单
 ////                Response<ApiDataRsp> response = HttpServicesFactory.getHttpServiceApi()
@@ -64,10 +64,10 @@
 ////                    ApiDataRsp body = response.body();
 ////                    if (body != null) {
 ////                        if (body.success) {
-////                            LogUtil.i("订单上传成功！" + transOrderCode);
+////                            LLog.i("订单上传成功！" + transOrderCode);
 ////                            // 更新本地订单上传状态
 ////                            updateLocalOrder(transOrderCode);
-////                            LogUtil.i("本地订单上传状态更新成功！" + transOrderCode);
+////                            LLog.i("本地订单上传状态更新成功！" + transOrderCode);
 ////                            return Result.success();
 ////                        } else {
 ////                            String code = body.code;

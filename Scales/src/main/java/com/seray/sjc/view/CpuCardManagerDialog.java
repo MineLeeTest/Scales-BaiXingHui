@@ -177,7 +177,7 @@
 //            mTransOrderCode = args.getString("transOrderCode");
 //            double transAmt = args.getDouble("transAmt");
 //            mTransAmout = new BigDecimal(transAmt);
-//            LogUtil.i(mTransAmout.toString());
+//            LLog.i(mTransAmout.toString());
 //        }
 //    }
 //
@@ -297,8 +297,8 @@
 //                CardPayOrder cardPayOrder = createCardPayOrder(userCardInfoResponse.data, pasmCardInfoResponse.data);
 //                saveCardPayOrder(cardPayOrder);
 //
-//                LogUtil.i("预付卡支付成功！" + userCardInfoResponse.data.toString());
-//                LogUtil.i("预付卡支付成功！" + pasmCardInfoResponse.data.toString());
+//                LLog.i("预付卡支付成功！" + userCardInfoResponse.data.toString());
+//                LLog.i("预付卡支付成功！" + pasmCardInfoResponse.data.toString());
 //            } else {
 //                CpuCardResult errorResponse = CpuCardHelper.getErrorResponse();
 //                LogUtil.e("预付卡支付失败！" + errorResponse.errorCode + "|" + errorResponse.errorMessage);
@@ -321,7 +321,7 @@
 //            if (doBalance) {
 //                CpuCardResult<UserCardInfo> userCardInfoResponse = CpuCardHelper.getUserCardInfoResponse();
 //                updateBalanceView(userCardInfoResponse);
-//                LogUtil.i("预付卡余额查询成功！" + userCardInfoResponse.data.BALANCE.toString());
+//                LLog.i("预付卡余额查询成功！" + userCardInfoResponse.data.BALANCE.toString());
 //            } else {
 //                CpuCardResult errorResponse = CpuCardHelper.getErrorResponse();
 //                LogUtil.e("预付卡余额查询失败！" + errorResponse.errorCode + "|" + errorResponse.errorMessage);

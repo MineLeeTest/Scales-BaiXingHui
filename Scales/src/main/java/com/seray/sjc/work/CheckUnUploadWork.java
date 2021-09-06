@@ -44,7 +44,7 @@
 //            List<SjcSubtotal> subtotals = mSjcSubtotalDao.getNoUploadOrdersOneTime(ONE_TIME_UPLOAD_MAX_COUNT);
 //            if (subtotals == null || subtotals.isEmpty()) break;
 //
-//            LogUtil.i("单次任务实际上传订单数目：" + subtotals.size());
+//            LLog.i("单次任务实际上传订单数目：" + subtotals.size());
 //
 //            String[] totalTransOrderCode = new String[subtotals.size()];
 //            int offset = 0;
@@ -68,12 +68,12 @@
 ////                    if (body != null && body.success) {
 ////                        String[] errorOrderCodes = body.msgs;
 ////                        if (errorOrderCodes != null && errorOrderCodes.length > 0) {
-////                            LogUtil.i("批量上传订单部分失败！");
+////                            LLog.i("批量上传订单部分失败！");
 ////                        } else {
-////                            LogUtil.i("批量上传订单部分全部成功！");
+////                            LLog.i("批量上传订单部分全部成功！");
 ////                        }
 ////                        updateOrderUploadStatus(totalTransOrderCode, errorOrderCodes);
-////                        LogUtil.i("批量上传订单上传状态更新成功！");
+////                        LLog.i("批量上传订单上传状态更新成功！");
 ////                    }
 ////                }
 ////            } catch (IOException e) {

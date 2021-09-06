@@ -71,7 +71,7 @@
 //
 //        try {
 //
-//            LogUtil.i("检查周期性更新数据的任务");
+//            LLog.i("检查周期性更新数据的任务");
 //
 //            Response<ApiDataRsp<BusinessRsp>> response = HttpServicesFactory.getHttpServiceApi()
 //                    .getBusinessData(businessReq)
@@ -79,7 +79,7 @@
 //
 //            if (response.isSuccessful()) {
 //                //存储数据
-//                LogUtil.i("检查周期性更新数据的任务 成功");
+//                LLog.i("检查周期性更新数据的任务 成功");
 //                ApiDataRsp<BusinessRsp> body = response.body();
 //                if (body != null && body.success) {
 //                    BusinessRsp resp = body.msgs;
@@ -95,7 +95,7 @@
 //                        businessReq.lastSynResult = "1";
 //                        setBusinessReq(businessReq);
 //                        mDatabase.setTransactionSuccessful();
-//                        LogUtil.i("检查周期性更新数据的任务 存储数据 成功");
+//                        LLog.i("检查周期性更新数据的任务 存储数据 成功");
 //                    } catch (Exception e) {
 //                        businessReq.lastSynDate = DateUtil.getDateStr(new Date(), "");
 //                        businessReq.lastSynResult = "2";
@@ -109,7 +109,7 @@
 //                }
 //            }
 //        } catch (Exception e) {
-//            LogUtil.i("检查周期性更新数据的任务 失败" + e.getMessage());
+//            LLog.i("检查周期性更新数据的任务 失败" + e.getMessage());
 //        }
 //        EventBus.getDefault().post(new SyncDataWorkMessage(false));
 //        return Result.failure();

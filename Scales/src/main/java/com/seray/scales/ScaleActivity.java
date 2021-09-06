@@ -38,6 +38,7 @@ import com.seray.sjc.api.request.RequestOrderVM;
 import com.seray.sjc.api.request.RequestWatcherAlertVM;
 import com.seray.sjc.api.result.ApiDataRsp;
 import com.seray.sjc.api.result.UserVipCardDetailDTO;
+import com.seray.sjc.db.AppDatabase;
 import com.seray.sjc.entity.device.ProductADB;
 import com.seray.util.AESTools;
 import com.seray.util.FileHelp;
@@ -99,7 +100,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
 
     //展示商品列表
     private void showPros() {
-        List<ProductADB> productADBList = CacheHelper.getPros();
+        List<ProductADB> productADBList = AppDatabase.getInstance().getProductDao().loadAll();
         if (productADBList == null || productADBList.size() < 1) {
             showMessage("本地数据库中没有找到商品！");
             return;
@@ -140,6 +141,10 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //开启定时循环
     Runnable runnableTimer = () -> {
         handlerScale.sendEmptyMessage(1);
+    };
+    //开启定时循环
+    Runnable showTimer = () -> {
+        handlerScale.sendEmptyMessage(99);
     };
 
     //计算总价
@@ -201,6 +206,9 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
 
         //循环定时任务-轮询称重模块数据
         timerThreads.scheduleAtFixedRate(runnableTimer, 1500, 200, TimeUnit.MILLISECONDS);
+        //循环定时任务-点亮屏幕+展示时间
+        showTimeThreads.scheduleAtFixedRate(showTimer, 1, 1, TimeUnit.MINUTES);
+
         //开启IC卡读取功能
         icCardSerialPortUtil.startRead(this);
     }
@@ -275,7 +283,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     //接收电量消息 每分钟一次
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveBattery(@NonNull BatteryMsg msg) {
-        LogUtil.i("--------BatteryMsg---->" + msg.toString());
+        LLog.i("--------BatteryMsg---->" + msg.toString());
         //展示时间
         mTimeView.setText(NumFormatUtil.getFormatDate() + "-" + msg.getBattery());
 
@@ -324,7 +332,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             showMessage("更新商品成功！");
             showPros();
         }
-        LogUtil.i("--------HeartBeatMsg---->" + heartBeatMsg.toString());
+        LLog.i("--------HeartBeatMsg---->" + heartBeatMsg.toString());
     }
 
     //接收商品页面中的选择选项
@@ -457,11 +465,11 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
     public void onICCardDataReceive(ICCardSerialPortUtil.DataReceType type, byte[] buffer, int size) {
         Message message = new Message();
         message.what = -1;
-        System.out.println(ByteUtil.bytesToHexString(buffer));
+        LLog.i("读取卡号：" + ByteUtil.bytesToHexString(buffer));
         if (ICCardSerialPortUtil.DataReceType.success == type) {
-            if (buffer.length != 12) {
-                message.obj = "卡号长度有误：" + buffer.length;
-                System.out.println(ByteUtil.bytesToHexString(buffer));
+            if (buffer.length < 12) {
+                message.obj = "请重新刷卡!";
+                LLog.e("卡号读取长度不足：" + ByteUtil.bytesToHexString(buffer));
             } else {
                 String cardID = ByteUtil.getCardNo(buffer);
                 if (null == cardID) {
@@ -489,18 +497,18 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             }
             String sign = resultData.getMsg() + "";
             getUserByCardNoVM.setCardNo(cardID);
-            System.out.println("--getuserbycardno--request---start------>" + CacheHelper.device_id);
+            LLog.i("--getuserbycardno--request---start------>" + getUserByCardNoVM.toString());
             Response<ApiDataRsp<UserVipCardDetailDTO>> response = HttpServicesFactory.getHttpServiceApi().getuserbycardno(CacheHelper.device_id + "", sign, getUserByCardNoVM).execute();
-            System.out.println("--getuserbycardno--request---end------>");
-
             if (!response.isSuccessful()) {
                 resultData.setRetMsg(response.code() + "", "-" + response.errorBody().toString());
             } else {
                 resultData.setTrueMsg(response.body());
             }
+
             return resultData;
         } catch (Exception e) {
             resultData.setRetMsg("2144", e.getMessage());
+            LLog.e("--getuserbycardno---Exception----->", e);
             return resultData;
         }
     }
@@ -524,6 +532,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
             }
             if (msg.what == 9) {
                 ResultData resultData = (ResultData) msg.obj;
+                LLog.i("--getuserbycardno--request---end------>" + resultData.getCode());
                 if (!resultData.isSuccess()) {
                     activity.showMessage(resultData.getCode() + "-" + resultData.getMsg());
                 } else {
@@ -531,11 +540,19 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                     if (apiDataRsp.getSuccess()) {
                         UserVipCardDetailDTO userVipCardDetailDTO = apiDataRsp.getMsgs();
                         if ("买家".equals(userVipCardDetailDTO.getUser_type())) {
-                            activity.buyer.setText(userVipCardDetailDTO.getUser_name() + "-" + userVipCardDetailDTO.getBalance());
-                            activity.buyer.setTag(userVipCardDetailDTO);
+                            if (null != activity.buyer.getTag()) {
+                                activity.showMessage("当前有买家正在交易,如需变更,请点击重置后,重试!");
+                            } else {
+                                activity.buyer.setText(userVipCardDetailDTO.getUser_name() + "-" + userVipCardDetailDTO.getBalance());
+                                activity.buyer.setTag(userVipCardDetailDTO);
+                            }
                         } else if ("卖家".equals(userVipCardDetailDTO.getUser_type())) {
-                            activity.seller.setText(userVipCardDetailDTO.getUser_name());
-                            activity.seller.setTag(userVipCardDetailDTO);
+                            if (null != activity.seller.getTag()) {
+                                activity.showMessage("当前有卖家正在交易,如需变更,请点击重置后,重试!");
+                            } else {
+                                activity.seller.setText(userVipCardDetailDTO.getUser_name());
+                                activity.seller.setTag(userVipCardDetailDTO);
+                            }
                         } else {
                             activity.showMessage("没有【" + userVipCardDetailDTO.getUser_type() + "】该种类型的角色！");
                         }
@@ -694,7 +711,7 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
         if (realPrice.compareTo(BigDecimal.valueOf(proTradeNow.getPrice())) != 0) {
             proTradeNow.setPrice(Double.parseDouble(realPrice + ""));
             CacheHelper.updateProductADB(proTradeNow);
-            System.out.println("-------showPros()-------->");
+            LLog.i("-------showPros()-------->");
             //刷新商品列表
             showPros();
         }
@@ -806,6 +823,8 @@ public class ScaleActivity extends BaseActivity implements ICCardSerialPortUtil.
                 if (msg.what == 1) {
                     //显示重量
                     activity.weightChangedCyclicity();
+                }
+                if (msg.what == 99) {
                     //点亮屏幕
                     activity.lightScreenCyclicity();
                     //展示时间
